@@ -1,0 +1,96 @@
+{
+	"goal" : {
+		"posX" : 298,
+		"posY" : 416,
+		"width" : 32,
+		"height" : 32,
+		"img" : "goal.png"
+	},
+	"player" : {
+		"posX" : 304,
+		"posY" : 0,
+		"width" : 32,
+		"height" : 32,
+		"speed" : 128,
+		"img" : "player.png"
+	},
+	"enemies" : [
+		{
+			"posX" : 0,
+			"posY" : 208,
+			"width" : 32,
+			"height" : 32,
+			"speed" : 64,
+			"pursuingSpeed" : 128,
+			"img" : "soldier_right.png",
+			"routePoints" : [ { "posX" : 0, "posY" : 208 }, { "posX" : 256, "posY" : 208 } ]
+		},
+		{
+			"posX" : 626,
+			"posY" : 208,
+			"width" : 32,
+			"height" : 32,
+			"speed" : 64,
+			"pursuingSpeed" : 128,
+			"img" : "soldier_left.png",
+			"routePoints" : [ { "posX" : 626, "posY" : 208 }, { "posX" : 330, "posY" : 208 } ]
+		},
+		{
+			"posX" : 256,
+			"posY" : 240,
+			"width" : 32,
+			"height" : 32,
+			"speed" : 64,
+			"pursuingSpeed" : 128,
+			"img" : "soldier_right.png",
+			"routePoints" : [ { "posX" : 256, "posY" : 240 }, { "posX" : 0, "posY" : 240 } ]
+		},
+		{
+			"posX" : 330,
+			"posY" : 240,
+			"width" : 32,
+			"height" : 32,
+			"speed" : 64,
+			"pursuingSpeed" : 128,
+			"img" : "soldier_left.png",
+			"routePoints" : [ { "posX" : 330, "posY" : 240 }, { "posX" : 626, "posY" : 240 } ]
+		}
+	],
+	"walls" : [
+		{
+			"posX" : 0,
+			"posY" : 0,
+			"width" : 200,
+			"height" : 200,
+			"img" : "wall.png"
+		},
+		{
+			"posX" : 440,
+			"posY" : 0,
+			"width" : 200,
+			"height" : 200,
+			"img" : "wall.png"
+		},
+		{
+			"posX" : 0,
+			"posY" : 280,
+			"width" : 200,
+			"height" : 200,
+			"img" : "wall.png"
+		},
+		{
+			"posX" : 440,
+			"posY" : 280,
+			"width" : 200,
+			"height" : 200,
+			"img" : "wall.png"
+		},
+		{
+			"posX" : 298,
+			"posY" : 208,
+			"width" : 32,
+			"height" : 32,
+			"img" : "wall.png"
+		}
+	]
+}
