@@ -1,19 +1,19 @@
 #include "stdafx.h"
 #include "globals.h"
-#include "graphicsengine.h"
+#include "coregraphicsengine.h"
 #include "sys.h"
 #include "core.h"
-#include "sprite.h"
+#include "coresprite.h"
 
 
-GraphicsEngine::GraphicsEngine() : m_initialized(false), m_ended(false) {}
+CoreGraphicsEngine::CoreGraphicsEngine() : m_initialized(false), m_ended(false) {}
 
-GraphicsEngine::~GraphicsEngine()
+CoreGraphicsEngine::~CoreGraphicsEngine()
 {
 	if (m_initialized && !m_ended) End();
 }
 
-void GraphicsEngine::Init()
+void CoreGraphicsEngine::Init()
 {
 	if (!m_initialized)
 	{
@@ -22,7 +22,7 @@ void GraphicsEngine::Init()
 	}
 }
 
-void GraphicsEngine::End()
+void CoreGraphicsEngine::End()
 {
 	if (m_initialized)
 	{
@@ -38,7 +38,7 @@ void GraphicsEngine::End()
 }
 
 
-void GraphicsEngine::Render()
+void CoreGraphicsEngine::Render()
 {
 	glClear( GL_COLOR_BUFFER_BIT );
 
@@ -58,7 +58,7 @@ void GraphicsEngine::Render()
 }
 
 
-Sprite * GraphicsEngine::RequireSprite(vec2 pos, vec2 size, const char * image, float red, float green, float blue)
+ISprite * CoreGraphicsEngine::RequireSprite(vec2 pos, vec2 size, const char * image, float red, float green, float blue)
 {
 	GLuint sprite_id = 0;
 	for (auto texture : m_textures) 
@@ -76,14 +76,14 @@ Sprite * GraphicsEngine::RequireSprite(vec2 pos, vec2 size, const char * image, 
 		m_textures.push_back({ image, sprite_id });
 	}
 	
-	Sprite * required_sprite = new Sprite(pos, size, sprite_id, red, green, blue);
+	ISprite * required_sprite = new CoreSprite(pos, size, sprite_id, red, green, blue);
 
 	m_sprites.push_back(required_sprite);
 
 	return required_sprite;
 }
 
-void GraphicsEngine::ReleaseSprite(Sprite * sprite) 
+void CoreGraphicsEngine::ReleaseSprite(ISprite * sprite) 
 {
 	for (auto it = m_sprites.begin(); it != m_sprites.end(); ) 
 	{

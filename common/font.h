@@ -1,5 +1,5 @@
-#ifndef _FONT_H_
-#define _FONT_H_
+#ifndef __FONT_H__
+#define __FONT_H__
 
 void FONT_Init();
 void FONT_End();

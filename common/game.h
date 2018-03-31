@@ -1,13 +1,13 @@
-#ifndef _GAME_H_
-#define _GAME_H_
+#ifndef __GAME_H__
+#define __GAME_H__
 
 #include "core.h"
+#include "graphicsengine.h"
 #include <vector>
 
 
 class Entity;
 class GameInputManager;
-class GraphicsEngine;
 class IMessageReceiver;
 class GameMessage;
 
@@ -30,7 +30,6 @@ public:
 	void Run                                   (float deltaTime);
 
 	GameInputManager * GetInputManager   () const;
-	GraphicsEngine   * GetGraphicsEngine () const;
 	Entity           * GetPlayer         () const;
 	GameLevel          GetGameLevel      () const;
 	void               SetGameLevel      (GameLevel level);
@@ -49,7 +48,6 @@ private:
 	std::vector<Entity *>                                 m_enemies;
 	Entity                                               *m_pGoal;
 	GameInputManager                                     *m_pInputManager;
-	GraphicsEngine                                       *m_pGraphicsEngine;
 	GameLevel                                             m_gameLevel;
 };
 

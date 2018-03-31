@@ -1,5 +1,5 @@
-#ifndef _SYS_H_
-#define _SYS_H_
+#ifndef __SYS_H__
+#define __SYS_H__
 
 #define SCR_WIDTH  640
 #define SCR_HEIGHT 480

@@ -1,10 +1,8 @@
-#ifndef __COMPONENTS_H_
-#define __COMPONENTS_H_
+#ifndef __COMPONENTS_H__
+#define __COMPONENTS_H__
 
 
-#include "core.h"
 #include "entity.h"
-#include "sys.h"
 #include "sprite.h"
 #include "messages.h"
 #include "game.h"
@@ -38,7 +36,7 @@ public:
 		m_image       (image),
 	    m_initialized (false) {}
 
-	Sprite * GetSprite () const { return m_pSprite; }
+	ISprite * GetSprite () const { return m_pSprite; }
 	virtual void Run   (float deltaTime) {}
 	
 	void Init()
@@ -46,7 +44,7 @@ public:
 		assert(g_pGame);
 		if (!m_initialized)
 		{
-			m_pSprite = g_pGame->GetGraphicsEngine()->RequireSprite(m_pos, m_size, m_image);
+			m_pSprite = g_pGraphicsEngine->RequireSprite(m_pos, m_size, m_image);
 		}
 	}
 
@@ -123,8 +121,8 @@ public:
 								if (strcmp(requiredTexture, m_image)) {
 									// TODO cuidado con esto
 									m_image = requiredTexture;
-									g_pGame->GetGraphicsEngine()->ReleaseSprite(m_pSprite);
-									m_pSprite = g_pGame->GetGraphicsEngine()->RequireSprite(m_pos, m_size, m_image);
+									g_pGraphicsEngine->ReleaseSprite(m_pSprite);
+									m_pSprite = g_pGraphicsEngine->RequireSprite(m_pos, m_size, m_image);
 								}
 							}
 						}
@@ -139,13 +137,13 @@ private:
 	vec2        m_pos;
 	vec2        m_size;
 	const char *m_image;
-	Sprite     *m_pSprite;
+	ISprite     *m_pSprite;
 	bool        m_initialized;
 };
 
 /***************************/
 
-class C_Movable : public Component, public IMessageReceiver
+class C_Movable : public Component, public IMessageReceiver, public IEventManager::IListener
 {
 public:
 
@@ -163,6 +161,9 @@ public:
 
 			AddPositionMessage apm(m_movement.x, m_movement.y);
 			m_owner->ReceiveMessage(apm);
+
+			m_movement.x = 0.f;
+			m_movement.y = 0.f;
 		}
 	}
 
@@ -267,6 +268,18 @@ public:
 				}
 			}
 		}
+	}
+
+	bool ProcessEvent(IEventManager::EM_Event event) {
+
+		switch (event) {
+			case IEventManager::EM_Event::MoveUp    : m_movement.y =  m_speed; break;
+			case IEventManager::EM_Event::MoveDown  : m_movement.y = -m_speed; break;
+			case IEventManager::EM_Event::MoveLeft  : m_movement.x = -m_speed; break;
+			case IEventManager::EM_Event::MoveRight : m_movement.x =  m_speed; break;
+		}
+
+		return true;
 	}
 
 private:

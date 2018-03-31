@@ -1,5 +1,5 @@
-#ifndef _APPLICATION_MANAGER_H_
-#define _APPLICATION_MANAGER_H_
+#ifndef __APPLICATION_MANAGER_H__
+#define __APPLICATION_MANAGER_H__
 
 
 #include "applicationmode.h"

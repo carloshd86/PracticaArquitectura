@@ -49,3 +49,7 @@ void ApplicationModeMenu::Render()
 	FONT_DrawString(vmake(SCR_HEIGHT/4.f, SCR_HEIGHT*0.5f) , "PRESS 2 TO START LEVEL 2");
 	FONT_DrawString(vmake(SCR_HEIGHT/4.f, SCR_HEIGHT*0.25f), "PRESS 3 TO START LEVEL 3");
 }
+
+bool ApplicationModeMenu::ProcessEvent(IEventManager::EM_Event event) {
+	return true;
+}

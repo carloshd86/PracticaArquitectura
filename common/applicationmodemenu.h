@@ -1,11 +1,11 @@
-#ifndef _APPLICATION_MODE_MENU_H_
-#define _APPLICATION_MODE_MENU_H_
+#ifndef __APPLICATION_MODE_MENU_H__
+#define __APPLICATION_MODE_MENU_H__
 
 
 #include "applicationmode.h"
 
 
-class ApplicationModeMenu : public ApplicationMode
+class ApplicationModeMenu : public ApplicationMode, public IEventManager::IListener
 {
 public:
 
@@ -17,6 +17,8 @@ public:
 	void   ProcessInput    ();
 	void   Run             (float deltaTime);
 	void   Render          ();
+
+	bool ProcessEvent(IEventManager::EM_Event event);
 
 private:
 

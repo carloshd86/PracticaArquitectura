@@ -1,5 +1,5 @@
-#ifndef _MESSAGES_H_
-#define _MESSAGES_H_
+#ifndef __MESSAGES_H__
+#define __MESSAGES_H__
 
 
 #include "messagereceiver.h"

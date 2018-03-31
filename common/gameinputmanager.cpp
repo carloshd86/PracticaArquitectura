@@ -12,17 +12,20 @@ GameInputManager::GameInputManager() {}
 
 void GameInputManager::ProcessInput()
 {
-	assert(g_pGame);
+	assert(g_pEventManager);
+	g_pEventManager->UpdateEvents();
 
-	Entity * player = g_pGame->GetPlayer();
+	//assert(g_pGame);
 
-	assert(player);
+	//Entity * player = g_pGame->GetPlayer();
 
-	player->ReceiveMessage(SetMovementMessage(0.f, 0.f));
+	//assert(player);
 
-	if (SYS_KeyPressed(SYS_KEY_UP))      player->ReceiveMessage(MoveUpMessage());
-	if (SYS_KeyPressed(SYS_KEY_DOWN))    player->ReceiveMessage(MoveDownMessage());
-	if (SYS_KeyPressed(SYS_KEY_LEFT))    player->ReceiveMessage(MoveLeftMessage());
-	if (SYS_KeyPressed(SYS_KEY_RIGHT))   player->ReceiveMessage(MoveRightMessage());
-	if (SYS_KeyPressed(VK_ESCAPE))       g_pApplicationManager->SwitchMode(AM_MENU);
+	//player->ReceiveMessage(SetMovementMessage(0.f, 0.f));
+
+	//if (SYS_KeyPressed(SYS_KEY_UP))      player->ReceiveMessage(MoveUpMessage());
+	//if (SYS_KeyPressed(SYS_KEY_DOWN))    player->ReceiveMessage(MoveDownMessage());
+	//if (SYS_KeyPressed(SYS_KEY_LEFT))    player->ReceiveMessage(MoveLeftMessage());
+	//if (SYS_KeyPressed(SYS_KEY_RIGHT))   player->ReceiveMessage(MoveRightMessage());
+	//if (SYS_KeyPressed(VK_ESCAPE))       g_pApplicationManager->SwitchMode(AM_MENU);
 }

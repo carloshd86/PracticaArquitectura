@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "globals.h"
 #include "applicationmodegame.h"
+#include "applicationmanager.h"
 #include "game.h"
 #include "gameinputmanager.h"
 #include "graphicsengine.h"
@@ -24,10 +25,13 @@ void ApplicationModeGame::Activate()
 		case 3: g_pGame->SetGameLevel(Game::GameLevel::LEVEL_3); break;
 	}
 	g_pGame->Init();
+
+	g_pEventManager->Register(this, IEventManager::EM_Event::PressEscape, 0);
 }
 
 void ApplicationModeGame::Deactivate()
 {
+	g_pEventManager->Unregister(this);
 	g_pGame->End();
 }
 
@@ -43,5 +47,14 @@ void ApplicationModeGame::Run(float deltaTime)
 
 void ApplicationModeGame::Render()
 {
-	g_pGame->GetGraphicsEngine()->Render();
+	g_pGraphicsEngine->Render();
+}
+
+bool ApplicationModeGame::ProcessEvent(IEventManager::EM_Event event) {
+
+	switch (event) {
+		case IEventManager::EM_Event::PressEscape: g_pApplicationManager->SwitchMode(AM_MENU); break;
+	}
+
+	return true;
 }

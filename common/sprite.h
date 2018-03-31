@@ -1,32 +1,22 @@
-#ifndef _SPRITE_H_
-#define _SPRITE_H_
+#ifndef __SPRITE_H__
+#define __SPRITE_H__
 
 #include "core.h"
-#include <array>
 
-
-class Sprite
+class ISprite
 {
+
 public:
 
-	Sprite(vec2 pos, vec2 size, GLuint tex, float red, float green, float blue);
-
-	vec2   GetPos               ()                                    const; 
-	void   SetPos               (float x, float y); 
-	vec2   GetSize              ()                                    const; 
-	void   SetSize              (float x, float y); 
-	GLuint GetTex               ()                                    const; 
-	void   SetColor             (float red, float green, float blue);
-	float  GetRed               ()                                    const;
-	float  GetGreen             ()                                    const;
-	float  GetBlue              ()                                    const;
-
-private:
-
-	vec2                   m_pos;
-	vec2                   m_size;
-	GLuint                 m_tex;
-	std::array<float, 3>   m_color;
+	virtual vec2         GetPos   ()                                    const = 0; 
+	virtual void         SetPos   (float x, float y)                          = 0; 
+	virtual vec2         GetSize  ()                                    const = 0; 
+	virtual void         SetSize  (float x, float y)                          = 0; 
+	virtual unsigned int GetTex   ()                                    const = 0; 
+	virtual void         SetColor (float red, float green, float blue)        = 0;
+	virtual float        GetRed   ()                                    const = 0;
+	virtual float        GetGreen ()                                    const = 0;
+	virtual float        GetBlue  ()                                    const = 0;
 };
 
 #endif
