@@ -25,6 +25,7 @@ void ApplicationModeGame::Activate()
 		case 3: g_pGame->SetGameLevel(Game::GameLevel::LEVEL_3); break;
 	}
 	g_pGame->Init();
+	g_pGraphicsEngine->Init();
 
 	g_pEventManager->Register(this, IEventManager::EM_Event::PressEscape, 0);
 }
@@ -32,6 +33,7 @@ void ApplicationModeGame::Activate()
 void ApplicationModeGame::Deactivate()
 {
 	g_pEventManager->Unregister(this);
+	g_pGraphicsEngine->End();
 	g_pGame->End();
 }
 

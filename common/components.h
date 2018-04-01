@@ -159,11 +159,18 @@ public:
 			m_movement.x *= deltaTime;
 			m_movement.y *= deltaTime;
 
+			m_last_movement.x = m_movement.x;
+			m_last_movement.y = m_movement.y;
+
 			AddPositionMessage apm(m_movement.x, m_movement.y);
 			m_owner->ReceiveMessage(apm);
 
 			m_movement.x = 0.f;
 			m_movement.y = 0.f;
+		}
+		else {
+			m_last_movement.x = 0.f;
+			m_last_movement.y = 0.f;
 		}
 	}
 
@@ -213,16 +220,16 @@ public:
 		RigidBodyCollisionMessage * wcm = dynamic_cast<RigidBodyCollisionMessage *>(&message);
 		if (wcm)
 		{
-			if      (RigidBodyCollisionMessage::Type::CollisionX == wcm->GetType()) m_owner->ReceiveMessage(AddPositionMessage(-m_movement.x, 0.f));
-			else if (RigidBodyCollisionMessage::Type::CollisionY == wcm->GetType()) m_owner->ReceiveMessage(AddPositionMessage(0.f, -m_movement.y));;
+			if      (RigidBodyCollisionMessage::Type::CollisionX == wcm->GetType()) m_owner->ReceiveMessage(AddPositionMessage(-m_last_movement.x, 0.f));
+			else if (RigidBodyCollisionMessage::Type::CollisionY == wcm->GetType()) m_owner->ReceiveMessage(AddPositionMessage(0.f, -m_last_movement.y));;
 		}
 		else
 		{
 			RequireMovementMessage * rmm = dynamic_cast<RequireMovementMessage *>(&message);
 			if (rmm)
 			{
-				rmm->SetX(m_movement.x);
-				rmm->SetY(m_movement.y);
+				rmm->SetX(m_last_movement.x);
+				rmm->SetY(m_last_movement.y);
 				rmm->SetSpeed(m_speed);
 				rmm->SetProcessed(true);
 			}
@@ -273,10 +280,10 @@ public:
 	bool ProcessEvent(IEventManager::EM_Event event) {
 
 		switch (event) {
-			case IEventManager::EM_Event::MoveUp    : m_movement.y =  m_speed; break;
-			case IEventManager::EM_Event::MoveDown  : m_movement.y = -m_speed; break;
-			case IEventManager::EM_Event::MoveLeft  : m_movement.x = -m_speed; break;
-			case IEventManager::EM_Event::MoveRight : m_movement.x =  m_speed; break;
+			case IEventManager::EM_Event::MoveUp    : m_owner->ReceiveMessage(MoveUpMessage());    break;
+			case IEventManager::EM_Event::MoveDown  : m_owner->ReceiveMessage(MoveDownMessage());  break;
+			case IEventManager::EM_Event::MoveLeft  : m_owner->ReceiveMessage(MoveLeftMessage());  break;
+			case IEventManager::EM_Event::MoveRight : m_owner->ReceiveMessage(MoveRightMessage()); break;
 		}
 
 		return true;
@@ -285,6 +292,7 @@ public:
 private:
 
 	vec2 m_movement;
+	vec2 m_last_movement;
 	float m_speed;
 };
 
