@@ -1,5 +1,5 @@
-#ifndef _SYS_H_
-#define _SYS_H_
+#ifndef __SYS_H__
+#define __SYS_H__
 
 #define SCR_WIDTH  640
 #define SCR_HEIGHT 480
@@ -44,6 +44,7 @@ void  SYS_Sleep     (int ms);
 struct ivec2 { int x, y; };
 
 bool  SYS_KeyPressed       (int key);
+bool  SYS_KeyToggled       (int key);
 ivec2 SYS_MousePos         ();
 bool  SYS_MouseButonPressed(int button);
 

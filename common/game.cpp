@@ -1,12 +1,9 @@
 #include "stdafx.h"
 #include "globals.h"
 #include "game.h"
-#include "sys.h"
-#include "core.h"
 #include "applicationmanager.h"
 #include "entity.h"
 #include "gameinputmanager.h"
-#include "graphicsengine.h"
 #include "messagereceiver.h"
 #include "messages.h"
 #include "rapidjson\document.h"
@@ -20,25 +17,24 @@ using namespace rapidjson;
 
 
 Game::Game() : 
-	m_initialized     (false), 
-	m_ended           (false), 
+	mInitialized     (false), 
+	mEnded           (false), 
 	m_pPlayer         (nullptr), 
 	m_pGoal           (nullptr),
-	m_pInputManager   (nullptr),
-	m_pGraphicsEngine (nullptr) {}
+	m_pInputManager   (nullptr) {}
 
 Game::~Game()
 {
-	if (m_initialized && !m_ended) End();
+	if (mInitialized && !mEnded) End();
 }
 
 void Game::Init()
 {
-	if (!m_initialized)
+	if (!mInitialized)
 	{
 		// Init game state
 		char * jsonSrc = nullptr;
-		switch (m_gameLevel)
+		switch (mGameLevel)
 		{
 			case LEVEL_1: jsonSrc = "../data/level1.json"; break;
 			case LEVEL_2: jsonSrc = "../data/level2.json"; break;
@@ -63,9 +59,6 @@ void Game::Init()
 			exit(EXIT_FAILURE);
 		}
 		assert(document.IsObject());
-
-		m_pGraphicsEngine = new GraphicsEngine();
-		m_pGraphicsEngine->Init();
 	
 		assert(document.HasMember(PLAYER_JSON_KEY));
 		assert(document[PLAYER_JSON_KEY].IsObject());
@@ -86,14 +79,17 @@ void Game::Init()
 		playerImgSrc += playerImg;
 
 		m_pPlayer = new Entity();
-		Component * cPlayer           = new C_Player(m_pPlayer);
-		Component * cPlayerRenderable = new C_Renderable(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight), playerImgSrc.c_str());
-		dynamic_cast<C_Renderable *>(cPlayerRenderable)->Init();
-		Component * cPlayerMovable    = new C_Movable(m_pPlayer, playerSpeed);
+		Component * cPlayer              = new C_Player(m_pPlayer);
+		C_Renderable * cPlayerRenderable = new C_Renderable(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight), playerImgSrc.c_str());
+		cPlayerRenderable->Init();
+		C_Movable      * cPlayerMovable       = new C_Movable(m_pPlayer, playerSpeed);
+		C_Controllable * cPlayerControllable  = new C_Controllable(m_pPlayer);
+		cPlayerControllable->Init();
 		m_pPlayer->AddComponent(cPlayer);
 		m_pPlayer->AddComponent(cPlayerRenderable);
 		m_pPlayer->AddComponent(cPlayerMovable);
-		m_entities.push_back(m_pPlayer);
+		m_pPlayer->AddComponent(cPlayerControllable);
+		mEntities.push_back(m_pPlayer);
 
 
 		m_pInputManager = new GameInputManager();
@@ -115,12 +111,12 @@ void Game::Init()
 		goalImgSrc += goalImg;
 
 		m_pGoal = new Entity();
-		Component * cGoal           = new C_Goal(m_pGoal);
-		Component * cGoalRenderable = new C_Renderable(m_pGoal, vmake(goalPosX, goalPosY), vmake(goalWidth, goalHeight), goalImgSrc.c_str());
-		dynamic_cast<C_Renderable *>(cGoalRenderable)->Init();
+		Component * cGoal              = new C_Goal(m_pGoal);
+		C_Renderable * cGoalRenderable = new C_Renderable(m_pGoal, vmake(goalPosX, goalPosY), vmake(goalWidth, goalHeight), goalImgSrc.c_str());
+		cGoalRenderable->Init();
 		m_pGoal->AddComponent(cGoal);
 		m_pGoal->AddComponent(cGoalRenderable);
-		m_entities.push_back(m_pGoal);
+		mEntities.push_back(m_pGoal);
 
 		if (document.HasMember(ENEMIES_JSON_KEY))
 			for (auto& item : document[ENEMIES_JSON_KEY].GetArray())
@@ -146,10 +142,10 @@ void Game::Init()
 				enemyImgSrc += enemyImg;
 
 				Entity * enemy = new Entity();
-				Component * cEnemy           = new C_Enemy(enemy, enemyPursuingSpeed);
-				Component * cEnemyRenderable = new C_Renderable(enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight), enemyImgSrc.c_str());
-				dynamic_cast<C_Renderable *>(cEnemyRenderable)->Init();
-				Component * cEnemyMovable    = new C_Movable(enemy, enemySpeed);
+				Component * cEnemy              = new C_Enemy(enemy, enemyPursuingSpeed);
+				C_Renderable * cEnemyRenderable = new C_Renderable(enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight), enemyImgSrc.c_str());
+				cEnemyRenderable->Init();
+				Component * cEnemyMovable       = new C_Movable(enemy, enemySpeed);
 				enemy->AddComponent(cEnemy);
 				enemy->AddComponent(cEnemyRenderable);
 				enemy->AddComponent(cEnemyMovable);
@@ -172,8 +168,8 @@ void Game::Init()
 					enemy->AddComponent(cRoutePath);
 				}
 
-				m_entities.push_back(enemy);
-				m_enemies.push_back(enemy);
+				mEntities.push_back(enemy);
+				mEnemies.push_back(enemy);
 			}
 
 		if (document.HasMember(WALLS_JSON_KEY))
@@ -196,47 +192,45 @@ void Game::Init()
 				wallImgSrc += wallImg;
 
 				Entity * wall = new Entity();
-				Component * cWall           = new C_RigidBody(wall);
-				Component * cWallRenderable = new C_Renderable(wall, vmake(wallPosX, wallPosY), vmake(wallWidth, wallHeight), wallImgSrc.c_str());
-				dynamic_cast<C_Renderable *>(cWallRenderable)->Init();
+				Component * cWall              = new C_RigidBody(wall);
+				C_Renderable * cWallRenderable = new C_Renderable(wall, vmake(wallPosX, wallPosY), vmake(wallWidth, wallHeight), wallImgSrc.c_str());
+				cWallRenderable->Init();
 				wall->AddComponent(cWall);
 				wall->AddComponent(cWallRenderable);
 
-				m_entities.push_back(wall);
-				m_walls.push_back(wall);
+				mEntities.push_back(wall);
+				mWalls.push_back(wall);
 			}
 
-		m_initialized = true;
+		mInitialized = true;
 	}
 }
 
 void Game::End()
 {
-	if (m_initialized)
+	if (mInitialized)
 	{
-		for(auto entity : m_entities) { delete entity; }
-		m_entities.clear();
+		for(auto entity : mEntities) { delete entity; }
+		mEntities.clear();
 		
 		m_pPlayer = nullptr;
 		m_pGoal   = nullptr;
 
-		m_walls.clear();
-		m_enemies.clear();
+		mWalls.clear();
+		mEnemies.clear();
 
 		delete m_pInputManager;
 		m_pInputManager = nullptr;
-		delete m_pGraphicsEngine;
-		m_pGraphicsEngine = nullptr;
 
-		m_initialized = false;
+		mInitialized = false;
 	}
-	m_ended = true;
+	mEnded = true;
 }
 
 
 void Game::Run(float deltaTime)
 {
-	for (auto entity : m_entities) entity->Run(deltaTime);
+	for (auto entity : mEntities) entity->Run(deltaTime);
 	MoveEntities();
 	CheckCollisions();
 }
@@ -260,7 +254,7 @@ void Game::MoveEntities()
 	
 	vec2 playerPosCheck;
 
-	for (auto wall : m_walls)
+	for (auto wall : mWalls)
 	{
 		positionMessage.SetProcessed(false);
 		wall->ReceiveMessage(positionMessage);
@@ -291,7 +285,7 @@ void Game::MoveEntities()
 		}
 
 		// Enemy with wall
-		for (auto enemy : m_enemies)
+		for (auto enemy : mEnemies)
 		{
 			movementMessage.SetProcessed(false);
 			enemy->ReceiveMessage(movementMessage);
@@ -356,7 +350,7 @@ void Game::CheckCollisions()
 		g_pApplicationManager->SwitchMode(AM_MENU);
 	}
 
-	for (auto enemy : m_enemies)
+	for (auto enemy : mEnemies)
 	{
 		positionMessage.SetProcessed(false);
 		enemy->ReceiveMessage(positionMessage);
@@ -405,11 +399,6 @@ GameInputManager * Game::GetInputManager() const
 	return m_pInputManager;
 }
 
-GraphicsEngine * Game::GetGraphicsEngine() const
-{
-	return m_pGraphicsEngine;
-}
-
 Entity * Game::GetPlayer() const
 {
 	return m_pPlayer;
@@ -417,10 +406,10 @@ Entity * Game::GetPlayer() const
 
 Game::GameLevel Game::GetGameLevel() const 
 {
-	return m_gameLevel;
+	return mGameLevel;
 }
 
 void Game::SetGameLevel(GameLevel level)
 {
-	m_gameLevel = level;
+	mGameLevel = level;
 }

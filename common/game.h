@@ -1,13 +1,13 @@
-#ifndef _GAME_H_
-#define _GAME_H_
+#ifndef __GAME_H__
+#define __GAME_H__
 
 #include "core.h"
+#include "graphicsengine.h"
 #include <vector>
 
 
 class Entity;
 class GameInputManager;
-class GraphicsEngine;
 class IMessageReceiver;
 class GameMessage;
 
@@ -30,7 +30,6 @@ public:
 	void Run                                   (float deltaTime);
 
 	GameInputManager * GetInputManager   () const;
-	GraphicsEngine   * GetGraphicsEngine () const;
 	Entity           * GetPlayer         () const;
 	GameLevel          GetGameLevel      () const;
 	void               SetGameLevel      (GameLevel level);
@@ -41,16 +40,15 @@ private:
 	void CheckCollisions    ();
 	bool CheckRectCollision (vec2 pos1, vec2 size1, vec2 pos2, vec2 size2);
 	
-	bool                                                  m_initialized;
-	bool                                                  m_ended;
-	std::vector<Entity *>                                 m_entities;
-	Entity                                               *m_pPlayer;
-	std::vector<Entity *>                                 m_walls;
-	std::vector<Entity *>                                 m_enemies;
-	Entity                                               *m_pGoal;
-	GameInputManager                                     *m_pInputManager;
-	GraphicsEngine                                       *m_pGraphicsEngine;
-	GameLevel                                             m_gameLevel;
+	bool                   mInitialized;
+	bool                   mEnded;
+	std::vector<Entity *>  mEntities;
+	Entity                *m_pPlayer;
+	std::vector<Entity *>  mWalls;
+	std::vector<Entity *>  mEnemies;
+	Entity                *m_pGoal;
+	GameInputManager      *m_pInputManager;
+	GameLevel              mGameLevel;
 };
 
 #endif

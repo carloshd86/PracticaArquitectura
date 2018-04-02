@@ -1,5 +1,5 @@
-#ifndef _ENTITY_H_
-#define _ENTITY_H_
+#ifndef __ENTITY_H__
+#define __ENTITY_H__
 
 
 #include "core.h"
@@ -18,7 +18,7 @@ public:
 	virtual void Run          (float deltaTime);
 	void         AddComponent (Component * component);
 
-	virtual void ReceiveMessage(GameMessage &message);
+	virtual void ReceiveMessage (GameMessage &message);
 
 private:
 

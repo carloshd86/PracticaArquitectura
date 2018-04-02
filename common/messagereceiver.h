@@ -1,5 +1,5 @@
-#ifndef _MESSAGE_RECEIVER_H_
-#define _MESSAGE_RECEIVER_H_
+#ifndef __MESSAGE_RECEIVER_H__
+#define __MESSAGE_RECEIVER_H__
 
 
 class GameMessage;

@@ -183,6 +183,12 @@ bool SYS_KeyPressed(int key)
 }
 
 //-----------------------------------------------------------------------------
+bool SYS_KeyToggled(int key)
+{
+	return GetFocus() == WIN_hWnd && (GetAsyncKeyState(key) & 1) != 0;
+}
+
+//-----------------------------------------------------------------------------
 ivec2 SYS_MousePos()
 {
   POINT pt;

@@ -1,5 +1,5 @@
-#ifndef _APPLICATION_MODE_H_
-#define _APPLICATION_MODE_H_
+#ifndef __APPLICATION_MODE_H__
+#define __APPLICATION_MODE_H__
 
 
 enum IdMode 

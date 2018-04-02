@@ -1,5 +1,5 @@
-#ifndef _CORE_H_
-#define _CORE_H_
+#ifndef __CORE_H__
+#define __CORE_H__
 
 //-----------------------------------------------------------------------------
 typedef unsigned       char byte;

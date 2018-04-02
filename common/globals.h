@@ -1,5 +1,9 @@
-#ifndef _GLOBALS_H_
-#define _GLOBALS_H_
+#ifndef __GLOBALS_H__
+#define __GLOBALS_H__
+
+
+#include "graphicsengine.h"
+#include "eventmanager.h"
 
 
 class ApplicationManager;
@@ -8,6 +12,8 @@ class Game;
 extern ApplicationManager * g_pApplicationManager;
 extern Game               * g_pGame;
 extern int                  g_gameLevel;
+extern IGraphicsEngine    * g_pGraphicsEngine;
+extern IEventManager      * g_pEventManager;
 
 
 const int KEY_LEVEL_1 = 0x31;

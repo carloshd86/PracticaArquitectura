@@ -1,9 +1,10 @@
-#ifndef _GAME_INPUT_MANAGER_H_
-#define _GAME_INPUT_MANAGER_H_
+#ifndef __GAME_INPUT_MANAGER_H__
+#define __GAME_INPUT_MANAGER_H__
 
 
 class GameInputManager
 {
+
 public:
 
 	GameInputManager();
