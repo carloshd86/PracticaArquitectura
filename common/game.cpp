@@ -82,14 +82,13 @@ void Game::Init()
 		Component * cPlayer              = new C_Player(m_pPlayer);
 		C_Renderable * cPlayerRenderable = new C_Renderable(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight), playerImgSrc.c_str());
 		cPlayerRenderable->Init();
-		C_Movable * cPlayerMovable       = new C_Movable(m_pPlayer, playerSpeed);
-		g_pEventManager->Register(cPlayerMovable, IEventManager::EM_Event::MoveUp    , 0);
-		g_pEventManager->Register(cPlayerMovable, IEventManager::EM_Event::MoveDown  , 0);
-		g_pEventManager->Register(cPlayerMovable, IEventManager::EM_Event::MoveLeft  , 0);
-		g_pEventManager->Register(cPlayerMovable, IEventManager::EM_Event::MoveRight , 0);
+		C_Movable      * cPlayerMovable       = new C_Movable(m_pPlayer, playerSpeed);
+		C_Controllable * cPlayerControllable  = new C_Controllable(m_pPlayer);
+		cPlayerControllable->Init();
 		m_pPlayer->AddComponent(cPlayer);
 		m_pPlayer->AddComponent(cPlayerRenderable);
 		m_pPlayer->AddComponent(cPlayerMovable);
+		m_pPlayer->AddComponent(cPlayerControllable);
 		mEntities.push_back(m_pPlayer);
 
 

@@ -31,7 +31,10 @@ Button::~Button()
 
 bool Button::ProcessEvent(IEventManager::EM_Event event)
 {
-	// TODO
+	switch (event) {
+	case IEventManager::EM_Event::SinglePressEnter: { if (mFocused) mListener->OnClick(this); break; }
+	}
+
 	return true;
 }
 

@@ -13,6 +13,8 @@ public:
 
 	class IListener 
 	{
+	public:
+
 		virtual void OnClick(Button * button) = 0;
 	};
 

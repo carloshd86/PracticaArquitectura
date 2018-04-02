@@ -13,10 +13,7 @@ const std::vector<Control *>& Container::GetControls() const
 
 Container::~Container()
 {
-	for (auto control : mControls)
-	{
-		delete control;
-	}
+	for (auto control : mControls) delete control;
 }
 
 // *************************************************
@@ -68,10 +65,7 @@ void Container::Clear()
 
 void Container::Update(float deltaTime)
 {
-	for (auto it = mControls.begin(); it != mControls.end(); ++it) 
-	{
-		(*it)->Update(deltaTime);
-	}
+	for (auto it = mControls.begin(); it != mControls.end(); ++it) (*it)->Update(deltaTime);
 }
 
 // *************************************************
@@ -80,8 +74,5 @@ void Container::Update(float deltaTime)
 
 void Container::Render()
 {
-	for (auto it = mControls.begin(); it != mControls.end(); ++it) 
-	{
-		(*it)->Render();
-	}
+	for (auto it = mControls.begin(); it != mControls.end(); ++it) (*it)->Render();
 }

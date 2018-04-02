@@ -16,7 +16,7 @@ public:
 
 	Component(Entity * owner) :
 		mOwner(owner) {}
-	~Component() {}
+	virtual ~Component() {}
 
 	Entity * mOwner;
 
@@ -41,12 +41,23 @@ public:
 	ISprite * GetSprite () const { return m_pSprite; }
 	virtual void Run   (float deltaTime) {}
 	
-	void Init()
+	virtual void Init()
 	{
-		assert(g_pGame);
 		if (!mInitialized)
 		{
+			assert(g_pGraphicsEngine);
 			m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage);
+			mInitialized = true;
+		}
+	}
+
+	virtual void End()
+	{
+		if (mInitialized)
+		{
+			assert(g_pGraphicsEngine);
+			g_pGraphicsEngine->ReleaseSprite(m_pSprite);
+			mInitialized = false;
 		}
 	}
 
@@ -147,7 +158,7 @@ private:
 //
 // *************************************************
 
-class C_Movable : public Component, public IMessageReceiver, public IEventManager::IListener
+class C_Movable : public Component, public IMessageReceiver
 {
 public:
 
@@ -281,6 +292,59 @@ public:
 		}
 	}
 
+private:
+
+	vec2  mMovement;
+	vec2  mLastMovement;
+	float mSpeed;
+};
+
+// *************************************************
+//
+// *************************************************
+
+class C_Controllable : public Component, public IEventManager::IListener
+{
+public:
+
+	C_Controllable(Entity * owner) : 
+		Component    (owner),
+		mInitialized (false) {}
+
+	virtual ~C_Controllable()
+	{
+		End();
+	}
+
+	virtual void Init()
+	{
+		if (!mInitialized)
+		{
+			assert(g_pEventManager);
+			g_pEventManager->Register(this, IEventManager::EM_Event::MoveUp, 0);
+			g_pEventManager->Register(this, IEventManager::EM_Event::MoveDown, 0);
+			g_pEventManager->Register(this, IEventManager::EM_Event::MoveLeft, 0);
+			g_pEventManager->Register(this, IEventManager::EM_Event::MoveRight, 0);
+
+			mInitialized = true;
+		}
+	}
+
+	virtual void End()
+	{
+		if (mInitialized)
+		{
+			assert(g_pEventManager);
+			g_pEventManager->Unregister(this);
+
+			mInitialized = false;
+		}
+	}
+
+	virtual void Run(float deltaTime)
+	{
+	}
+
 	bool ProcessEvent(IEventManager::EM_Event event) 
 	{
 
@@ -297,9 +361,7 @@ public:
 
 private:
 
-	vec2  mMovement;
-	vec2  mLastMovement;
-	float mSpeed;
+	bool mInitialized;
 };
 
 // *************************************************

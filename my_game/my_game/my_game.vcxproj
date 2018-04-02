@@ -123,6 +123,7 @@
     <ClCompile Include="..\..\common\entity.cpp" />
     <ClCompile Include="..\..\common\game.cpp" />
     <ClCompile Include="..\..\common\applicatonmanager.cpp" />
+    <ClCompile Include="..\..\common\navigationcontainer.cpp" />
     <ClCompile Include="..\..\common\sysinputmanager.cpp" />
     <ClCompile Include="..\..\common\coregraphicsengine.cpp" />
     <ClCompile Include="..\..\common\gameinputmanager.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="..\..\common\entity.h" />
     <ClInclude Include="..\..\common\eventmanager.h" />
     <ClInclude Include="..\..\common\graphicsengine.h" />
+    <ClInclude Include="..\..\common\navigationcontainer.h" />
     <ClInclude Include="..\..\common\sprite.h" />
     <ClInclude Include="..\..\common\sysinputmanager.h" />
     <ClInclude Include="..\..\common\globals.h" />

@@ -44,6 +44,7 @@ void  SYS_Sleep     (int ms);
 struct ivec2 { int x, y; };
 
 bool  SYS_KeyPressed       (int key);
+bool  SYS_KeyToggled       (int key);
 ivec2 SYS_MousePos         ();
 bool  SYS_MouseButonPressed(int button);
 

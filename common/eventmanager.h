@@ -19,8 +19,10 @@ public:
 		MoveDown,
 		MoveLeft,
 		MoveRight,
-		PressEscape,
-		PressEnter
+		SinglePressUp,
+		SinglePressDown,
+		SinglePressEscape,
+		SinglePressEnter
 	};
 
 	class IListener 

@@ -27,7 +27,7 @@ void ApplicationModeGame::Activate()
 	g_pGame->Init();
 	g_pGraphicsEngine->Init();
 
-	g_pEventManager->Register(this, IEventManager::EM_Event::PressEscape, 0);
+	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressEscape, 0);
 }
 
 void ApplicationModeGame::Deactivate()
@@ -55,7 +55,7 @@ void ApplicationModeGame::Render()
 bool ApplicationModeGame::ProcessEvent(IEventManager::EM_Event event) {
 
 	switch (event) {
-		case IEventManager::EM_Event::PressEscape: g_pApplicationManager->SwitchMode(AM_MENU); break;
+		case IEventManager::EM_Event::SinglePressEscape: g_pApplicationManager->SwitchMode(AM_MENU); break;
 	}
 
 	return true;

@@ -29,8 +29,14 @@ private:
 
 	static SysInputManager *mInstance;
 
-	ListenerMap         mListeners;
-	bool                mInitialized;
+	static const int NO_KEY_PRESSED = -1;
+
+	ListenerMap mListeners;
+	bool        mInitialized;
+	bool        mPressedUp;
+	bool        mPressedDown;
+	bool        mPressedEscape;
+	bool        mPressedEnter;
 
 	void SendEvent              (EM_Event event, const EventsMultiMap& eventsMultiMap);
 	void RemoveListenerForEvent (IListener * listener, EM_Event e);

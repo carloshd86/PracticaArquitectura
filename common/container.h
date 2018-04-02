@@ -13,17 +13,17 @@ class Container
 
 public:
 
-	~Container();
+	virtual ~Container();
 
-	const std::vector<Control *>& GetControls () const;
-	void                        AddControl    (Control * control);
-	void                        RemoveControl (Control *& control);
-	void                        Clear         ();
+	virtual const std::vector<Control *>& GetControls () const;
+	virtual void                        AddControl    (Control * control);
+	virtual void                        RemoveControl (Control *& control);
+	virtual void                        Clear         ();
 
-	void Update (float deltaTime);
-	void Render ();
+	virtual void Update (float deltaTime);
+	virtual void Render ();
 
-private:
+protected:
 
 	std::vector<Control *> mControls;
 };
