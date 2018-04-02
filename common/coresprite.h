@@ -24,10 +24,10 @@ public:
 
 private:
 
-	vec2                   m_pos;
-	vec2                   m_size;
-	uint32_t           m_tex;
-	std::array<float, 3>   m_color;
+	vec2                   mPos;
+	vec2                   mSize;
+	uint32_t               mTex;
+	std::array<float, 3>   mColor;
 };
 
 #endif

@@ -7,6 +7,7 @@
 
 class IGraphicsEngine
 {
+
 public:
 
 	virtual void      Init          ()                                                                                              = 0;

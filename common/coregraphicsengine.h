@@ -27,11 +27,11 @@ private:
 	const float	 GAME_BACKGROUND_WIDTH  = 128;
 	const float	 GAME_BACKGROUND_HEIGHT = 128;
 
-	bool                                          m_initialized;
-	bool                                          m_ended;
-	uint32_t                                      m_background;
-	std::vector<ISprite *>                        m_sprites;
-	std::vector<std::pair<std::string, uint32_t>> m_textures;
+	bool                                          mInitialized;
+	bool                                          mEnded;
+	uint32_t                                      mBackground;
+	std::vector<ISprite *>                        mSprites;
+	std::vector<std::pair<std::string, uint32_t>> mTextures;
 };
 
 #endif

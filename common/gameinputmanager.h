@@ -4,6 +4,7 @@
 
 class GameInputManager
 {
+
 public:
 
 	GameInputManager();

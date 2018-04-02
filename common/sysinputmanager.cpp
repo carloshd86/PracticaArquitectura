@@ -19,7 +19,8 @@ SysInputManager::SysInputManager() :
 //
 // *************************************************
 
-SysInputManager::~SysInputManager() {
+SysInputManager::~SysInputManager() 
+{
 	if (mInitialized)
 		End();
 }
@@ -28,8 +29,10 @@ SysInputManager::~SysInputManager() {
 //
 // *************************************************
 
-SysInputManager * SysInputManager::Instance() {
-	if (!mInstance) {
+SysInputManager * SysInputManager::Instance() 
+{
+	if (!mInstance) 
+	{
 		mInstance = new SysInputManager();
 		mInstance->Init();
 	}
@@ -41,7 +44,8 @@ SysInputManager * SysInputManager::Instance() {
 //
 // *************************************************
 
-IEventManager::EM_Err SysInputManager::Init() {
+IEventManager::EM_Err SysInputManager::Init() 
+{
 
 	if (mInitialized)
 		return OK;
@@ -54,7 +58,8 @@ IEventManager::EM_Err SysInputManager::Init() {
 //
 // *************************************************
 
-IEventManager::EM_Err SysInputManager::End() {
+IEventManager::EM_Err SysInputManager::End() 
+{
 	return OK;
 }
 
@@ -62,8 +67,10 @@ IEventManager::EM_Err SysInputManager::End() {
 //
 // ************************************************
 
-void SysInputManager::UpdateEvents() {
-	for (auto it = mListeners.begin(); it != mListeners.end(); ++it) {
+void SysInputManager::UpdateEvents() 
+{
+	for (auto it = mListeners.begin(); it != mListeners.end(); ++it) 
+	{
 		int key = GetSysKeyFromEvent(it->first);
 		if(SYS_KeyPressed(key))
 			SendEvent(it->first, it->second);
@@ -74,7 +81,8 @@ void SysInputManager::UpdateEvents() {
 //
 // *************************************************
 
-IEventManager::EM_Err SysInputManager::Register(IListener * listener, EM_Event e, int priority) {
+IEventManager::EM_Err SysInputManager::Register(IListener * listener, EM_Event e, int priority) 
+{
 
 	mListeners[e].insert(std::pair<int, IListener *>(priority, listener));
 
@@ -85,9 +93,11 @@ IEventManager::EM_Err SysInputManager::Register(IListener * listener, EM_Event e
 //
 // *************************************************
 
-IEventManager::EM_Err SysInputManager::Unregister(IListener * listener) {
+IEventManager::EM_Err SysInputManager::Unregister(IListener * listener) 
+{
 
-	for (auto it = mListeners.begin(); it != mListeners.end(); ++it) {
+	for (auto it = mListeners.begin(); it != mListeners.end(); ++it) 
+	{
 		EM_Event event = it->first;
 		RemoveListenerForEvent(listener, event);
 	}
@@ -99,7 +109,8 @@ IEventManager::EM_Err SysInputManager::Unregister(IListener * listener) {
 //
 // *************************************************
 
-SysInputManager::ListenerMap& SysInputManager::GetListenerMap() {
+SysInputManager::ListenerMap& SysInputManager::GetListenerMap() 
+{
 	return mListeners;
 }
 
@@ -107,10 +118,13 @@ SysInputManager::ListenerMap& SysInputManager::GetListenerMap() {
 //
 // *************************************************
 
-void SysInputManager::RemoveListenerForEvent(IListener * listener, EM_Event e) {
+void SysInputManager::RemoveListenerForEvent(IListener * listener, EM_Event e) 
+{
 
-	for(auto prioritiesIt = mListeners[e].begin(); prioritiesIt != mListeners[e].end(); ++prioritiesIt) {
-		if (prioritiesIt->second == listener) {
+	for(auto prioritiesIt = mListeners[e].begin(); prioritiesIt != mListeners[e].end(); ++prioritiesIt) 
+	{
+		if (prioritiesIt->second == listener) 
+		{
 			prioritiesIt = mListeners[e].erase(prioritiesIt);
 			break;
 		}
@@ -122,10 +136,13 @@ void SysInputManager::RemoveListenerForEvent(IListener * listener, EM_Event e) {
 //
 // *************************************************
 
-void SysInputManager::SendEvent(EM_Event event, const EventsMultiMap& eventsMultiMap) {
+void SysInputManager::SendEvent(EM_Event event, const EventsMultiMap& eventsMultiMap) 
+{
 
-	if (eventsMultiMap.size()) {
-		for (auto prioritiesIt = eventsMultiMap.begin(); prioritiesIt != eventsMultiMap.end(); ++prioritiesIt) {
+	if (eventsMultiMap.size()) 
+	{
+		for (auto prioritiesIt = eventsMultiMap.begin(); prioritiesIt != eventsMultiMap.end(); ++prioritiesIt) 
+		{
 			prioritiesIt->second->ProcessEvent(event);
 		}
 	}
@@ -135,14 +152,17 @@ void SysInputManager::SendEvent(EM_Event event, const EventsMultiMap& eventsMult
 //
 // *************************************************ç
 
-int SysInputManager::GetSysKeyFromEvent(EM_Event event) {
+int SysInputManager::GetSysKeyFromEvent(EM_Event event) 
+{
 	int key = -1;
-	switch (event) {
+	switch (event) 
+	{
 		case EM_Event::MoveUp      : key = SYS_KEY_UP;     break;
 		case EM_Event::MoveDown    : key = SYS_KEY_DOWN;   break;
 		case EM_Event::MoveLeft    : key = SYS_KEY_LEFT;   break;
 		case EM_Event::MoveRight   : key = SYS_KEY_RIGHT;  break;
 		case EM_Event::PressEscape : key = VK_ESCAPE;      break;
+		case EM_Event::PressEnter  : key = VK_RETURN;      break;
 	}
 
 	return key;

@@ -3,6 +3,7 @@
 
 
 #include "applicationmode.h"
+#include "container.h"
 
 
 class ApplicationModeMenu : public ApplicationMode, public IEventManager::IListener
@@ -22,7 +23,8 @@ public:
 
 private:
 
-	bool m_waitEscapeRelease;
+	bool      mWaitEscapeRelease;
+	Container mContainer;
 };
 
 #endif

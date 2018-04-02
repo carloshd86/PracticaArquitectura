@@ -20,7 +20,7 @@ public:
 	
 private:
 
-	IdMode           m_desiredMode;
+	IdMode           mDesiredMode;
 	ApplicationMode *m_pGameMode;
 };
 

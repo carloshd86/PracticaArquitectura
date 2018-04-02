@@ -40,15 +40,15 @@ private:
 	void CheckCollisions    ();
 	bool CheckRectCollision (vec2 pos1, vec2 size1, vec2 pos2, vec2 size2);
 	
-	bool                                                  m_initialized;
-	bool                                                  m_ended;
-	std::vector<Entity *>                                 m_entities;
-	Entity                                               *m_pPlayer;
-	std::vector<Entity *>                                 m_walls;
-	std::vector<Entity *>                                 m_enemies;
-	Entity                                               *m_pGoal;
-	GameInputManager                                     *m_pInputManager;
-	GameLevel                                             m_gameLevel;
+	bool                   mInitialized;
+	bool                   mEnded;
+	std::vector<Entity *>  mEntities;
+	Entity                *m_pPlayer;
+	std::vector<Entity *>  mWalls;
+	std::vector<Entity *>  mEnemies;
+	Entity                *m_pGoal;
+	GameInputManager      *m_pInputManager;
+	GameLevel              mGameLevel;
 };
 
 #endif

@@ -5,7 +5,7 @@
 #include "applicationmodemenu.h"
 
 
-ApplicationManager::ApplicationManager() : m_desiredMode(AM_MENU), m_pGameMode(nullptr) {}
+ApplicationManager::ApplicationManager() : mDesiredMode(AM_MENU), m_pGameMode(nullptr) {}
 
 ApplicationManager::~ApplicationManager()
 {
@@ -14,7 +14,7 @@ ApplicationManager::~ApplicationManager()
 
 void ApplicationManager::SwitchMode(IdMode mode)
 {
-	m_desiredMode = mode;
+	mDesiredMode = mode;
 }
 
 void ApplicationManager::ManageModeChange()
@@ -24,12 +24,12 @@ void ApplicationManager::ManageModeChange()
 		m_pGameMode = new ApplicationModeMenu();
 		m_pGameMode->Activate();
 	}
-	else if (m_pGameMode->GetId() != m_desiredMode)
+	else if (m_pGameMode->GetId() != mDesiredMode)
 	{
 		if (m_pGameMode) m_pGameMode->Deactivate();
 		delete m_pGameMode;
 
-		switch (m_desiredMode)
+		switch (mDesiredMode)
 		{
 			case AM_MENU: m_pGameMode = new ApplicationModeMenu();   break;
 			case AM_GAME: m_pGameMode = new ApplicationModeGame();   break;

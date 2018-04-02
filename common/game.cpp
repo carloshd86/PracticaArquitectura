@@ -17,24 +17,24 @@ using namespace rapidjson;
 
 
 Game::Game() : 
-	m_initialized     (false), 
-	m_ended           (false), 
+	mInitialized     (false), 
+	mEnded           (false), 
 	m_pPlayer         (nullptr), 
 	m_pGoal           (nullptr),
 	m_pInputManager   (nullptr) {}
 
 Game::~Game()
 {
-	if (m_initialized && !m_ended) End();
+	if (mInitialized && !mEnded) End();
 }
 
 void Game::Init()
 {
-	if (!m_initialized)
+	if (!mInitialized)
 	{
 		// Init game state
 		char * jsonSrc = nullptr;
-		switch (m_gameLevel)
+		switch (mGameLevel)
 		{
 			case LEVEL_1: jsonSrc = "../data/level1.json"; break;
 			case LEVEL_2: jsonSrc = "../data/level2.json"; break;
@@ -90,7 +90,7 @@ void Game::Init()
 		m_pPlayer->AddComponent(cPlayer);
 		m_pPlayer->AddComponent(cPlayerRenderable);
 		m_pPlayer->AddComponent(cPlayerMovable);
-		m_entities.push_back(m_pPlayer);
+		mEntities.push_back(m_pPlayer);
 
 
 		m_pInputManager = new GameInputManager();
@@ -117,7 +117,7 @@ void Game::Init()
 		cGoalRenderable->Init();
 		m_pGoal->AddComponent(cGoal);
 		m_pGoal->AddComponent(cGoalRenderable);
-		m_entities.push_back(m_pGoal);
+		mEntities.push_back(m_pGoal);
 
 		if (document.HasMember(ENEMIES_JSON_KEY))
 			for (auto& item : document[ENEMIES_JSON_KEY].GetArray())
@@ -169,8 +169,8 @@ void Game::Init()
 					enemy->AddComponent(cRoutePath);
 				}
 
-				m_entities.push_back(enemy);
-				m_enemies.push_back(enemy);
+				mEntities.push_back(enemy);
+				mEnemies.push_back(enemy);
 			}
 
 		if (document.HasMember(WALLS_JSON_KEY))
@@ -199,39 +199,39 @@ void Game::Init()
 				wall->AddComponent(cWall);
 				wall->AddComponent(cWallRenderable);
 
-				m_entities.push_back(wall);
-				m_walls.push_back(wall);
+				mEntities.push_back(wall);
+				mWalls.push_back(wall);
 			}
 
-		m_initialized = true;
+		mInitialized = true;
 	}
 }
 
 void Game::End()
 {
-	if (m_initialized)
+	if (mInitialized)
 	{
-		for(auto entity : m_entities) { delete entity; }
-		m_entities.clear();
+		for(auto entity : mEntities) { delete entity; }
+		mEntities.clear();
 		
 		m_pPlayer = nullptr;
 		m_pGoal   = nullptr;
 
-		m_walls.clear();
-		m_enemies.clear();
+		mWalls.clear();
+		mEnemies.clear();
 
 		delete m_pInputManager;
 		m_pInputManager = nullptr;
 
-		m_initialized = false;
+		mInitialized = false;
 	}
-	m_ended = true;
+	mEnded = true;
 }
 
 
 void Game::Run(float deltaTime)
 {
-	for (auto entity : m_entities) entity->Run(deltaTime);
+	for (auto entity : mEntities) entity->Run(deltaTime);
 	MoveEntities();
 	CheckCollisions();
 }
@@ -255,7 +255,7 @@ void Game::MoveEntities()
 	
 	vec2 playerPosCheck;
 
-	for (auto wall : m_walls)
+	for (auto wall : mWalls)
 	{
 		positionMessage.SetProcessed(false);
 		wall->ReceiveMessage(positionMessage);
@@ -286,7 +286,7 @@ void Game::MoveEntities()
 		}
 
 		// Enemy with wall
-		for (auto enemy : m_enemies)
+		for (auto enemy : mEnemies)
 		{
 			movementMessage.SetProcessed(false);
 			enemy->ReceiveMessage(movementMessage);
@@ -351,7 +351,7 @@ void Game::CheckCollisions()
 		g_pApplicationManager->SwitchMode(AM_MENU);
 	}
 
-	for (auto enemy : m_enemies)
+	for (auto enemy : mEnemies)
 	{
 		positionMessage.SetProcessed(false);
 		enemy->ReceiveMessage(positionMessage);
@@ -407,10 +407,10 @@ Entity * Game::GetPlayer() const
 
 Game::GameLevel Game::GetGameLevel() const 
 {
-	return m_gameLevel;
+	return mGameLevel;
 }
 
 void Game::SetGameLevel(GameLevel level)
 {
-	m_gameLevel = level;
+	mGameLevel = level;
 }

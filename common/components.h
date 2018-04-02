@@ -15,15 +15,17 @@ class Component
 public:
 
 	Component(Entity * owner) :
-		m_owner(owner) {}
+		mOwner(owner) {}
 	~Component() {}
 
-	Entity * m_owner;
+	Entity * mOwner;
 
 	virtual void Run(float deltaTime) = 0;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class C_Renderable : public Component, public IMessageReceiver
 {
@@ -31,10 +33,10 @@ public:
 
 	C_Renderable(Entity * owner, vec2 pos, vec2 size, const char * image) :
 		Component     (owner),
-		m_pos         (pos),
-		m_size        (size),
-		m_image       (image),
-	    m_initialized (false) {}
+		mPos         (pos),
+		mSize        (size),
+		mImage       (image),
+	    mInitialized (false) {}
 
 	ISprite * GetSprite () const { return m_pSprite; }
 	virtual void Run   (float deltaTime) {}
@@ -42,34 +44,34 @@ public:
 	void Init()
 	{
 		assert(g_pGame);
-		if (!m_initialized)
+		if (!mInitialized)
 		{
-			m_pSprite = g_pGraphicsEngine->RequireSprite(m_pos, m_size, m_image);
+			m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage);
 		}
 	}
 
 
 	vec2 GetPos() const
 	{
-		return m_pos;
+		return mPos;
 	}
 
 	void SetPos(float x, float y)
 	{
-		m_pos.x = x;
-		m_pos.y = y;
+		mPos.x = x;
+		mPos.y = y;
 		m_pSprite->SetPos(x, y);
 	}
 
 	vec2 GetSize() const
 	{
-		return m_size;
+		return mSize;
 	}
 
 	void SetSize(float x, float y)
 	{
-		m_size.x = x;
-		m_size.y = y;
+		mSize.x = x;
+		mSize.y = y;
 		m_pSprite->SetSize(x, y);
 	}
 
@@ -85,7 +87,7 @@ public:
 			AddPositionMessage * apm = dynamic_cast<AddPositionMessage *>(&message);
 			if (apm)
 			{
-				SetPos(m_pos.x + apm->GetX(), m_pos.y + apm->GetY());
+				SetPos(mPos.x + apm->GetX(), mPos.y + apm->GetY());
 			}
 			else
 			{
@@ -99,8 +101,8 @@ public:
 					RequirePositionMessage * rpm = dynamic_cast<RequirePositionMessage *>(&message);
 					if (rpm)
 					{
-						rpm->SetX(m_pos.x);
-						rpm->SetY(m_pos.y);
+						rpm->SetX(mPos.x);
+						rpm->SetY(mPos.y);
 						rpm->SetProcessed(true);
 					}
 					else
@@ -108,8 +110,8 @@ public:
 						RequireSizeMessage * rsm = dynamic_cast<RequireSizeMessage *>(&message);
 						if (rsm)
 						{
-							rsm->SetX(m_size.x);
-							rsm->SetY(m_size.y);
+							rsm->SetX(mSize.x);
+							rsm->SetY(mSize.y);
 							rsm->SetProcessed(true);
 						}
 						else
@@ -118,11 +120,11 @@ public:
 							if (csm)
 							{
 								const char * requiredTexture = csm->GetImage();
-								if (strcmp(requiredTexture, m_image)) {
+								if (strcmp(requiredTexture, mImage)) {
 									// TODO cuidado con esto
-									m_image = requiredTexture;
+									mImage = requiredTexture;
 									g_pGraphicsEngine->ReleaseSprite(m_pSprite);
-									m_pSprite = g_pGraphicsEngine->RequireSprite(m_pos, m_size, m_image);
+									m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage);
 								}
 							}
 						}
@@ -134,14 +136,16 @@ public:
 
 private:
 	
-	vec2        m_pos;
-	vec2        m_size;
-	const char *m_image;
+	vec2        mPos;
+	vec2        mSize;
+	const char *mImage;
 	ISprite     *m_pSprite;
-	bool        m_initialized;
+	bool        mInitialized;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class C_Movable : public Component, public IMessageReceiver, public IEventManager::IListener
 {
@@ -149,70 +153,70 @@ public:
 
 	C_Movable(Entity * owner, float speed) : 
 		Component  (owner),
-		m_movement { 0, 0 },
-		m_speed    (speed) {}
+		mMovement { 0, 0 },
+		mSpeed    (speed) {}
 
 	virtual void Run(float deltaTime)
 	{
-		if (m_movement.x || m_movement.y)
+		if (mMovement.x || mMovement.y)
 		{
-			m_movement.x *= deltaTime;
-			m_movement.y *= deltaTime;
+			mMovement.x *= deltaTime;
+			mMovement.y *= deltaTime;
 
-			m_last_movement.x = m_movement.x;
-			m_last_movement.y = m_movement.y;
+			mLastMovement.x = mMovement.x;
+			mLastMovement.y = mMovement.y;
 
-			AddPositionMessage apm(m_movement.x, m_movement.y);
-			m_owner->ReceiveMessage(apm);
+			AddPositionMessage apm(mMovement.x, mMovement.y);
+			mOwner->ReceiveMessage(apm);
 
-			m_movement.x = 0.f;
-			m_movement.y = 0.f;
+			mMovement.x = 0.f;
+			mMovement.y = 0.f;
 		}
 		else {
-			m_last_movement.x = 0.f;
-			m_last_movement.y = 0.f;
+			mLastMovement.x = 0.f;
+			mLastMovement.y = 0.f;
 		}
 	}
 
 	vec2 GetMovement() const
 	{
-		return m_movement;
+		return mMovement;
 	}
 
 	void SetMovement(float x, float y)
 	{
-		m_movement.x = x;
-		m_movement.y = y;
+		mMovement.x = x;
+		mMovement.y = y;
 	}
 
 	vec2 GetSpeed() const
 	{
-		return m_movement;
+		return mMovement;
 	}
 
 	void SetSpeed(float speed)
 	{
-		m_speed = speed;
+		mSpeed = speed;
 	}
 
 	void MoveUp()
 	{
-		m_movement.y = m_speed;
+		mMovement.y = mSpeed;
 	}
 
 	void MoveDown()
 	{
-		m_movement.y = -m_speed;
+		mMovement.y = -mSpeed;
 	}
 
 	void MoveLeft()
 	{
-		m_movement.x = -m_speed;
+		mMovement.x = -mSpeed;
 	}
 
 	void MoveRight()
 	{
-		m_movement.x = m_speed;
+		mMovement.x = mSpeed;
 	}
 
 	void ReceiveMessage(GameMessage &message)
@@ -220,17 +224,17 @@ public:
 		RigidBodyCollisionMessage * wcm = dynamic_cast<RigidBodyCollisionMessage *>(&message);
 		if (wcm)
 		{
-			if      (RigidBodyCollisionMessage::Type::CollisionX == wcm->GetType()) m_owner->ReceiveMessage(AddPositionMessage(-m_last_movement.x, 0.f));
-			else if (RigidBodyCollisionMessage::Type::CollisionY == wcm->GetType()) m_owner->ReceiveMessage(AddPositionMessage(0.f, -m_last_movement.y));;
+			if      (RigidBodyCollisionMessage::Type::CollisionX == wcm->GetType()) mOwner->ReceiveMessage(AddPositionMessage(-mLastMovement.x, 0.f));
+			else if (RigidBodyCollisionMessage::Type::CollisionY == wcm->GetType()) mOwner->ReceiveMessage(AddPositionMessage(0.f, -mLastMovement.y));;
 		}
 		else
 		{
 			RequireMovementMessage * rmm = dynamic_cast<RequireMovementMessage *>(&message);
 			if (rmm)
 			{
-				rmm->SetX(m_last_movement.x);
-				rmm->SetY(m_last_movement.y);
-				rmm->SetSpeed(m_speed);
+				rmm->SetX(mLastMovement.x);
+				rmm->SetY(mLastMovement.y);
+				rmm->SetSpeed(mSpeed);
 				rmm->SetProcessed(true);
 			}
 			else
@@ -238,36 +242,36 @@ public:
 				SetMovementMessage * smm = dynamic_cast<SetMovementMessage *>(&message);
 				if (smm)
 				{
-					m_movement.x = smm->GetX();
-					m_movement.y = smm->GetY();
+					mMovement.x = smm->GetX();
+					mMovement.y = smm->GetY();
 				}
 				else
 				{
 					MoveUpMessage * mum = dynamic_cast<MoveUpMessage *>(&message);
 					if (mum)
 					{
-						m_movement.y = m_speed;
+						mMovement.y = mSpeed;
 					}
 					else
 					{
 						MoveDownMessage  * mdm = dynamic_cast<MoveDownMessage *>(&message);
 						if (mdm)
 						{
-							m_movement.y = -m_speed;
+							mMovement.y = -mSpeed;
 						}
 						else
 						{
 							MoveLeftMessage  * mlm = dynamic_cast<MoveLeftMessage *>(&message);
 							if (mlm)
 							{
-								m_movement.x = -m_speed;
+								mMovement.x = -mSpeed;
 							}
 							else
 							{
 								MoveRightMessage * mrm = dynamic_cast<MoveRightMessage *>(&message);
 								if (mrm)
 								{
-									m_movement.x = m_speed;
+									mMovement.x = mSpeed;
 								}
 							}
 						}
@@ -277,13 +281,15 @@ public:
 		}
 	}
 
-	bool ProcessEvent(IEventManager::EM_Event event) {
+	bool ProcessEvent(IEventManager::EM_Event event) 
+	{
 
-		switch (event) {
-			case IEventManager::EM_Event::MoveUp    : m_owner->ReceiveMessage(MoveUpMessage());    break;
-			case IEventManager::EM_Event::MoveDown  : m_owner->ReceiveMessage(MoveDownMessage());  break;
-			case IEventManager::EM_Event::MoveLeft  : m_owner->ReceiveMessage(MoveLeftMessage());  break;
-			case IEventManager::EM_Event::MoveRight : m_owner->ReceiveMessage(MoveRightMessage()); break;
+		switch (event) 
+		{
+			case IEventManager::EM_Event::MoveUp    : mOwner->ReceiveMessage(MoveUpMessage());    break;
+			case IEventManager::EM_Event::MoveDown  : mOwner->ReceiveMessage(MoveDownMessage());  break;
+			case IEventManager::EM_Event::MoveLeft  : mOwner->ReceiveMessage(MoveLeftMessage());  break;
+			case IEventManager::EM_Event::MoveRight : mOwner->ReceiveMessage(MoveRightMessage()); break;
 		}
 
 		return true;
@@ -291,12 +297,14 @@ public:
 
 private:
 
-	vec2 m_movement;
-	vec2 m_last_movement;
-	float m_speed;
+	vec2  mMovement;
+	vec2  mLastMovement;
+	float mSpeed;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class C_Player : public Component
 {
@@ -307,14 +315,12 @@ public:
 
 	virtual void Run(float deltaTime)
 	{
-		//if (m_pos.x < 0)          m_pos.x = 0;
-		//if (m_pos.y < 0)          m_pos.y = 0;
-		//if (m_pos.x > SCR_WIDTH)  m_pos.x = SCR_WIDTH;
-		//if (m_pos.y > SCR_HEIGHT) m_pos.y = SCR_HEIGHT;
 	}
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class C_Enemy : public Component, public IMessageReceiver
 {
@@ -329,8 +335,8 @@ public:
 
 	C_Enemy(Entity * owner, float pursuingSpeed) :
 		Component       (owner),
-		m_pursuingSpeed (pursuingSpeed),
-		m_state         (CES_PATROLLING) {}
+		mPursuingSpeed (pursuingSpeed),
+		mState         (CES_PATROLLING) {}
 
 	virtual void Run(float deltaTime)
 	{
@@ -343,9 +349,9 @@ public:
 		RequirePositionMessage       playerPositionMessage;
 		RequireSizeMessage           playerSizeMessage;
 
-		m_owner->ReceiveMessage(positionMessage);
-		m_owner->ReceiveMessage(sizeMessage);
-		m_owner->ReceiveMessage(movementMessage);
+		mOwner->ReceiveMessage(positionMessage);
+		mOwner->ReceiveMessage(sizeMessage);
+		mOwner->ReceiveMessage(movementMessage);
 		player->ReceiveMessage(playerPositionMessage);
 		player->ReceiveMessage(playerSizeMessage);
 
@@ -356,7 +362,7 @@ public:
 		assert(playerSizeMessage.GetProcessed());
 
 		RequireRouteMessage routeMessage;
-		m_owner->ReceiveMessage(routeMessage);
+		mOwner->ReceiveMessage(routeMessage);
 
 		vec2    pos                              = vmake(positionMessage.GetX()       , positionMessage.GetY());
 		vec2    size                             = vmake(sizeMessage.GetX()           , sizeMessage.GetY());
@@ -367,7 +373,7 @@ public:
 		const   std::vector<vec2> * routePoints  = routeMessage.GetRoutePoints();
 		uint8_t currentRoutePoint                = routeMessage.GetCurrentRoutePoint();
 
-		if (CES_PATROLLING == m_state && routePoints && !routePoints->empty())
+		if (CES_PATROLLING == mState && routePoints && !routePoints->empty())
 		{
 			vec2 nextRoutePoint = (*routePoints)[currentRoutePoint];
 
@@ -376,17 +382,10 @@ public:
 			float angle = atan2(nextRoutePoint.y - pos.y, nextRoutePoint.x - pos.x);
 			direction = vunit(angle);
 			
-			/*SetMovementMessage smm(speed * deltaTime * direction.x, speed * deltaTime * direction.y);*/
 			SetMovementMessage smm(speed * direction.x, speed * direction.y);
-			m_owner->ReceiveMessage(smm);
-			//SetPos(m_pos.x + m_movement.x, m_pos.y + m_movement.y);
+			mOwner->ReceiveMessage(smm);
 
-
-			m_owner->ReceiveMessage(IncreaseCurrentRoutePointMessage(pos.x, pos.y));
-
-			//if (m_pos.x < 0)             { SetPos(0.f, m_pos.y); }
-			//if (m_pos.x > SCR_WIDTH)     { SetPos(SCR_WIDTH, m_pos.y); }
-
+			mOwner->ReceiveMessage(IncreaseCurrentRoutePointMessage(pos.x, pos.y));
 
 			bool enemy_sights = false;
 			if (movement.x < 0 && playerPos.x < pos.x)
@@ -396,7 +395,7 @@ public:
 				{
 					enemy_sights = true;
 					OutputDebugString("Enemy sights player\n");
-					m_state = CES_PURSUING;
+					mState = CES_PURSUING;
 				}
 			}
 			else if (movement.x > 0 && playerPos.x > pos.x)
@@ -406,7 +405,7 @@ public:
 				{
 					enemy_sights = true;
 					OutputDebugString("Enemy sights player\n");
-					m_state = CES_PURSUING;
+					mState = CES_PURSUING;
 				}
 			}
 		} 
@@ -416,17 +415,13 @@ public:
 
 			float angle = atan2(playerPos.y - pos.y, playerPos.x - pos.x);
 			vec2 direction = vunit(angle);
-			/*movement.x = PLAYER_SPEED * deltaTime * direction.x;
-			movement.y = PLAYER_SPEED * deltaTime * direction.y;*/
-			//SetPos(pos.x + movement.x, pos.y + movement.y);
-			/*SetMovementMessage smm(m_pursuingSpeed * deltaTime * direction.x, m_pursuingSpeed * deltaTime * direction.y);*/
-			SetMovementMessage smm(m_pursuingSpeed * direction.x, m_pursuingSpeed * direction.y);
-			m_owner->ReceiveMessage(smm);
+			SetMovementMessage smm(mPursuingSpeed * direction.x, mPursuingSpeed * direction.y);
+			mOwner->ReceiveMessage(smm);
 		}
 
 		const char * required_texture = ((movement.x < 0) ? "../data/soldier_left.png" : "../data/soldier_right.png");
 		ChangeSpriteMessage csm(required_texture);
-		m_owner->ReceiveMessage(csm);
+		mOwner->ReceiveMessage(csm);
 	}
 
 	void ReceiveMessage(GameMessage &message)
@@ -434,18 +429,20 @@ public:
 		RequirePursuingSpeedMessage * rpsm = dynamic_cast<RequirePursuingSpeedMessage *>(&message);
 		if (rpsm)
 		{
-			rpsm->SetPursuingSpeed(m_pursuingSpeed);
+			rpsm->SetPursuingSpeed(mPursuingSpeed);
 			rpsm->SetProcessed(true);
 		}
 	}
 
 private:
 
-	State m_state;
-	float m_pursuingSpeed;
+	State mState;
+	float mPursuingSpeed;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class C_RoutePath : public Component, public IMessageReceiver
 {
@@ -453,7 +450,7 @@ public:
 	
 	C_RoutePath(Entity * owner) :
 		Component           (owner),
-		m_currentRoutePoint (0) {}
+		mCurrentRoutePoint (0) {}
 
 	virtual void Run(float deltaTime)
 	{
@@ -462,16 +459,16 @@ public:
 
 	void AddRoutePoint(float x, float y)
 	{
-		m_routePoints.push_back(vmake(x, y));
+		mRoutePoints.push_back(vmake(x, y));
 	}
 
 	void RemoveRoutePoint(float x, float y)
 	{
-		for (auto it = m_routePoints.begin(); it != m_routePoints.end(); ) 
+		for (auto it = mRoutePoints.begin(); it != mRoutePoints.end(); ) 
 		{
 			if ((*it).x == x && (*it).y == y) 
 			{
-				it = m_routePoints.erase(it);
+				it = mRoutePoints.erase(it);
 				break;
 			} 
 			else 
@@ -483,7 +480,7 @@ public:
 
 	void ClearRoutePoints()
 	{
-		m_routePoints.clear();
+		mRoutePoints.clear();
 	}
 
 	void ReceiveMessage(GameMessage &message)
@@ -491,29 +488,31 @@ public:
 		RequireRouteMessage * rrm = dynamic_cast<RequireRouteMessage *>(&message);
 		if (rrm)
 		{
-			rrm->SetCurrentRoutePoint(m_currentRoutePoint);
-			rrm->SetRoutePoints(&m_routePoints);
+			rrm->SetCurrentRoutePoint(mCurrentRoutePoint);
+			rrm->SetRoutePoints(&mRoutePoints);
 		}
 		else
 		{
 			IncreaseCurrentRoutePointMessage * icrpm = dynamic_cast<IncreaseCurrentRoutePointMessage *>(&message);
 			if (icrpm)
 			{ 
-				if (abs(m_routePoints[m_currentRoutePoint].x - icrpm->GetCurrentX()) < 2 && abs(m_routePoints[m_currentRoutePoint].y - icrpm->GetCurrentY()) < 2)
-					++m_currentRoutePoint;
-				if(m_currentRoutePoint >= m_routePoints.size())
-					m_currentRoutePoint = 0;
+				if (abs(mRoutePoints[mCurrentRoutePoint].x - icrpm->GetCurrentX()) < 2 && abs(mRoutePoints[mCurrentRoutePoint].y - icrpm->GetCurrentY()) < 2)
+					++mCurrentRoutePoint;
+				if(mCurrentRoutePoint >= mRoutePoints.size())
+					mCurrentRoutePoint = 0;
 			}
 		}
 	}
 
 private:
 
-	std::vector<vec2> m_routePoints;
-	uint8_t           m_currentRoutePoint;
+	std::vector<vec2> mRoutePoints;
+	uint8_t           mCurrentRoutePoint;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class C_RigidBody : public Component
 {
@@ -527,7 +526,9 @@ public:
 	}
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class C_Goal : public Component
 {

@@ -2,24 +2,29 @@
 #define __EVENT_MANAGER_H__
 
 
-class IEventManager {
+class IEventManager 
+{
 
 public:
 
-	enum EM_Err  {
+	enum EM_Err  
+	{
 		KO,
 		OK
 	};
 
-	enum EM_Event {
+	enum EM_Event 
+	{
 		MoveUp,
 		MoveDown,
 		MoveLeft,
 		MoveRight,
-		PressEscape
+		PressEscape,
+		PressEnter
 	};
 
-	class IListener {
+	class IListener 
+	{
 
 	public:
 
