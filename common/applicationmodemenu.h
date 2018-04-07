@@ -30,6 +30,7 @@ private:
 	bool                                      mWaitEscapeRelease;
 	NavigationContainer                       mContainer;
 	std::map<Button *, std::function<void()>> mButtonMap;
+	Properties                               *m_pProperties;
 
 	void StartLevel1();
 	void StartLevel2();

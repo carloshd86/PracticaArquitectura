@@ -3,6 +3,7 @@
 
 
 #include "applicationmode.h"
+#include "properties.h"
 
 
 class ApplicationManager
@@ -17,11 +18,16 @@ public:
 	void ProcessInput      ();
 	void Run               (float deltaTime);
 	void Render            ();
+
+	Properties::P_Language GetLang() const;
+	void SetLang(Properties::P_Language lang);
+
 	
 private:
 
-	IdMode           mDesiredMode;
-	ApplicationMode *m_pGameMode;
+	IdMode                  mDesiredMode;
+	ApplicationMode        *m_pGameMode;
+	Properties::P_Language  mLang;
 };
 
 #endif

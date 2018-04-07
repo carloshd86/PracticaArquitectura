@@ -5,7 +5,10 @@
 #include "applicationmodemenu.h"
 
 
-ApplicationManager::ApplicationManager() : mDesiredMode(AM_MENU), m_pGameMode(nullptr) {}
+ApplicationManager::ApplicationManager() : 
+	mDesiredMode (AM_MENU),
+	m_pGameMode  (nullptr),
+	mLang        (DEFAULT_LANG) {}
 
 ApplicationManager::~ApplicationManager()
 {
@@ -53,4 +56,14 @@ void ApplicationManager::Run(float deltaTime)
 void ApplicationManager::Render()
 {
 	m_pGameMode->Render();
+}
+
+Properties::P_Language ApplicationManager::GetLang() const
+{
+	return mLang;
+}
+
+void ApplicationManager::SetLang(Properties::P_Language lang)
+{
+	mLang = lang;
 }

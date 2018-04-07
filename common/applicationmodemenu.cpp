@@ -30,14 +30,17 @@ void ApplicationModeMenu::Activate()
 {
 	assert(g_pEventManager);
 
+	m_pProperties = Properties::Instance("messages", g_pApplicationManager->GetLang());
+	assert(m_pProperties);
+
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressUp     , 0);
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressDown   , 0);
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressEscape , 0);
 
-	Button * level1Button = new Button(SCR_HEIGHT/4.f, SCR_HEIGHT*0.75f, 200.f, SCR_HEIGHT*0.25f, &mContainer, "START LEVEL 1");
+	Button * level1Button = new Button(SCR_HEIGHT/4.f, SCR_HEIGHT*0.75f, 200.f, SCR_HEIGHT*0.25f, &mContainer, m_pProperties->GetProperty("main_menu.option1.text").c_str());
 	level1Button->SetFocused(true);
-	Button * level2Button = new Button(SCR_HEIGHT/4.f, SCR_HEIGHT*0.5f , 200.f, SCR_HEIGHT*0.25f, &mContainer, "START LEVEL 2");
-	Button * level3Button = new Button(SCR_HEIGHT/4.f, SCR_HEIGHT*0.25f, 200.f, SCR_HEIGHT*0.25f, &mContainer, "START LEVEL 3");
+	Button * level2Button = new Button(SCR_HEIGHT/4.f, SCR_HEIGHT*0.5f , 200.f, SCR_HEIGHT*0.25f, &mContainer, m_pProperties->GetProperty("main_menu.option2.text").c_str());
+	Button * level3Button = new Button(SCR_HEIGHT/4.f, SCR_HEIGHT*0.25f, 200.f, SCR_HEIGHT*0.25f, &mContainer, m_pProperties->GetProperty("main_menu.option3.text").c_str());
 	
 	level1Button->SetListener(this);
 	level2Button->SetListener(this);
@@ -59,6 +62,9 @@ void ApplicationModeMenu::Activate()
 void ApplicationModeMenu::Deactivate()
 {
 	assert(g_pEventManager);
+
+	Properties::RemoveInstance();
+	m_pProperties = nullptr;
 
 	g_pEventManager->Unregister(this);
 	const std::vector<Control *> containerControls = mContainer.GetControls();
