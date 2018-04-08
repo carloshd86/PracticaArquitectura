@@ -55,8 +55,8 @@ void ApplicationModeMenu::Activate()
 	NavigationContainer * mainContainer = new NavigationContainer();
 	mCurrentContainer = mainContainer;
 
-	Button * levelsButton     = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties->GetProperty("main_menu.levels.text").c_str());
-	Button * optionsButton    = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties->GetProperty("main_menu.options.text").c_str());
+	Button * levelsButton     = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties, "main_menu.levels.text");
+	Button * optionsButton    = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties, "main_menu.options.text");
 
 	levelsButton->SetListener(this);
 	optionsButton->SetListener(this);
@@ -74,10 +74,10 @@ void ApplicationModeMenu::Activate()
 	//Container select level menu
 	NavigationContainer * levelContainer = new NavigationContainer();
 
-	Button * level1Button       = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties->GetProperty("main_menu.level1.text").c_str());
-	Button * level2Button       = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties->GetProperty("main_menu.level2.text").c_str());
-	Button * level3Button       = new Button(SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties->GetProperty("main_menu.level3.text").c_str());
-	Button * levelsReturnButton = new Button(SCR_HEIGHT/4.f, 230.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties->GetProperty("main_menu.return.text").c_str(), 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
+	Button * level1Button       = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties, "main_menu.level1.text");
+	Button * level2Button       = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties, "main_menu.level2.text");
+	Button * level3Button       = new Button(SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties, "main_menu.level3.text");
+	Button * levelsReturnButton = new Button(SCR_HEIGHT/4.f, 230.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
 	level1Button->SetListener(this);
 	level2Button->SetListener(this);
@@ -101,9 +101,9 @@ void ApplicationModeMenu::Activate()
 	//Container options menu
 	NavigationContainer * optionsContainer = new NavigationContainer();
 
-	Button * spanishButton       = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties->GetProperty("main_menu.spanish.text").c_str());
-	Button * englishButton       = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties->GetProperty("main_menu.english.text").c_str());
-	Button * optionsReturnButton = new Button(SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties->GetProperty("main_menu.return.text").c_str(), 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
+	Button * spanishButton       = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties, "main_menu.spanish.text");
+	Button * englishButton       = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties, "main_menu.english.text");
+	Button * optionsReturnButton = new Button(SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
 	spanishButton->SetListener(this);
 	englishButton->SetListener(this);
@@ -113,9 +113,9 @@ void ApplicationModeMenu::Activate()
 	g_pEventManager->Register(englishButton       , IEventManager::EM_Event::SinglePressEnter, 0);
 	g_pEventManager->Register(optionsReturnButton , IEventManager::EM_Event::SinglePressEnter, 0);
 
-	mButtonMap[spanishButton]       = std::bind(&ApplicationModeMenu::StartLevel1 , this);
-	mButtonMap[englishButton]       = std::bind(&ApplicationModeMenu::StartLevel2 , this);
-	mButtonMap[optionsReturnButton] = std::bind(&ApplicationModeMenu::OpenMenu    , this, 0);
+	mButtonMap[spanishButton]       = std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::Spanish);
+	mButtonMap[englishButton]       = std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::English);
+	mButtonMap[optionsReturnButton] = std::bind(&ApplicationModeMenu::OpenMenu       , this, 0);
 
 	optionsContainer->SetVisible(false);
 	mContainers.push_back(optionsContainer);
@@ -173,6 +173,32 @@ void ApplicationModeMenu::Render()
 {
 	glClear( GL_COLOR_BUFFER_BIT );
 	mCurrentContainer->Render();
+}
+
+// *************************************************
+//
+// *************************************************
+
+void ApplicationModeMenu::ChangeLanguage(Properties::P_Language lang)
+{
+	// TODO
+	Properties::P_Language applicationLanguage = g_pApplicationManager->GetLang();
+	if (applicationLanguage != lang)
+	{
+		g_pApplicationManager->SetLang(lang);
+		m_pProperties = Properties::Instance("messages", lang);
+		assert(m_pProperties);
+
+		for (auto container : mContainers)
+		{
+			const std::vector<Control *> containerControls = container->GetControls();
+			for (auto control : containerControls)
+			{
+				Button * button = dynamic_cast<Button *>(control);
+				if (button) button->SetProperties(m_pProperties);
+			}
+		}
+	}
 }
 
 // *************************************************
@@ -243,7 +269,7 @@ void ApplicationModeMenu::OpenMenu(int index)
 		if (focusedControl) focusedControl->SetFocused(false);
 	}
 
-	if (mContainers.size() > index) mCurrentContainer = mContainers[index];
+	if (static_cast<int>(mContainers.size()) > index) mCurrentContainer = mContainers[index];
 	//std::vector<Control *> containerControls = mCurrentContainer->GetControls();
 	//if(!containerControls.empty()) containerControls[0]->SetFocused(true);
 	

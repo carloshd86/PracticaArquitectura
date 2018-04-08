@@ -2,6 +2,9 @@
 #define __APPLICATION_MODE_H__
 
 
+#include "properties.h"
+
+
 enum IdMode 
 {
 	AM_NULL,
@@ -19,6 +22,7 @@ public:
 	virtual void   ProcessInput    ()  =0;
 	virtual void   Run             (float deltaTime)  =0;
 	virtual void   Render          ()  =0;
+	virtual void   ChangeLanguage  (Properties::P_Language language)  =0;
 };
 
 #endif

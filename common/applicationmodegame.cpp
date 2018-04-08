@@ -13,6 +13,10 @@ IdMode ApplicationModeGame::GetId()
 	return AM_GAME;
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationModeGame::Activate()
 {
 	assert(g_gameLevel>= 1 && g_gameLevel <= 3);
@@ -30,6 +34,10 @@ void ApplicationModeGame::Activate()
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressEscape, 0);
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationModeGame::Deactivate()
 {
 	g_pEventManager->Unregister(this);
@@ -37,26 +45,58 @@ void ApplicationModeGame::Deactivate()
 	g_pGame->End();
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationModeGame::ProcessInput()
 {
 	g_pGame->GetInputManager()->ProcessInput();
 }
+
+// *************************************************
+//
+// *************************************************
 
 void ApplicationModeGame::Run(float deltaTime)
 {
 	g_pGame->Run(deltaTime);
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationModeGame::Render()
 {
 	g_pGraphicsEngine->Render();
 }
 
-bool ApplicationModeGame::ProcessEvent(IEventManager::EM_Event event) {
+// *************************************************
+//
+// *************************************************
+
+void ApplicationModeGame::ChangeLanguage(Properties::P_Language lang)
+{
+}
+// *************************************************
+//
+// *************************************************
+
+bool ApplicationModeGame::ProcessEvent(IEventManager::EM_Event event) 
+{
 
 	switch (event) {
 		case IEventManager::EM_Event::SinglePressEscape: g_pApplicationManager->SwitchMode(AM_MENU); break;
 	}
 
 	return true;
+}
+
+// *************************************************
+//
+// *************************************************
+
+void ChangeLanguage(Properties::P_Language language)
+{
 }

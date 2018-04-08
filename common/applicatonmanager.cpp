@@ -10,15 +10,27 @@ ApplicationManager::ApplicationManager() :
 	m_pGameMode  (nullptr),
 	mLang        (DEFAULT_LANG) {}
 
+// *************************************************
+//
+// *************************************************
+
 ApplicationManager::~ApplicationManager()
 {
 	delete m_pGameMode;
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationManager::SwitchMode(IdMode mode)
 {
 	mDesiredMode = mode;
 }
+
+// *************************************************
+//
+// *************************************************
 
 void ApplicationManager::ManageModeChange()
 {
@@ -43,25 +55,45 @@ void ApplicationManager::ManageModeChange()
 	}
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationManager::ProcessInput()
 {
 	m_pGameMode->ProcessInput();
 }
+
+// *************************************************
+//
+// *************************************************
 
 void ApplicationManager::Run(float deltaTime)
 {
 	m_pGameMode->Run(deltaTime);
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationManager::Render()
 {
 	m_pGameMode->Render();
 }
 
+// *************************************************
+//
+// *************************************************
+
 Properties::P_Language ApplicationManager::GetLang() const
 {
 	return mLang;
 }
+
+// *************************************************
+//
+// *************************************************
 
 void ApplicationManager::SetLang(Properties::P_Language lang)
 {
