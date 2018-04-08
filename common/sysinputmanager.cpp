@@ -80,7 +80,9 @@ void SysInputManager::UpdateEvents()
 			case IEventManager::EM_Event::SinglePressEnter  :
 			case IEventManager::EM_Event::SinglePressEscape :
 			case IEventManager::EM_Event::SinglePressUp     :
-			case IEventManager::EM_Event::SinglePressDown   : { if (SYS_KeyToggled(eventKey) && SYS_KeyPressed(eventKey)) SendEvent(it->first, it->second); break; }
+			case IEventManager::EM_Event::SinglePressDown   :
+			case IEventManager::EM_Event::SinglePressLeft   :
+			case IEventManager::EM_Event::SinglePressRight  : { if (SYS_KeyToggled(eventKey) && SYS_KeyPressed(eventKey)) SendEvent(it->first, it->second); break; }
 
 			case IEventManager::EM_Event::MoveUp   :
 			case IEventManager::EM_Event::MoveDown :
@@ -178,8 +180,12 @@ int SysInputManager::GetSysKeyFromEvent(EM_Event event)
 		case EM_Event::MoveDown          :
 		case EM_Event::SinglePressDown   : key = SYS_KEY_DOWN;   break;
 
-		case EM_Event::MoveLeft          : key = SYS_KEY_LEFT;   break;
-		case EM_Event::MoveRight         : key = SYS_KEY_RIGHT;  break;
+		case EM_Event::MoveLeft          :
+		case EM_Event::SinglePressLeft   : key = SYS_KEY_LEFT;   break;
+
+		case EM_Event::MoveRight         :
+		case EM_Event::SinglePressRight  : key = SYS_KEY_RIGHT;  break;
+
 		case EM_Event::SinglePressEscape : key = VK_ESCAPE;      break;
 		case EM_Event::SinglePressEnter  : key = VK_RETURN;      break;
 	}

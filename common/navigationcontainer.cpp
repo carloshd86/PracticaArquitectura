@@ -4,7 +4,7 @@
 
 NavigationContainer::NavigationContainer() :
 	Container     (),
-	mFocusedIndex (0) {}
+	mFocusedIndex (-1) {}
 
 // *************************************************
 //
@@ -35,7 +35,7 @@ void NavigationContainer::FocusNextControl()
 	{
 		mFocusedIndex++;
 		int numControls = static_cast<int>(mControls.size());
-		if (mFocusedIndex >= numControls) mFocusedIndex = 0;
+		if (mFocusedIndex < 0 || mFocusedIndex >= numControls) mFocusedIndex = 0;
 	
 		for (int i = 0; i < numControls; ++i)
 		{
@@ -63,4 +63,13 @@ void NavigationContainer::FocusPreviousControl()
 			else                    mControls[i]->SetFocused(false);
 		}
 	}
+}
+
+// *************************************************
+//
+// *************************************************
+
+void NavigationContainer::ResetFocus() 
+{
+	mFocusedIndex = -1;
 }

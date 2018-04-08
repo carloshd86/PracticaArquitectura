@@ -21,6 +21,9 @@ public:
 	virtual const Container * GetParent  () const;
 	virtual void              SetFocused (bool focused);
 
+	virtual bool GetVisible () const;
+	virtual void SetVisible (bool visible);
+
 
 protected:
 
@@ -30,6 +33,7 @@ protected:
 	float      mHeight;
 	bool       mFocused;
 	Container *mParent;
+	bool       mVisible;
 };
 
 

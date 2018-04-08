@@ -21,6 +21,8 @@ public:
 		MoveRight,
 		SinglePressUp,
 		SinglePressDown,
+		SinglePressLeft,
+		SinglePressRight,
 		SinglePressEscape,
 		SinglePressEnter
 	};
