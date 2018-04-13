@@ -55,17 +55,17 @@ void ApplicationModeMenu::Activate()
 	NavigationContainer * mainContainer = new NavigationContainer();
 	mCurrentContainer = mainContainer;
 
-	Button * levelsButton     = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties, "main_menu.levels.text");
-	Button * optionsButton    = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties, "main_menu.options.text");
+	Button * levelsButton  = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties, "main_menu.levels.text");
+	Button * optionsButton = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties, "main_menu.options.text");
 
 	levelsButton->SetListener(this);
 	optionsButton->SetListener(this);
 
-	g_pEventManager->Register(levelsButton     , IEventManager::EM_Event::SinglePressEnter, 0);
-	g_pEventManager->Register(optionsButton    , IEventManager::EM_Event::SinglePressEnter, 0);
+	g_pEventManager->Register(levelsButton  , IEventManager::EM_Event::SinglePressEnter, 0);
+	g_pEventManager->Register(optionsButton , IEventManager::EM_Event::SinglePressEnter, 0);
 
-	mButtonMap[levelsButton]  = std::bind(&ApplicationModeMenu::OpenMenu    , this, 1);
-	mButtonMap[optionsButton] = std::bind(&ApplicationModeMenu::OpenMenu    , this, 2);
+	mButtonMap[levelsButton]  = std::bind(&ApplicationModeMenu::OpenMenu, this, 1);
+	mButtonMap[optionsButton] = std::bind(&ApplicationModeMenu::OpenMenu, this, 2);
 
 	mainContainer->FocusNextControl();
 	mContainers.push_back(mainContainer);
@@ -132,8 +132,6 @@ void ApplicationModeMenu::Deactivate()
 	Properties::RemoveInstance();
 	m_pProperties = nullptr;
 
-	g_pEventManager->Unregister(this);
-
 	auto it = mContainers.begin();
 	while (mContainers.end() != it)
 	{
@@ -181,7 +179,6 @@ void ApplicationModeMenu::Render()
 
 void ApplicationModeMenu::ChangeLanguage(Properties::P_Language lang)
 {
-	// TODO
 	Properties::P_Language applicationLanguage = g_pApplicationManager->GetLang();
 	if (applicationLanguage != lang)
 	{

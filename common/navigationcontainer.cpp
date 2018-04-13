@@ -20,7 +20,7 @@ NavigationContainer::~NavigationContainer()
 
 Control * NavigationContainer::GetFocusedControl()
 {
-	if (mControls.empty()) return nullptr;
+	if (mControls.empty() || mFocusedIndex < 0) return nullptr;
 
 	return mControls[mFocusedIndex];
 }
@@ -39,8 +39,10 @@ void NavigationContainer::FocusNextControl()
 	
 		for (int i = 0; i < numControls; ++i)
 		{
-			if (i == mFocusedIndex) mControls[i]->SetFocused(true);
-			else                    mControls[i]->SetFocused(false);
+			if (i == mFocusedIndex) 
+				mControls[i]->SetFocused(true);
+			else                    
+				mControls[i]->SetFocused(false);
 		}
 	}
 }

@@ -127,7 +127,6 @@
     <ClCompile Include="..\..\common\properties.cpp" />
     <ClCompile Include="..\..\common\sysinputmanager.cpp" />
     <ClCompile Include="..\..\common\coregraphicsengine.cpp" />
-    <ClCompile Include="..\..\common\gameinputmanager.cpp" />
     <ClCompile Include="..\..\common\main.cpp" />
     <ClCompile Include="..\..\common\font.cpp" />
     <ClCompile Include="..\..\common\applicationmodemenu.cpp" />
@@ -157,7 +156,6 @@
     <ClInclude Include="..\..\common\applicationmodemenu.h" />
     <ClInclude Include="..\..\common\applicationmodegame.h" />
     <ClInclude Include="..\..\common\coregraphicsengine.h" />
-    <ClInclude Include="..\..\common\gameinputmanager.h" />
     <ClInclude Include="..\..\common\lodepng.h" />
     <ClInclude Include="..\..\common\applicationmode.h" />
     <ClInclude Include="..\..\common\messagereceiver.h" />

@@ -8,8 +8,6 @@
 
 class Entity;
 class GameInputManager;
-class IMessageReceiver;
-class GameMessage;
 
 class Game
 {
@@ -25,14 +23,13 @@ public:
 	Game();
 	~Game();
 
-	void Init                                  ();
-	void End                                   ();
-	void Run                                   (float deltaTime);
+	void Init ();
+	void End  ();
+	void Run  (float deltaTime);
 
-	GameInputManager * GetInputManager   () const;
-	Entity           * GetPlayer         () const;
-	GameLevel          GetGameLevel      () const;
-	void               SetGameLevel      (GameLevel level);
+	Entity           * GetPlayer       () const;
+	GameLevel          GetGameLevel    () const;
+	void               SetGameLevel    (GameLevel level);
 
 private:
 
@@ -47,7 +44,6 @@ private:
 	std::vector<Entity *>  mWalls;
 	std::vector<Entity *>  mEnemies;
 	Entity                *m_pGoal;
-	GameInputManager      *m_pInputManager;
 	GameLevel              mGameLevel;
 };
 

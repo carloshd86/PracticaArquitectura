@@ -22,7 +22,7 @@ public:
 	void   ProcessInput    ();
 	void   Run             (float deltaTime);
 	void   Render          ();
-	void   ChangeLanguage  (Properties::P_Language language);
+	void   ChangeLanguage  (Properties::P_Language lang);
 
 	bool ProcessEvent (IEventManager::EM_Event event);
 	void OnClick      (Button * button);

@@ -72,7 +72,7 @@ void Container::Clear()
 
 void Container::Update(float deltaTime)
 {
-	for (auto it = mControls.begin(); it != mControls.end(); ++it) (*it)->Update(deltaTime);
+	for (auto control : mControls) control->Update(deltaTime);
 }
 
 // *************************************************
@@ -81,7 +81,7 @@ void Container::Update(float deltaTime)
 
 void Container::Render()
 {
-	for (auto it = mControls.begin(); it != mControls.end(); ++it) (*it)->Render();
+	for (auto control : mControls) control->Render();
 }
 
 // *************************************************
@@ -100,9 +100,9 @@ bool Container::GetVisible() const
 void Container::SetVisible(bool visible)
 {
 	mVisible = visible;
-	for (auto it = mControls.begin(); it != mControls.end(); ++it)
+	for (auto control : mControls)
 	{
-		(*it)->SetVisible(visible);
-		if (!visible) (*it)->SetFocused(false);
+		control->SetVisible(visible);
+		if (!visible) control->SetFocused(false);
 	}
 }

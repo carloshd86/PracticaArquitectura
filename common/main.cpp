@@ -48,17 +48,13 @@ int Main(void)
 	//ProcessInput
 	g_pApplicationManager->ProcessInput();
 
-
 	//Run
 	g_pApplicationManager->Run(deltaTime);
-
 
     // Render
 	g_pApplicationManager->Render();
 
-    
     SYS_Show();
-	
 
     // Keep system running
     SYS_Pump();

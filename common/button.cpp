@@ -5,7 +5,6 @@
 #include "font.h"
 
 
-
 Button::Button(float x, float y, float width, float height, Container * parent, Properties * properties, const char * textKey, float rOn, float gOn, float bOn, float rOff, float gOff, float bOff) :
 	Control       (x, y, width, height, parent),
 	m_pProperties (properties),

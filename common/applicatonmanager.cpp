@@ -6,9 +6,9 @@
 
 
 ApplicationManager::ApplicationManager() : 
-	mDesiredMode (AM_MENU),
-	m_pGameMode  (nullptr),
-	mLang        (DEFAULT_LANG) {}
+	mDesiredMode      (AM_MENU),
+	m_pGameMode       (nullptr),
+	mLang             (DEFAULT_LANG) {}
 
 // *************************************************
 //
@@ -46,9 +46,9 @@ void ApplicationManager::ManageModeChange()
 
 		switch (mDesiredMode)
 		{
-			case AM_MENU: m_pGameMode = new ApplicationModeMenu();   break;
-			case AM_GAME: m_pGameMode = new ApplicationModeGame();   break;
-			default:      m_pGameMode = nullptr;                     break;
+			case AM_MENU: m_pGameMode = new ApplicationModeMenu(); break;
+			case AM_GAME: m_pGameMode = new ApplicationModeGame(); break; 
+			default:      m_pGameMode = nullptr;                   break; 
 		}
 
 		m_pGameMode->Activate();
