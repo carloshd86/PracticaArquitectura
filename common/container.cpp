@@ -2,6 +2,13 @@
 #include "control.h"
 
 
+Container::Container() :
+	mVisible(true) {}
+
+// *************************************************
+//
+// *************************************************
+
 const std::vector<Control *>& Container::GetControls() const
 {
 	return mControls;
@@ -65,7 +72,7 @@ void Container::Clear()
 
 void Container::Update(float deltaTime)
 {
-	for (auto it = mControls.begin(); it != mControls.end(); ++it) (*it)->Update(deltaTime);
+	for (auto control : mControls) control->Update(deltaTime);
 }
 
 // *************************************************
@@ -74,5 +81,28 @@ void Container::Update(float deltaTime)
 
 void Container::Render()
 {
-	for (auto it = mControls.begin(); it != mControls.end(); ++it) (*it)->Render();
+	for (auto control : mControls) control->Render();
+}
+
+// *************************************************
+//
+// *************************************************
+
+bool Container::GetVisible() const
+{
+	return mVisible;
+}
+
+// *************************************************
+//
+// *************************************************
+
+void Container::SetVisible(bool visible)
+{
+	mVisible = visible;
+	for (auto control : mControls)
+	{
+		control->SetVisible(visible);
+		if (!visible) control->SetFocused(false);
+	}
 }

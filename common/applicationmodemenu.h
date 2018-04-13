@@ -14,6 +14,7 @@ class ApplicationModeMenu : public ApplicationMode, public IEventManager::IListe
 public:
 
 	ApplicationModeMenu();
+	~ApplicationModeMenu();
 
 	IdMode GetId           ();
 	void   Activate        ();
@@ -21,19 +22,23 @@ public:
 	void   ProcessInput    ();
 	void   Run             (float deltaTime);
 	void   Render          ();
+	void   ChangeLanguage  (Properties::P_Language lang);
 
 	bool ProcessEvent (IEventManager::EM_Event event);
 	void OnClick      (Button * button);
 
+
 private:
 
-	bool                                      mWaitEscapeRelease;
-	NavigationContainer                       mContainer;
+	NavigationContainer                      *mCurrentContainer;
+	std::vector<NavigationContainer *>        mContainers;
 	std::map<Button *, std::function<void()>> mButtonMap;
+	Properties                               *m_pProperties;
 
-	void StartLevel1();
-	void StartLevel2();
-	void StartLevel3();
+	void StartLevel1 ();
+	void StartLevel2 ();
+	void StartLevel3 ();
+	void OpenMenu    (int index);
 };
 
 #endif

@@ -20,13 +20,20 @@ Game::Game() :
 	mInitialized     (false), 
 	mEnded           (false), 
 	m_pPlayer         (nullptr), 
-	m_pGoal           (nullptr),
-	m_pInputManager   (nullptr) {}
+	m_pGoal           (nullptr) {}
+
+// *************************************************
+//
+// *************************************************
 
 Game::~Game()
 {
 	if (mInitialized && !mEnded) End();
 }
+
+// *************************************************
+//
+// *************************************************
 
 void Game::Init()
 {
@@ -60,6 +67,7 @@ void Game::Init()
 		}
 		assert(document.IsObject());
 	
+		// Player
 		assert(document.HasMember(PLAYER_JSON_KEY));
 		assert(document[PLAYER_JSON_KEY].IsObject());
 		assert(document[PLAYER_JSON_KEY].HasMember(POS_X_JSON_KEY));
@@ -76,7 +84,7 @@ void Game::Init()
 		float        playerSpeed  = document[PLAYER_JSON_KEY][SPEED_JSON_KEY].GetFloat();
 		const char * playerImg    = document[PLAYER_JSON_KEY][IMG_JSON_KEY].GetString();
 		std::string  playerImgSrc = "../data/";
-		playerImgSrc += playerImg;
+		playerImgSrc.append(playerImg);
 
 		m_pPlayer = new Entity();
 		Component * cPlayer              = new C_Player(m_pPlayer);
@@ -91,9 +99,7 @@ void Game::Init()
 		m_pPlayer->AddComponent(cPlayerControllable);
 		mEntities.push_back(m_pPlayer);
 
-
-		m_pInputManager = new GameInputManager();
-	
+		// Goal
 		assert(document.HasMember(GOAL_JSON_KEY));
 		assert(document[GOAL_JSON_KEY].IsObject());
 		assert(document[GOAL_JSON_KEY].HasMember(POS_X_JSON_KEY));
@@ -108,7 +114,7 @@ void Game::Init()
 		float        goalHeight = document[GOAL_JSON_KEY][HEIGHT_JSON_KEY].GetFloat();
 		const char * goalImg    = document[GOAL_JSON_KEY][IMG_JSON_KEY].GetString();
 		std::string  goalImgSrc = "../data/";
-		goalImgSrc += goalImg;
+		goalImgSrc.append(goalImg);
 
 		m_pGoal = new Entity();
 		Component * cGoal              = new C_Goal(m_pGoal);
@@ -118,6 +124,7 @@ void Game::Init()
 		m_pGoal->AddComponent(cGoalRenderable);
 		mEntities.push_back(m_pGoal);
 
+		// Enemies
 		if (document.HasMember(ENEMIES_JSON_KEY))
 			for (auto& item : document[ENEMIES_JSON_KEY].GetArray())
 			{
@@ -139,7 +146,7 @@ void Game::Init()
 				float        enemyPursuingSpeed  = jsonEnemy[PURSUING_SPEED_JSON_KEY].GetFloat();
 				const char * enemyImg            = jsonEnemy[IMG_JSON_KEY].GetString();
 				std::string  enemyImgSrc         = "../data/";
-				enemyImgSrc += enemyImg;
+				enemyImgSrc.append(enemyImg);
 
 				Entity * enemy = new Entity();
 				Component * cEnemy              = new C_Enemy(enemy, enemyPursuingSpeed);
@@ -172,6 +179,7 @@ void Game::Init()
 				mEnemies.push_back(enemy);
 			}
 
+		// Walls
 		if (document.HasMember(WALLS_JSON_KEY))
 			for (auto& item : document[WALLS_JSON_KEY].GetArray())
 			{
@@ -189,7 +197,7 @@ void Game::Init()
 				float        wallHeight = jsonWall[HEIGHT_JSON_KEY].GetFloat();
 				const char * wallImg    = jsonWall[IMG_JSON_KEY].GetString();
 				std::string  wallImgSrc = "../data/";
-				wallImgSrc += wallImg;
+				wallImgSrc.append(wallImg);
 
 				Entity * wall = new Entity();
 				Component * cWall              = new C_RigidBody(wall);
@@ -206,6 +214,10 @@ void Game::Init()
 	}
 }
 
+// *************************************************
+//
+// *************************************************
+
 void Game::End()
 {
 	if (mInitialized)
@@ -219,14 +231,14 @@ void Game::End()
 		mWalls.clear();
 		mEnemies.clear();
 
-		delete m_pInputManager;
-		m_pInputManager = nullptr;
-
 		mInitialized = false;
 	}
 	mEnded = true;
 }
 
+// *************************************************
+//
+// *************************************************
 
 void Game::Run(float deltaTime)
 {
@@ -234,6 +246,10 @@ void Game::Run(float deltaTime)
 	MoveEntities();
 	CheckCollisions();
 }
+
+// *************************************************
+//
+// *************************************************
 
 void Game::MoveEntities() 
 {
@@ -320,6 +336,10 @@ void Game::MoveEntities()
 	}
 }
 
+// *************************************************
+//
+// *************************************************
+
 void Game::CheckCollisions()
 {
 	RequirePositionMessage positionMessage;
@@ -373,6 +393,10 @@ void Game::CheckCollisions()
 	}
 }
 
+// *************************************************
+//
+// *************************************************
+
 bool Game::CheckRectCollision(vec2 pos1, vec2 size1, vec2 pos2, vec2 size2)
 {
 	bool collision = false;
@@ -394,20 +418,27 @@ bool Game::CheckRectCollision(vec2 pos1, vec2 size1, vec2 pos2, vec2 size2)
 	return collision;
 }
 
-GameInputManager * Game::GetInputManager() const
-{
-	return m_pInputManager;
-}
+// *************************************************
+//
+// *************************************************
 
 Entity * Game::GetPlayer() const
 {
 	return m_pPlayer;
 }
 
+// *************************************************
+//
+// *************************************************
+
 Game::GameLevel Game::GetGameLevel() const 
 {
 	return mGameLevel;
 }
+
+// *************************************************
+//
+// *************************************************
 
 void Game::SetGameLevel(GameLevel level)
 {

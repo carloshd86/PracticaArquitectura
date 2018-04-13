@@ -4,6 +4,7 @@
 
 #include "graphicsengine.h"
 #include "eventmanager.h"
+#include "properties.h"
 
 
 class ApplicationManager;
@@ -32,5 +33,7 @@ constexpr const char * POS_Y_JSON_KEY          = "posY";
 constexpr const char * WIDTH_JSON_KEY          = "width";
 constexpr const char * HEIGHT_JSON_KEY         = "height";
 constexpr const char * IMG_JSON_KEY            = "img";
+
+const Properties::P_Language DEFAULT_LANG = Properties::P_Language::Spanish;
 
 #endif

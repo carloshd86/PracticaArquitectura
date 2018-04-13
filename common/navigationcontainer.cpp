@@ -4,7 +4,7 @@
 
 NavigationContainer::NavigationContainer() :
 	Container     (),
-	mFocusedIndex (0) {}
+	mFocusedIndex (-1) {}
 
 // *************************************************
 //
@@ -20,7 +20,7 @@ NavigationContainer::~NavigationContainer()
 
 Control * NavigationContainer::GetFocusedControl()
 {
-	if (mControls.empty()) return nullptr;
+	if (mControls.empty() || mFocusedIndex < 0) return nullptr;
 
 	return mControls[mFocusedIndex];
 }
@@ -35,12 +35,14 @@ void NavigationContainer::FocusNextControl()
 	{
 		mFocusedIndex++;
 		int numControls = static_cast<int>(mControls.size());
-		if (mFocusedIndex >= numControls) mFocusedIndex = 0;
+		if (mFocusedIndex < 0 || mFocusedIndex >= numControls) mFocusedIndex = 0;
 	
 		for (int i = 0; i < numControls; ++i)
 		{
-			if (i == mFocusedIndex) mControls[i]->SetFocused(true);
-			else                    mControls[i]->SetFocused(false);
+			if (i == mFocusedIndex) 
+				mControls[i]->SetFocused(true);
+			else                    
+				mControls[i]->SetFocused(false);
 		}
 	}
 }
@@ -63,4 +65,13 @@ void NavigationContainer::FocusPreviousControl()
 			else                    mControls[i]->SetFocused(false);
 		}
 	}
+}
+
+// *************************************************
+//
+// *************************************************
+
+void NavigationContainer::ResetFocus() 
+{
+	mFocusedIndex = -1;
 }

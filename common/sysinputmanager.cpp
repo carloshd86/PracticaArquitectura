@@ -13,11 +13,7 @@ SysInputManager * SysInputManager::mInstance;
 // *************************************************
 
 SysInputManager::SysInputManager() :
-	mInitialized   (false),
-	mPressedUp     (false),
-	mPressedDown   (false),
-	mPressedEscape (false),
-	mPressedEnter  (false) {}
+	mInitialized   (false) {}
 
 // *************************************************
 //
@@ -75,19 +71,40 @@ void SysInputManager::UpdateEvents()
 	for (auto it = mListeners.begin(); it != mListeners.end(); ++it) 
 	{
 		int eventKey = GetSysKeyFromEvent(it->first);
+		if (SYS_KeyPressed(eventKey))
+			mPressStatusMap[eventKey].currentPress = true;
+
 		switch (it->first)
 		{
 			case IEventManager::EM_Event::SinglePressEnter  :
 			case IEventManager::EM_Event::SinglePressEscape :
 			case IEventManager::EM_Event::SinglePressUp     :
-			case IEventManager::EM_Event::SinglePressDown   : { if (SYS_KeyToggled(eventKey) && SYS_KeyPressed(eventKey)) SendEvent(it->first, it->second); break; }
+			case IEventManager::EM_Event::SinglePressDown   :
+			case IEventManager::EM_Event::SinglePressLeft   :
+			case IEventManager::EM_Event::SinglePressRight  : 
+			{ 
+				if (!mPressStatusMap[eventKey].lastPress && mPressStatusMap[eventKey].currentPress) 
+					SendEvent(it->first, it->second); 
+				break; 
+			}
 
 			case IEventManager::EM_Event::MoveUp   :
 			case IEventManager::EM_Event::MoveDown :
 			case IEventManager::EM_Event::MoveLeft :
-			case IEventManager::EM_Event::MoveRight: { if (SYS_KeyPressed(eventKey)) SendEvent(it->first, it->second); break; }
+			case IEventManager::EM_Event::MoveRight: 
+			{ 
+				if (mPressStatusMap[eventKey].currentPress) 
+					SendEvent(it->first, it->second); 
+				break; 
+			}
 		}
 	}
+	for (auto& pressStatus : mPressStatusMap)
+	{
+		pressStatus.second.lastPress    = pressStatus.second.currentPress;
+		pressStatus.second.currentPress = false;
+	}
+		
 }
 
 // *************************************************
@@ -97,6 +114,9 @@ void SysInputManager::UpdateEvents()
 IEventManager::EM_Err SysInputManager::Register(IListener * listener, EM_Event e, int priority) 
 {
 	mListeners[e].insert(std::pair<int, IListener *>(priority, listener));
+	int eventKey = GetSysKeyFromEvent(e);
+	if (mPressStatusMap.find(eventKey) == mPressStatusMap.end())
+		mPressStatusMap.insert(std::pair<int, PressStatus>(eventKey, PressStatus()));
 
 	return OK;
 }
@@ -178,8 +198,12 @@ int SysInputManager::GetSysKeyFromEvent(EM_Event event)
 		case EM_Event::MoveDown          :
 		case EM_Event::SinglePressDown   : key = SYS_KEY_DOWN;   break;
 
-		case EM_Event::MoveLeft          : key = SYS_KEY_LEFT;   break;
-		case EM_Event::MoveRight         : key = SYS_KEY_RIGHT;  break;
+		case EM_Event::MoveLeft          :
+		case EM_Event::SinglePressLeft   : key = SYS_KEY_LEFT;   break;
+
+		case EM_Event::MoveRight         :
+		case EM_Event::SinglePressRight  : key = SYS_KEY_RIGHT;  break;
+
 		case EM_Event::SinglePressEscape : key = VK_ESCAPE;      break;
 		case EM_Event::SinglePressEnter  : key = VK_RETURN;      break;
 	}

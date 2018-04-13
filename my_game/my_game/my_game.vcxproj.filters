@@ -1,156 +1,183 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="UI">
+      <UniqueIdentifier>{716e7770-3651-49e4-884c-ba6738b6a600}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="ApplicationModes">
+      <UniqueIdentifier>{d80830b1-a43f-4d61-abeb-95bd544178ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="ApplicationManager">
+      <UniqueIdentifier>{54e5e39c-8cac-49c0-a378-aa29787011b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventManager">
+      <UniqueIdentifier>{2b49291e-12f7-479c-9093-447a55b6cabb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{eed63810-445f-467e-b7e0-186100d8b999}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{47507c67-c343-4771-b8cc-9c2908744f18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsEngine">
+      <UniqueIdentifier>{e9749795-9375-4f09-b33b-b558379595af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{94201b27-d033-4f51-8197-db2f339a8f9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Globals">
+      <UniqueIdentifier>{34c2cc2d-db1e-4526-9e2c-80fa0c29132b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Messages">
+      <UniqueIdentifier>{16765d12-c3f2-4154-85d6-6e0facd70ae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Properties">
+      <UniqueIdentifier>{959133da-96dd-44c7-bfb2-4163d7e25c03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sprites">
+      <UniqueIdentifier>{b7f76781-ba1e-4417-87a4-207e07b025f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{77766e2b-86ff-4fff-836e-acc60f19dc83}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\common\core.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\lodepng.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\sys_win.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\font.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\applicatonmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\applicationmodemenu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\applicationmodegame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\gameinputmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\coregraphicsengine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\coresprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\sysinputmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\common\container.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\common\control.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\common\button.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\common\applicationmodegame.cpp">
+      <Filter>ApplicationModes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\applicationmodemenu.cpp">
+      <Filter>ApplicationModes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\common\navigationcontainer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\sysinputmanager.cpp">
+      <Filter>EventManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\button.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\entity.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\coregraphicsengine.cpp">
+      <Filter>GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\core.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\font.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\lodepng.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\stdafx.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\sys_win.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\properties.cpp">
+      <Filter>Properties</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\coresprite.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\main.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\applicatonmanager.cpp">
+      <Filter>ApplicationManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\common\core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\lodepng.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\sys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\applicationmanager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\applicationmode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\applicationmodegame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\applicationmodemenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\gameinputmanager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\messagereceiver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\messages.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\components.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\eventmanager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\coregraphicsengine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\graphicsengine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\coresprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\sysinputmanager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\common\control.h">
+      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\container.h">
-      <Filter>Header Files</Filter>
+      <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\control.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\common\applicationmodemenu.h">
+      <Filter>ApplicationModes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\button.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\common\applicationmodegame.h">
+      <Filter>ApplicationModes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\applicationmode.h">
+      <Filter>ApplicationModes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\applicationmanager.h">
+      <Filter>ApplicationManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\eventmanager.h">
+      <Filter>EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\sysinputmanager.h">
+      <Filter>EventManager</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\navigationcontainer.h">
-      <Filter>Header Files</Filter>
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\button.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\entity.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\components.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\graphicsengine.h">
+      <Filter>GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\coregraphicsengine.h">
+      <Filter>GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\core.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\sys.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\stdafx.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\lodepng.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\font.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\globals.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\messagereceiver.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\messages.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\properties.h">
+      <Filter>Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\sprite.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\coresprite.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\game.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

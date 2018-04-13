@@ -5,17 +5,32 @@
 #include "applicationmodemenu.h"
 
 
-ApplicationManager::ApplicationManager() : mDesiredMode(AM_MENU), m_pGameMode(nullptr) {}
+ApplicationManager::ApplicationManager() : 
+	mDesiredMode      (AM_MENU),
+	m_pGameMode       (nullptr),
+	mLang             (DEFAULT_LANG) {}
+
+// *************************************************
+//
+// *************************************************
 
 ApplicationManager::~ApplicationManager()
 {
 	delete m_pGameMode;
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationManager::SwitchMode(IdMode mode)
 {
 	mDesiredMode = mode;
 }
+
+// *************************************************
+//
+// *************************************************
 
 void ApplicationManager::ManageModeChange()
 {
@@ -31,26 +46,56 @@ void ApplicationManager::ManageModeChange()
 
 		switch (mDesiredMode)
 		{
-			case AM_MENU: m_pGameMode = new ApplicationModeMenu();   break;
-			case AM_GAME: m_pGameMode = new ApplicationModeGame();   break;
-			default:      m_pGameMode = nullptr;                     break;
+			case AM_MENU: m_pGameMode = new ApplicationModeMenu(); break;
+			case AM_GAME: m_pGameMode = new ApplicationModeGame(); break; 
+			default:      m_pGameMode = nullptr;                   break; 
 		}
 
 		m_pGameMode->Activate();
 	}
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationManager::ProcessInput()
 {
 	m_pGameMode->ProcessInput();
 }
+
+// *************************************************
+//
+// *************************************************
 
 void ApplicationManager::Run(float deltaTime)
 {
 	m_pGameMode->Run(deltaTime);
 }
 
+// *************************************************
+//
+// *************************************************
+
 void ApplicationManager::Render()
 {
 	m_pGameMode->Render();
+}
+
+// *************************************************
+//
+// *************************************************
+
+Properties::P_Language ApplicationManager::GetLang() const
+{
+	return mLang;
+}
+
+// *************************************************
+//
+// *************************************************
+
+void ApplicationManager::SetLang(Properties::P_Language lang)
+{
+	mLang = lang;
 }

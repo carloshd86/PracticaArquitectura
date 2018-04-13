@@ -18,6 +18,7 @@ public:
 	virtual Control * GetFocusedControl    ();
 	virtual void      FocusNextControl     ();
 	virtual void      FocusPreviousControl ();
+	virtual void      ResetFocus           ();
 
 private:
 

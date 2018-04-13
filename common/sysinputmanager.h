@@ -27,16 +27,21 @@ public:
 private:
 	SysInputManager();
 
+	struct PressStatus
+	{
+		PressStatus() : currentPress(false), lastPress(false) {}
+
+		bool currentPress;
+		bool lastPress;
+	};
+
 	static SysInputManager *mInstance;
 
 	static const int NO_KEY_PRESSED = -1;
 
-	ListenerMap mListeners;
-	bool        mInitialized;
-	bool        mPressedUp;
-	bool        mPressedDown;
-	bool        mPressedEscape;
-	bool        mPressedEnter;
+	ListenerMap                mListeners;
+	std::map<int, PressStatus> mPressStatusMap;
+	bool                       mInitialized;
 
 	void SendEvent              (EM_Event event, const EventsMultiMap& eventsMultiMap);
 	void RemoveListenerForEvent (IListener * listener, EM_Event e);

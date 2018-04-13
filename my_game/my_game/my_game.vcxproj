@@ -124,9 +124,9 @@
     <ClCompile Include="..\..\common\game.cpp" />
     <ClCompile Include="..\..\common\applicatonmanager.cpp" />
     <ClCompile Include="..\..\common\navigationcontainer.cpp" />
+    <ClCompile Include="..\..\common\properties.cpp" />
     <ClCompile Include="..\..\common\sysinputmanager.cpp" />
     <ClCompile Include="..\..\common\coregraphicsengine.cpp" />
-    <ClCompile Include="..\..\common\gameinputmanager.cpp" />
     <ClCompile Include="..\..\common\main.cpp" />
     <ClCompile Include="..\..\common\font.cpp" />
     <ClCompile Include="..\..\common\applicationmodemenu.cpp" />
@@ -145,6 +145,7 @@
     <ClInclude Include="..\..\common\eventmanager.h" />
     <ClInclude Include="..\..\common\graphicsengine.h" />
     <ClInclude Include="..\..\common\navigationcontainer.h" />
+    <ClInclude Include="..\..\common\properties.h" />
     <ClInclude Include="..\..\common\sprite.h" />
     <ClInclude Include="..\..\common\sysinputmanager.h" />
     <ClInclude Include="..\..\common\globals.h" />
@@ -155,7 +156,6 @@
     <ClInclude Include="..\..\common\applicationmodemenu.h" />
     <ClInclude Include="..\..\common\applicationmodegame.h" />
     <ClInclude Include="..\..\common\coregraphicsengine.h" />
-    <ClInclude Include="..\..\common\gameinputmanager.h" />
     <ClInclude Include="..\..\common\lodepng.h" />
     <ClInclude Include="..\..\common\applicationmode.h" />
     <ClInclude Include="..\..\common\messagereceiver.h" />

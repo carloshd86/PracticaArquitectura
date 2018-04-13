@@ -29,7 +29,7 @@ void CoreGraphicsEngine::End()
 		for(auto sprite : mSprites) delete sprite;
 		mSprites.clear();
 
-		for (auto texture : mTextures) CORE_UnloadPNG(texture.second);
+		for (auto& texture : mTextures) CORE_UnloadPNG(texture.second);
 		mTextures.clear();
 
 		mInitialized = false;
@@ -61,7 +61,7 @@ void CoreGraphicsEngine::Render()
 ISprite * CoreGraphicsEngine::RequireSprite(vec2 pos, vec2 size, const char * image, float red, float green, float blue)
 {
 	GLuint sprite_id = 0;
-	for (auto texture : mTextures) 
+	for (auto& texture : mTextures) 
 	{
 		if (texture.first == image) 
 		{
