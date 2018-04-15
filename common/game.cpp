@@ -43,9 +43,9 @@ void Game::Init()
 		char * jsonSrc = nullptr;
 		switch (mGameLevel)
 		{
-			case LEVEL_1: jsonSrc = "../data/level1.json"; break;
-			case LEVEL_2: jsonSrc = "../data/level2.json"; break;
-			case LEVEL_3: jsonSrc = "../data/level3.json"; break;
+			case Level1: jsonSrc = "../data/level1.json"; break;
+			case Level2: jsonSrc = "../data/level2.json"; break;
+			case Level3: jsonSrc = "../data/level3.json"; break;
 		}
 
 		assert(jsonSrc);
@@ -107,10 +107,12 @@ void Game::Init()
 		playerImgSrc.append(playerImg);
 
 		m_pPlayer = new Entity();
-		Component * cPlayer              = new C_Player(m_pPlayer);
-		C_Renderable * cPlayerRenderable = new C_Renderable(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight), playerImgSrc.c_str());
+		C_Player * cPlayer                    = new C_Player(m_pPlayer);
+		cPlayer->Init();
+		C_Renderable * cPlayerRenderable      = new C_Renderable(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight), playerImgSrc.c_str());
 		cPlayerRenderable->Init();
 		C_Movable      * cPlayerMovable       = new C_Movable(m_pPlayer, playerSpeed);
+		cPlayerMovable->Init();
 		C_Controllable * cPlayerControllable  = new C_Controllable(m_pPlayer);
 		cPlayerControllable->Init();
 		m_pPlayer->AddComponent(cPlayer);
@@ -137,7 +139,8 @@ void Game::Init()
 		goalImgSrc.append(goalImg);
 
 		m_pGoal = new Entity();
-		Component * cGoal              = new C_Goal(m_pGoal);
+		C_Goal * cGoal                 = new C_Goal(m_pGoal);
+		cGoal->Init();
 		C_Renderable * cGoalRenderable = new C_Renderable(m_pGoal, vmake(goalPosX, goalPosY), vmake(goalWidth, goalHeight), goalImgSrc.c_str());
 		cGoalRenderable->Init();
 		m_pGoal->AddComponent(cGoal);
@@ -169,17 +172,20 @@ void Game::Init()
 				enemyImgSrc.append(enemyImg);
 
 				Entity * enemy = new Entity();
-				Component * cEnemy              = new C_Enemy(enemy, enemyPursuingSpeed);
+				C_Enemy * cEnemy                = new C_Enemy(enemy, enemyPursuingSpeed);
+				cEnemy->Init();
 				C_Renderable * cEnemyRenderable = new C_Renderable(enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight), enemyImgSrc.c_str());
 				cEnemyRenderable->Init();
-				Component * cEnemyMovable       = new C_Movable(enemy, enemySpeed);
+				C_Movable * cEnemyMovable       = new C_Movable(enemy, enemySpeed);
+				cEnemyMovable->Init();
 				enemy->AddComponent(cEnemy);
 				enemy->AddComponent(cEnemyRenderable);
 				enemy->AddComponent(cEnemyMovable);
 	
 				if (jsonEnemy.HasMember(ROUTE_POINTS_JSON_KEY))
 				{
-					Component * cRoutePath = new C_RoutePath(enemy);
+					C_RoutePath * cRoutePath = new C_RoutePath(enemy);
+					cRoutePath->Init();
 					for (auto& point : jsonEnemy[ROUTE_POINTS_JSON_KEY].GetArray())
 					{
 						auto& routePoint = point.GetObjectA();
@@ -190,7 +196,7 @@ void Game::Init()
 						float routePointX = routePoint[POS_X_JSON_KEY].GetFloat();
 						float routePointY = routePoint[POS_Y_JSON_KEY].GetFloat();
 
-						reinterpret_cast<C_RoutePath *>(cRoutePath)->AddRoutePoint(routePointX, routePointY);
+						cRoutePath->AddRoutePoint(routePointX, routePointY);
 					}
 					enemy->AddComponent(cRoutePath);
 				}
@@ -220,7 +226,8 @@ void Game::Init()
 				wallImgSrc.append(wallImg);
 
 				Entity * wall = new Entity();
-				Component * cWall              = new C_RigidBody(wall);
+				C_RigidBody * cWall            = new C_RigidBody(wall);
+				cWall->Init();
 				C_Renderable * cWallRenderable = new C_Renderable(wall, vmake(wallPosX, wallPosY), vmake(wallWidth, wallHeight), wallImgSrc.c_str());
 				cWallRenderable->Init();
 				wall->AddComponent(cWall);
@@ -309,14 +316,14 @@ void Game::MoveEntities()
 			playerPosCheck.y = playerPos.y - playerMovement.y;
 			if (CheckRectCollision(playerPosCheck, playerSize, wallPos, wallSize))
 			{
-				m_pPlayer->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::Type::CollisionX));
+				m_pPlayer->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type::CollisionX));
 			}
 
 			playerPosCheck.x = playerPos.x - playerMovement.x;
 			playerPosCheck.y = playerPos.y;
 			if (CheckRectCollision(playerPosCheck, playerSize, wallPos, wallSize))
 			{
-				m_pPlayer->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::Type::CollisionY));
+				m_pPlayer->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type::CollisionY));
 			}
 		}
 
@@ -343,12 +350,12 @@ void Game::MoveEntities()
 
 				if (CheckRectCollision(enemyPosCheck, enemySize, wallPos, wallSize))
 				{
-					enemy->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::Type::CollisionX));
+					enemy->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type::CollisionX));
 				}
 
 				if (CheckRectCollision(enemyPos, enemySize, wallPos, wallSize))
 				{
-					enemy->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::Type::CollisionY));
+					enemy->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type::CollisionY));
 				}
 			}
 		}
@@ -387,7 +394,7 @@ void Game::CheckCollisions()
 		OutputDebugString("Player reaches goal\n");
 		m_pPlayer->ReceiveMessage(GoalReachedMessage());
 
-		g_pApplicationManager->SwitchMode(AM_MENU);
+		g_pApplicationManager->SwitchMode(AM_Menu);
 	}
 
 	for (auto enemy : mEnemies)
@@ -407,7 +414,7 @@ void Game::CheckCollisions()
 			OutputDebugString("Enemy hits player\n");
 			m_pPlayer->ReceiveMessage(EnemyCollisionMessage());
 
-			g_pApplicationManager->SwitchMode(AM_MENU);
+			g_pApplicationManager->SwitchMode(AM_Menu);
 			break;
 		}
 	}

@@ -15,9 +15,9 @@ public:
 
 	enum GameLevel
 	{
-		LEVEL_1,
-		LEVEL_2,
-		LEVEL_3
+		Level1,
+		Level2,
+		Level3
 	};
 
 	Game();
