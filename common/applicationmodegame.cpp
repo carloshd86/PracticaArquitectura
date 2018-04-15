@@ -58,68 +58,21 @@ void ApplicationModeGame::Activate()
 
 	// Container main menu
 	NavigationContainer * mainContainer = new NavigationContainer();
+	mCurrentContainer = mainContainer;
 
-	Button * levelsButton     = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties, "main_menu.levels.text");
-	Button * optionsButton    = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, m_pProperties, "main_menu.options.text");
+	Button * optionsButton = InitButton(std::bind(&ApplicationModeGame::OpenMenu, this, 1) , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, "main_menu.options.text");
+	Button * quitButton    = InitButton(std::bind(&ApplicationModeGame::QuitGame, this)    , SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, "main_menu.exit.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
-	levelsButton->SetListener(this);
-	optionsButton->SetListener(this);
-
-	g_pEventManager->Register(levelsButton     , IEventManager::EM_Event::SinglePressEnter, 0);
-	g_pEventManager->Register(optionsButton    , IEventManager::EM_Event::SinglePressEnter, 0);
-
-	mButtonMap[levelsButton]  = std::bind(&ApplicationModeGame::OpenMenu, this, 1);
-	mButtonMap[optionsButton] = std::bind(&ApplicationModeGame::OpenMenu, this, 2);
-
-	mainContainer->FocusNextControl();
+	mainContainer->SetVisible(false);
 	mContainers.push_back(mainContainer);
-
-
-	//Container select level menu
-	NavigationContainer * levelContainer = new NavigationContainer();
-
-	Button * level1Button       = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties, "main_menu.level1.text");
-	Button * level2Button       = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties, "main_menu.level2.text");
-	Button * level3Button       = new Button(SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties, "main_menu.level3.text");
-	Button * levelsReturnButton = new Button(SCR_HEIGHT/4.f, 230.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, m_pProperties, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
-
-	level1Button->SetListener(this);
-	level2Button->SetListener(this);
-	level3Button->SetListener(this);
-	levelsReturnButton->SetListener(this);
-
-	g_pEventManager->Register(level1Button       , IEventManager::EM_Event::SinglePressEnter, 0);
-	g_pEventManager->Register(level2Button       , IEventManager::EM_Event::SinglePressEnter, 0);
-	g_pEventManager->Register(level3Button       , IEventManager::EM_Event::SinglePressEnter, 0);
-	g_pEventManager->Register(levelsReturnButton , IEventManager::EM_Event::SinglePressEnter, 0);
-
-	mButtonMap[level1Button]       = std::bind(&ApplicationModeGame::QuitGame , this);
-	mButtonMap[level2Button]       = std::bind(&ApplicationModeGame::QuitGame , this);
-	mButtonMap[level3Button]       = std::bind(&ApplicationModeGame::QuitGame , this);
-	mButtonMap[levelsReturnButton] = std::bind(&ApplicationModeGame::OpenMenu , this, 0);
-
-	levelContainer->SetVisible(false);
-	mContainers.push_back(levelContainer);
 
 
 	//Container options menu
 	NavigationContainer * optionsContainer = new NavigationContainer();
 
-	Button * spanishButton       = new Button(SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties, "main_menu.spanish.text");
-	Button * englishButton       = new Button(SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties, "main_menu.english.text");
-	Button * optionsReturnButton = new Button(SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, m_pProperties, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
-
-	spanishButton->SetListener(this);
-	englishButton->SetListener(this);
-	optionsReturnButton->SetListener(this);
-
-	g_pEventManager->Register(spanishButton       , IEventManager::EM_Event::SinglePressEnter, 0);
-	g_pEventManager->Register(englishButton       , IEventManager::EM_Event::SinglePressEnter, 0);
-	g_pEventManager->Register(optionsReturnButton , IEventManager::EM_Event::SinglePressEnter, 0);
-
-	mButtonMap[spanishButton]       = std::bind(&ApplicationModeGame::ChangeLanguage , this, Properties::P_Language::Spanish);
-	mButtonMap[englishButton]       = std::bind(&ApplicationModeGame::ChangeLanguage , this, Properties::P_Language::English);
-	mButtonMap[optionsReturnButton] = std::bind(&ApplicationModeGame::OpenMenu       , this, 0);
+	Button * spanishButton       = InitButton(std::bind(&ApplicationModeGame::ChangeLanguage , this, Properties::P_Language::Spanish) , SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.spanish.text");
+	Button * englishButton       = InitButton(std::bind(&ApplicationModeGame::ChangeLanguage , this, Properties::P_Language::English) , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.english.text");
+	Button * optionsReturnButton = InitButton(std::bind(&ApplicationModeGame::OpenMenu       , this, 0)                               , SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
 	optionsContainer->SetVisible(false);
 	mContainers.push_back(optionsContainer);
@@ -134,6 +87,7 @@ void ApplicationModeGame::Activate()
 	}
 	g_pGame->Init();
 	g_pGraphicsEngine->Init();
+	g_pGraphicsEngine->SetOverlayActive(false);
 }
 
 // *************************************************
@@ -225,6 +179,23 @@ void ApplicationModeGame::OnClick(Button * button)
 //
 // *************************************************
 
+Button * ApplicationModeGame::InitButton(std::function<void()> clickFunction, float x, float y, float width, float height, Container * parent, const char * textKey, float rOn, float gOn, float bOn, float rOff, float gOff, float bOff)
+{
+	Button * button = new Button(x, y, width, height, parent, m_pProperties, textKey, rOn, gOn, bOn, rOff, gOff, bOff);
+
+	button->SetListener(this);
+
+	g_pEventManager->Register(button  , IEventManager::EM_Event::SinglePressEnter, 0);
+
+	mButtonMap[button] = clickFunction;
+
+	return button;
+}
+
+// *************************************************
+//
+// *************************************************
+
 void ApplicationModeGame::ChangeLanguage(Properties::P_Language lang)
 {
 	Properties::P_Language applicationLanguage = g_pApplicationManager->GetLang();
@@ -252,6 +223,7 @@ void ApplicationModeGame::ChangeLanguage(Properties::P_Language lang)
 
 void ApplicationModeGame::ResumeGame() 
 {
+	g_pGraphicsEngine->SetOverlayActive(false);
 	mInGameMenuActive = false;
 	if (mCurrentContainer)
 	{
@@ -280,6 +252,7 @@ void ApplicationModeGame::OpenMenu(int index)
 	if (!mInGameMenuActive)
 	{
 		mInGameMenuActive = true;
+		g_pGraphicsEngine->SetOverlayActive(true);
 	}
 
 	if (mCurrentContainer)
@@ -296,6 +269,6 @@ void ApplicationModeGame::OpenMenu(int index)
 	if (mCurrentContainer)
 	{
 		mCurrentContainer->SetVisible(true);
-		mCurrentContainer->FocusNextControl();
+		mCurrentContainer->ResetFocus();
 	}
 }

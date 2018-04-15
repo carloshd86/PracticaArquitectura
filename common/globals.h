@@ -21,10 +21,15 @@ const int KEY_LEVEL_1 = 0x31;
 const int KEY_LEVEL_2 = 0x32;
 const int KEY_LEVEL_3 = 0x33;
 
+constexpr const char * LEVEL_JSON_KEY          = "level";
 constexpr const char * GOAL_JSON_KEY           = "goal";
 constexpr const char * PLAYER_JSON_KEY         = "player";
 constexpr const char * ENEMIES_JSON_KEY        = "enemies";
 constexpr const char * WALLS_JSON_KEY          = "walls";
+constexpr const char * BACKGROUND_IMG_JSON_KEY = "backgroundImg";
+constexpr const char * BACKGROUND_R_JSON_KEY   = "backgroundR";
+constexpr const char * BACKGROUND_G_JSON_KEY   = "backgroundG";
+constexpr const char * BACKGROUND_B_JSON_KEY   = "backgroundB";
 constexpr const char * SPEED_JSON_KEY          = "speed";
 constexpr const char * PURSUING_SPEED_JSON_KEY = "pursuingSpeed";
 constexpr const char * ROUTE_POINTS_JSON_KEY   = "routePoints";

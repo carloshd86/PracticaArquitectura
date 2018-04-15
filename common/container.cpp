@@ -102,7 +102,7 @@ void Container::SetVisible(bool visible)
 	mVisible = visible;
 	for (auto control : mControls)
 	{
-		control->SetVisible(visible);
-		if (!visible) control->SetFocused(false);
+		control->SetVisible(mVisible);
+		if (!mVisible) control->SetFocused(false);
 	}
 }

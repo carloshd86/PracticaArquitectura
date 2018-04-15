@@ -67,6 +67,26 @@ void Game::Init()
 		}
 		assert(document.IsObject());
 	
+		// Level
+		assert(document.HasMember(LEVEL_JSON_KEY));
+		assert(document[LEVEL_JSON_KEY].IsObject());
+		assert(document[LEVEL_JSON_KEY].HasMember(BACKGROUND_IMG_JSON_KEY));
+
+		const char * backgroundImg    = document[LEVEL_JSON_KEY][BACKGROUND_IMG_JSON_KEY].GetString();
+		std::string  backgroundImgSrc = "../data/";
+		backgroundImgSrc.append(backgroundImg);
+		float backgroundR = 1.f;
+		float backgroundG = 1.f;
+		float backgroundB = 1.f;
+		if (document[LEVEL_JSON_KEY].HasMember(BACKGROUND_R_JSON_KEY))
+			backgroundR = document[LEVEL_JSON_KEY][BACKGROUND_R_JSON_KEY].GetFloat();
+		if (document[LEVEL_JSON_KEY].HasMember(BACKGROUND_G_JSON_KEY))
+			backgroundG = document[LEVEL_JSON_KEY][BACKGROUND_G_JSON_KEY].GetFloat();
+		if (document[LEVEL_JSON_KEY].HasMember(BACKGROUND_B_JSON_KEY))
+			backgroundB = document[LEVEL_JSON_KEY][BACKGROUND_B_JSON_KEY].GetFloat();
+		g_pGraphicsEngine->SetBackgroundImage(backgroundImgSrc.c_str());
+		g_pGraphicsEngine->SetBackgroundColor(backgroundR, backgroundG, backgroundB);
+
 		// Player
 		assert(document.HasMember(PLAYER_JSON_KEY));
 		assert(document[PLAYER_JSON_KEY].IsObject());

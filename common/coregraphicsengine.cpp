@@ -6,21 +6,51 @@
 #include "coresprite.h"
 
 
-CoreGraphicsEngine::CoreGraphicsEngine() : mInitialized(false), mEnded(false) {}
+CoreGraphicsEngine::CoreGraphicsEngine(const char * backgroundImage) : 
+	mBackgroundImage (backgroundImage),
+	mBackgroundR     (1.f),
+	mBackgroundG     (1.f),
+	mBackgroundB     (1.f),
+	mOverlayActive   (false),
+	mOverlayR        (0.f),
+	mOverlayG        (0.f),
+	mOverlayB        (0.f),
+	mOverlayA        (0.6f),
+	mInitialized     (false), 
+	mEnded           (false) {}
+
+// *************************************************
+//
+// *************************************************
+
+CoreGraphicsEngine::CoreGraphicsEngine() : 
+	CoreGraphicsEngine ("") {}
+
+// *************************************************
+//
+// *************************************************
 
 CoreGraphicsEngine::~CoreGraphicsEngine()
 {
 	if (mInitialized && !mEnded) End();
 }
 
+// *************************************************
+//
+// *************************************************
+
 void CoreGraphicsEngine::Init()
 {
 	if (!mInitialized)
 	{
-		mBackground = CORE_LoadPNG(GAME_BACKGROUND, true);
+		if (!mBackgroundImage.empty()) mBackground = CORE_LoadPNG(mBackgroundImage.c_str(), true);
 		mInitialized = true;
 	}
 }
+
+// *************************************************
+//
+// *************************************************
 
 void CoreGraphicsEngine::End()
 {
@@ -37,15 +67,22 @@ void CoreGraphicsEngine::End()
 	mEnded = true;
 }
 
+// *************************************************
+//
+// *************************************************
 
 void CoreGraphicsEngine::Render()
 {
+	glColor3f(mBackgroundR, mBackgroundG, mBackgroundB);
 	glClear( GL_COLOR_BUFFER_BIT );
 
 	// Render background
-	for (int i = 0; i <= SCR_WIDTH/GAME_BACKGROUND_WIDTH; i++)
-		for (int j = 0; j <= SCR_HEIGHT/GAME_BACKGROUND_HEIGHT; j++)
-			CORE_RenderCenteredSprite(vmake(i * GAME_BACKGROUND_WIDTH + 64.f, j * GAME_BACKGROUND_HEIGHT + 64.f), vmake(GAME_BACKGROUND_WIDTH, GAME_BACKGROUND_HEIGHT), mBackground);
+	if (!mBackgroundImage.empty())
+	{
+		for (int i = 0; i <= SCR_WIDTH / GAME_BACKGROUND_WIDTH; i++)
+			for (int j = 0; j <= SCR_HEIGHT / GAME_BACKGROUND_HEIGHT; j++)
+				CORE_RenderCenteredSprite(vmake(i * GAME_BACKGROUND_WIDTH + 64.f, j * GAME_BACKGROUND_HEIGHT + 64.f), vmake(GAME_BACKGROUND_WIDTH, GAME_BACKGROUND_HEIGHT), mBackground);
+	}
 
 	// Render elements
 	for(auto sprite : mSprites)
@@ -55,10 +92,20 @@ void CoreGraphicsEngine::Render()
 		vec2 size = sprite->GetSize();
 		CORE_RenderSprite(pos, vmake(pos.x + size.x, pos.y + size.y), sprite->GetTex());
 	}
+
+	// Render overlay
+	if (mOverlayActive)
+	{
+		glColor4f(mOverlayR, mOverlayG, mOverlayB, mOverlayA);
+		CORE_RenderSprite(vmake(0.f, 0.f), vmake(SCR_WIDTH, SCR_HEIGHT), 0);
+	}
 }
 
+// *************************************************
+//
+// *************************************************
 
-ISprite * CoreGraphicsEngine::RequireSprite(vec2 pos, vec2 size, const char * image, float red, float green, float blue)
+ISprite * CoreGraphicsEngine::RequireSprite(vec2 pos, vec2 size, const char * image, float r, float g, float b)
 {
 	GLuint sprite_id = 0;
 	for (auto& texture : mTextures) 
@@ -76,12 +123,16 @@ ISprite * CoreGraphicsEngine::RequireSprite(vec2 pos, vec2 size, const char * im
 		mTextures.push_back({ image, sprite_id });
 	}
 	
-	ISprite * required_sprite = new CoreSprite(pos, size, sprite_id, red, green, blue);
+	ISprite * requir_sprite = new CoreSprite(pos, size, sprite_id, r, g, b);
 
-	mSprites.push_back(required_sprite);
+	mSprites.push_back(requir_sprite);
 
-	return required_sprite;
+	return requir_sprite;
 }
+
+// *************************************************
+//
+// *************************************************
 
 void CoreGraphicsEngine::ReleaseSprite(ISprite * sprite) 
 {
@@ -97,4 +148,46 @@ void CoreGraphicsEngine::ReleaseSprite(ISprite * sprite)
 			++it;
 		}
 	}
+}
+
+// *************************************************
+//
+// *************************************************
+
+void CoreGraphicsEngine::SetOverlayActive(bool active)
+{
+	mOverlayActive = active;
+}
+
+// *************************************************
+//
+// *************************************************
+
+void CoreGraphicsEngine::SetOverlayColor(float r, float g, float b, float a)
+{
+	mOverlayR = r;
+	mOverlayG = g;
+	mOverlayB = b;
+}
+
+// *************************************************
+//
+// *************************************************
+
+void CoreGraphicsEngine::SetBackgroundImage(const char * backgroundImage)
+{
+	if(!mBackgroundImage.empty()) CORE_UnloadPNG(mBackground);
+	mBackgroundImage = backgroundImage;
+	mBackground = CORE_LoadPNG(mBackgroundImage.c_str(), true);
+}
+
+// *************************************************
+//
+// *************************************************
+
+void CoreGraphicsEngine::SetBackgroundColor(float r, float g, float b)
+{
+	mBackgroundR = r;
+	mBackgroundG = g;
+	mBackgroundB = b;
 }
