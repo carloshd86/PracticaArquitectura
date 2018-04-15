@@ -1,4 +1,10 @@
 {
+	"level" : {
+		"backgroundImg" : "256xdrygrassblock.png",
+		"backgroundR" : 1.0,
+		"backgroundG" : 1.0,
+		"backgroundB" : 1.0
+	},
 	"goal" : {
 		"posX" : 298,
 		"posY" : 416,

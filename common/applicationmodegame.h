@@ -35,6 +35,8 @@ private:
 	std::map<Button *, std::function<void()>> mButtonMap;
 	Properties                               *m_pProperties;
 
+	Button * InitButton (std::function<void()> clickFunction, float x, float y, float width, float height, Container * parent, const char * textKey, float rOn = 1.f, float gOn = 1.f, float bOn = 0.f, float rOff = 1.f, float gOff = 1.f, float bOff = 1.f);
+
 	void ResumeGame ();
 	void QuitGame   ();
 	void OpenMenu   (int index);

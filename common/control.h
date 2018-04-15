@@ -32,8 +32,8 @@ protected:
 	float      mWidth;
 	float      mHeight;
 	bool       mFocused;
-	Container *mParent;
 	bool       mVisible;
+	Container *mParent;
 };
 
 

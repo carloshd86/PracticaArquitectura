@@ -15,7 +15,7 @@ Button::Button(float x, float y, float width, float height, Container * parent, 
 	m_rOff        (rOff),
 	m_gOff        (gOff),
 	m_bOff        (bOff),
-	mListener     (nullptr) 
+	mListener     (nullptr)
 {
 	mText =  m_pProperties->GetProperty(mTextKey);
 }
