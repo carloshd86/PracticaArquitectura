@@ -35,7 +35,7 @@ ApplicationModeGame::~ApplicationModeGame()
 
 IdMode ApplicationModeGame::GetId()
 {
-	return AM_GAME;
+	return AM_Game;
 }
 
 // *************************************************
@@ -81,9 +81,9 @@ void ApplicationModeGame::Activate()
 	if (!g_pGame) g_pGame = new Game();
 	switch (g_gameLevel)
 	{
-		case 1: g_pGame->SetGameLevel(Game::GameLevel::LEVEL_1); break;
-		case 2: g_pGame->SetGameLevel(Game::GameLevel::LEVEL_2); break;
-		case 3: g_pGame->SetGameLevel(Game::GameLevel::LEVEL_3); break;
+		case 1: g_pGame->SetGameLevel(Game::GameLevel::Level1); break;
+		case 2: g_pGame->SetGameLevel(Game::GameLevel::Level2); break;
+		case 3: g_pGame->SetGameLevel(Game::GameLevel::Level3); break;
 	}
 	g_pGame->Init();
 	g_pGraphicsEngine->Init();
@@ -133,6 +133,7 @@ void ApplicationModeGame::ProcessInput()
 void ApplicationModeGame::Run(float deltaTime)
 {
 	if (!mInGameMenuActive) g_pGame->Run(deltaTime);
+	else if (mCurrentContainer) mCurrentContainer->Update(deltaTime);
 }
 
 // *************************************************
@@ -240,7 +241,7 @@ void ApplicationModeGame::ResumeGame()
 
 void ApplicationModeGame::QuitGame() 
 {
-	g_pApplicationManager->SwitchMode(AM_MENU);
+	g_pApplicationManager->SwitchMode(AM_Menu);
 }
 
 // *************************************************

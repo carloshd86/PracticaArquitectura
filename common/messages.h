@@ -9,13 +9,50 @@ class GameMessage
 {
 public:
 
+	enum GM_Type
+	{
+		EnemyCollision,
+		RigidBodyCollision,
+		GoalReached,
+		SetPosition,
+		AddPosition,
+		SetSize,
+		RequirePosition,
+		RequireSize,
+		RequireMovement,
+		RequirePursuingSpeed,
+		RequireRoute,
+		IncreaseCurrentRoutePoint,
+		SetMovement,
+		MoveUp,
+		MoveDown,
+		MoveLeft,
+		MoveRight,
+		ChangeSprite
+	};
+
+	GameMessage(GM_Type type) :
+		mType(type) {}
 	virtual ~GameMessage() {};
+
+	virtual GM_Type GetType() const
+	{
+		return mType;
+	}
+
+private:
+
+	GM_Type mType;
 };
 
 /***************************/
 
 class EnemyCollisionMessage : public GameMessage
 {
+public:
+
+	EnemyCollisionMessage() :
+		GameMessage(GM_Type::EnemyCollision) {}
 };
 
 /***************************/
@@ -24,26 +61,31 @@ class RigidBodyCollisionMessage : public GameMessage
 {
 public:
 
-	enum Type 
+	enum RGBM_Type 
 	{
 		CollisionX,
 		CollisionY
 	};
 
-	RigidBodyCollisionMessage(RigidBodyCollisionMessage::Type type) : 
-		m_type(type) {}
+	RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type collisionType) : 
+		GameMessage    (GM_Type::RigidBodyCollision),
+		mCollisionType (collisionType) {}
 
-	RigidBodyCollisionMessage::Type GetType() const { return m_type; }
+	RigidBodyCollisionMessage::RGBM_Type GetCollisionType() const { return mCollisionType; }
 
 private:
 
-	RigidBodyCollisionMessage::Type m_type;
+	RigidBodyCollisionMessage::RGBM_Type mCollisionType;
 };
 
 /***************************/
 
 class GoalReachedMessage : public GameMessage
 {
+public:
+
+	GoalReachedMessage() :
+		GameMessage(GM_Type::GoalReached) {}
 };
 
 /***************************/
@@ -53,8 +95,9 @@ class SetPositionMessage : public GameMessage
 public:
 
 	SetPositionMessage(float x, float y) : 
-		mX(x),
-		mY(y) {}
+		GameMessage (GM_Type::SetPosition),
+		mX          (x),
+		mY          (y) {}
 
 	float GetX() const { return mX; }
 	float GetY() const { return mY; }
@@ -72,8 +115,9 @@ class AddPositionMessage : public GameMessage
 public:
 
 	AddPositionMessage(float x, float y) : 
-		mX(x),
-		mY(y) {}
+		GameMessage (GM_Type::AddPosition),
+		mX          (x),
+		mY          (y) {}
 
 	float GetX() const { return mX; }
 	float GetY() const { return mY; }
@@ -91,8 +135,9 @@ class SetSizeMessage : public GameMessage
 public:
 
 	SetSizeMessage(float x, float y) : 
-		mX(x),
-		mY(y) {}
+		GameMessage (GM_Type::SetSize),
+		mX          (x),
+		mY          (y) {}
 
 	float GetX() const { return mX; }
 	float GetY() const { return mY; }
@@ -110,9 +155,10 @@ class RequirePositionMessage : public GameMessage
 public:
 
 	RequirePositionMessage() : 
-		mProcessed (false),
-		mX         (0.f), 
-		mY         (0.f) {}
+		GameMessage (GM_Type::RequirePosition),
+		mProcessed  (false),
+		mX          (0.f), 
+		mY          (0.f) {}
 
 	bool  GetProcessed()         const { return mProcessed; }
 	void  SetProcessed(bool processed) { mProcessed = processed; }
@@ -135,9 +181,10 @@ class RequireSizeMessage : public GameMessage
 public:
 
 	RequireSizeMessage() : 
-		mProcessed (false),
-		mX         (0.f), 
-		mY         (0.f) {}
+		GameMessage (GM_Type::RequireSize),
+		mProcessed  (false),
+		mX          (0.f), 
+		mY          (0.f) {}
 
 	bool  GetProcessed()         const { return mProcessed; }
 	void  SetProcessed(bool processed) { mProcessed = processed; }
@@ -160,10 +207,11 @@ class RequireMovementMessage : public GameMessage
 public:
 
 	RequireMovementMessage() : 
-		mProcessed (false),
-		mX         (0.f), 
-		mY         (0.f),
-		mSpeed     (0.f){}
+		GameMessage (GM_Type::RequireMovement),
+		mProcessed  (false),
+		mX          (0.f), 
+		mY          (0.f),
+		mSpeed      (0.f){}
 
 	bool  GetProcessed()                  const { return mProcessed; }
 	void  SetProcessed(bool processed)          { mProcessed = processed; }
@@ -189,6 +237,7 @@ class RequirePursuingSpeedMessage : public GameMessage
 public:
 
 	RequirePursuingSpeedMessage() : 
+		GameMessage    (GM_Type::RequirePursuingSpeed),
 		mPursuingSpeed (0.f) {}
 
 	bool  GetProcessed()                  const { return mProcessed; }
@@ -209,8 +258,9 @@ class RequireRouteMessage : public GameMessage
 public:
 
 	RequireRouteMessage() : 
-		m_pRoutePoints(nullptr),
-		mCurrentRoutePoint(0) {}
+		GameMessage        (GM_Type::RequireRoute),
+		m_pRoutePoints     (nullptr),
+		mCurrentRoutePoint (0) {}
 
 	const std::vector<vec2> * GetRoutePoints()                                 const { return m_pRoutePoints; }
 	void                      SetRoutePoints(const std::vector<vec2> * pRoutePoints) { m_pRoutePoints = pRoutePoints; }
@@ -230,8 +280,9 @@ class IncreaseCurrentRoutePointMessage : public GameMessage
 public:
 
 	IncreaseCurrentRoutePointMessage(float currentX, float currentY) : 
-		mCurrentX(currentX),
-		mCurrentY(currentY) {}
+		GameMessage (GM_Type::IncreaseCurrentRoutePoint),
+		mCurrentX   (currentX),
+		mCurrentY   (currentY) {}
 
 	float GetCurrentX() const { return mCurrentX; }
 	float GetCurrentY() const { return mCurrentY; }
@@ -250,8 +301,9 @@ class SetMovementMessage : public GameMessage
 public:
 
 	SetMovementMessage(float x, float y) : 
-		mX(x),
-		mY(y) {}
+		GameMessage (GM_Type::SetMovement),
+		mX          (x),
+		mY          (y) {}
 
 	float GetX() const { return mX; }
 	float GetY() const { return mY; }
@@ -266,24 +318,40 @@ private:
 
 class MoveUpMessage : public GameMessage
 {
+public:
+
+	MoveUpMessage() : 
+		GameMessage (GM_Type::MoveUp) {}
 };
 
 /***************************/
 
 class MoveDownMessage : public GameMessage
 {
+public:
+
+	MoveDownMessage() : 
+		GameMessage (GM_Type::MoveDown) {}
 };
 
 /***************************/
 
 class MoveLeftMessage : public GameMessage
 {
+public:
+
+	MoveLeftMessage() :
+		GameMessage(GM_Type::MoveLeft) {}
 };
 
 /***************************/
 
 class MoveRightMessage : public GameMessage
 {
+public:
+
+	MoveRightMessage() : 
+		GameMessage (GM_Type::MoveRight) {}
 };
 
 /***************************/
@@ -293,7 +361,8 @@ class ChangeSpriteMessage : public GameMessage
 public:
 
 	ChangeSpriteMessage(const char * image) : 
-		mImage(image) {}
+		GameMessage (GM_Type::ChangeSprite),
+		mImage      (image) {}
 
 	const char * GetImage() const { return mImage; }
 

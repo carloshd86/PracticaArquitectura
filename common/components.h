@@ -8,11 +8,15 @@
 #include "game.h"
 #include "graphicsengine.h"
 #include <assert.h>
+#include <functional>
 
 
 class Component 
 {
 public:
+
+	typedef std::function<void(GameMessage&)> MessageCallbackFun;
+	typedef std::map<GameMessage::GM_Type, MessageCallbackFun> MessageCallbackMap;
 
 	Component(Entity * owner) :
 		mOwner(owner) {}
@@ -20,6 +24,8 @@ public:
 
 	Entity * mOwner;
 
+	virtual void Init()               = 0;
+	virtual void End()                = 0;
 	virtual void Run(float deltaTime) = 0;
 };
 
@@ -38,15 +44,25 @@ public:
 		mImage       (image),
 	    mInitialized (false) {}
 
-	ISprite * GetSprite () const { return m_pSprite; }
-	virtual void Run   (float deltaTime) {}
-	
+	virtual ~C_Renderable()
+	{
+		End();
+	}
+
 	virtual void Init()
 	{
 		if (!mInitialized)
 		{
 			assert(g_pGraphicsEngine);
 			m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage);
+
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::SetPosition     , std::bind(&C_Renderable::OnSetPosition     , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::AddPosition     , std::bind(&C_Renderable::OnAddPosition     , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::SetSize         , std::bind(&C_Renderable::OnSetSize         , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::RequirePosition , std::bind(&C_Renderable::OnRequirePosition , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::RequireSize     , std::bind(&C_Renderable::OnRequireSize     , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::ChangeSprite    , std::bind(&C_Renderable::OnChangeSprite    , this, std::placeholders::_1)));
+
 			mInitialized = true;
 		}
 	}
@@ -57,10 +73,15 @@ public:
 		{
 			assert(g_pGraphicsEngine);
 			g_pGraphicsEngine->ReleaseSprite(m_pSprite);
+
+			mMessageCallbacks.clear();
+
 			mInitialized = false;
 		}
 	}
 
+	ISprite * GetSprite () const { return m_pSprite; }
+	virtual void Run   (float deltaTime) {}
 
 	vec2 GetPos() const
 	{
@@ -88,70 +109,83 @@ public:
 
 	void ReceiveMessage(GameMessage &message)
 	{
+		GameMessage::GM_Type messageType = message.GetType();
+		if (mMessageCallbacks.end() != mMessageCallbacks.find(messageType))
+			mMessageCallbacks[messageType](message);
+	}
+
+private:
+	
+	vec2               mPos;
+	vec2               mSize;
+	const char        *mImage;
+	ISprite           *m_pSprite;
+	bool               mInitialized;
+	MessageCallbackMap mMessageCallbacks;
+
+	void OnSetPosition(GameMessage& message)
+	{
 		SetPositionMessage * spm = dynamic_cast<SetPositionMessage *>(&message);
 		if (spm)
 		{
 			SetPos(spm->GetX(), spm->GetY());
 		}
-		else
+	}
+
+	void OnAddPosition(GameMessage& message)
+	{
+		AddPositionMessage * apm = dynamic_cast<AddPositionMessage *>(&message);
+		if (apm)
 		{
-			AddPositionMessage * apm = dynamic_cast<AddPositionMessage *>(&message);
-			if (apm)
-			{
-				SetPos(mPos.x + apm->GetX(), mPos.y + apm->GetY());
-			}
-			else
-			{
-				SetSizeMessage * ssm = dynamic_cast<SetSizeMessage *>(&message);
-				if (ssm)
-				{
-					SetSize(ssm->GetX(), ssm->GetY());
-				}
-				else
-				{
-					RequirePositionMessage * rpm = dynamic_cast<RequirePositionMessage *>(&message);
-					if (rpm)
-					{
-						rpm->SetX(mPos.x);
-						rpm->SetY(mPos.y);
-						rpm->SetProcessed(true);
-					}
-					else
-					{
-						RequireSizeMessage * rsm = dynamic_cast<RequireSizeMessage *>(&message);
-						if (rsm)
-						{
-							rsm->SetX(mSize.x);
-							rsm->SetY(mSize.y);
-							rsm->SetProcessed(true);
-						}
-						else
-						{
-							ChangeSpriteMessage * csm = dynamic_cast<ChangeSpriteMessage *>(&message);
-							if (csm)
-							{
-								const char * requiredTexture = csm->GetImage();
-								if (strcmp(requiredTexture, mImage)) {
-									// TODO cuidado con esto
-									mImage = requiredTexture;
-									g_pGraphicsEngine->ReleaseSprite(m_pSprite);
-									m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage);
-								}
-							}
-						}
-					}
-				}
-			}
+			SetPos(mPos.x + apm->GetX(), mPos.y + apm->GetY());
 		}
 	}
 
-private:
-	
-	vec2        mPos;
-	vec2        mSize;
-	const char *mImage;
-	ISprite     *m_pSprite;
-	bool        mInitialized;
+	void OnSetSize(GameMessage& message)
+	{
+		SetSizeMessage * ssm = dynamic_cast<SetSizeMessage *>(&message);
+		if (ssm)
+		{
+			SetSize(ssm->GetX(), ssm->GetY());
+		}
+	}
+
+	void OnRequirePosition(GameMessage& message)
+	{
+		RequirePositionMessage * rpm = dynamic_cast<RequirePositionMessage *>(&message);
+		if (rpm)
+		{
+			rpm->SetX(mPos.x);
+			rpm->SetY(mPos.y);
+			rpm->SetProcessed(true);
+		}
+	}
+
+	void OnRequireSize(GameMessage& message)
+	{
+		RequireSizeMessage * rsm = dynamic_cast<RequireSizeMessage *>(&message);
+		if (rsm)
+		{
+			rsm->SetX(mSize.x);
+			rsm->SetY(mSize.y);
+			rsm->SetProcessed(true);
+		}
+	}
+
+	void OnChangeSprite(GameMessage& message)
+	{
+		ChangeSpriteMessage * csm = dynamic_cast<ChangeSpriteMessage *>(&message);
+		if (csm)
+		{
+			const char * requiredTexture = csm->GetImage();
+			if (strcmp(requiredTexture, mImage)) {
+				// TODO cuidado con esto
+				mImage = requiredTexture;
+				g_pGraphicsEngine->ReleaseSprite(m_pSprite);
+				m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage);
+			}
+		}
+	}
 };
 
 // *************************************************
@@ -166,6 +200,37 @@ public:
 		Component  (owner),
 		mMovement { 0, 0 },
 		mSpeed    (speed) {}
+
+	virtual ~C_Movable()
+	{
+		End();
+	}
+
+	virtual void Init()
+	{
+		if (!mInitialized)
+		{ 
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::RigidBodyCollision , std::bind(&C_Movable::OnRigidBodyCollision , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::RequireMovement    , std::bind(&C_Movable::OnRequireMovement    , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::SetMovement        , std::bind(&C_Movable::OnSetMovement        , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::MoveUp             , std::bind(&C_Movable::OnMoveUp             , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::MoveDown           , std::bind(&C_Movable::OnMoveDown           , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::MoveLeft           , std::bind(&C_Movable::OnMoveLeft           , this, std::placeholders::_1)));
+			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::MoveRight          , std::bind(&C_Movable::OnMoveRight          , this, std::placeholders::_1)));
+			
+			mInitialized = true;
+		}
+	}
+
+	virtual void End()
+	{
+		if (mInitialized)
+		{ 
+			mMessageCallbacks.clear();
+			
+			mInitialized = false;
+		}
+	}
 
 	virtual void Run(float deltaTime)
 	{
@@ -232,71 +297,87 @@ public:
 
 	void ReceiveMessage(GameMessage &message)
 	{
-		RigidBodyCollisionMessage * wcm = dynamic_cast<RigidBodyCollisionMessage *>(&message);
-		if (wcm)
-		{
-			if      (RigidBodyCollisionMessage::Type::CollisionX == wcm->GetType()) mOwner->ReceiveMessage(AddPositionMessage(-mLastMovement.x, 0.f));
-			else if (RigidBodyCollisionMessage::Type::CollisionY == wcm->GetType()) mOwner->ReceiveMessage(AddPositionMessage(0.f, -mLastMovement.y));;
-		}
-		else
-		{
-			RequireMovementMessage * rmm = dynamic_cast<RequireMovementMessage *>(&message);
-			if (rmm)
-			{
-				rmm->SetX(mLastMovement.x);
-				rmm->SetY(mLastMovement.y);
-				rmm->SetSpeed(mSpeed);
-				rmm->SetProcessed(true);
-			}
-			else
-			{
-				SetMovementMessage * smm = dynamic_cast<SetMovementMessage *>(&message);
-				if (smm)
-				{
-					mMovement.x = smm->GetX();
-					mMovement.y = smm->GetY();
-				}
-				else
-				{
-					MoveUpMessage * mum = dynamic_cast<MoveUpMessage *>(&message);
-					if (mum)
-					{
-						mMovement.y = mSpeed;
-					}
-					else
-					{
-						MoveDownMessage  * mdm = dynamic_cast<MoveDownMessage *>(&message);
-						if (mdm)
-						{
-							mMovement.y = -mSpeed;
-						}
-						else
-						{
-							MoveLeftMessage  * mlm = dynamic_cast<MoveLeftMessage *>(&message);
-							if (mlm)
-							{
-								mMovement.x = -mSpeed;
-							}
-							else
-							{
-								MoveRightMessage * mrm = dynamic_cast<MoveRightMessage *>(&message);
-								if (mrm)
-								{
-									mMovement.x = mSpeed;
-								}
-							}
-						}
-					}	
-				}
-			}
-		}
+		GameMessage::GM_Type messageType = message.GetType();
+		if (mMessageCallbacks.end() != mMessageCallbacks.find(messageType))
+			mMessageCallbacks[messageType](message);
 	}
 
 private:
 
-	vec2  mMovement;
-	vec2  mLastMovement;
-	float mSpeed;
+	vec2               mMovement;
+	vec2               mLastMovement;
+	float              mSpeed;
+	MessageCallbackMap mMessageCallbacks;
+	bool               mInitialized;
+
+	void OnRigidBodyCollision(GameMessage& message)
+	{
+		RigidBodyCollisionMessage * wcm = dynamic_cast<RigidBodyCollisionMessage *>(&message);
+		if (wcm)
+		{
+			RigidBodyCollisionMessage::RGBM_Type collisionType = wcm->GetCollisionType();
+			if      (RigidBodyCollisionMessage::RGBM_Type::CollisionX == collisionType) mOwner->ReceiveMessage(AddPositionMessage(-mLastMovement.x, 0.f));
+			else if (RigidBodyCollisionMessage::RGBM_Type::CollisionY == collisionType) mOwner->ReceiveMessage(AddPositionMessage(0.f, -mLastMovement.y));;
+		}
+	}
+
+	void OnRequireMovement(GameMessage& message)
+	{
+		RequireMovementMessage * rmm = dynamic_cast<RequireMovementMessage *>(&message);
+		if (rmm)
+		{
+			rmm->SetX(mLastMovement.x);
+			rmm->SetY(mLastMovement.y);
+			rmm->SetSpeed(mSpeed);
+			rmm->SetProcessed(true);
+		}
+	}
+
+	void OnSetMovement(GameMessage& message)
+	{
+		SetMovementMessage * smm = dynamic_cast<SetMovementMessage *>(&message);
+		if (smm)
+		{
+			mMovement.x = smm->GetX();
+			mMovement.y = smm->GetY();
+		}
+	}
+
+	void OnMoveUp(GameMessage& message)
+	{
+		MoveUpMessage * mum = dynamic_cast<MoveUpMessage *>(&message);
+		if (mum)
+		{
+			mMovement.y = mSpeed;
+		}
+	}
+
+	void OnMoveDown(GameMessage& message)
+	{
+		MoveDownMessage  * mdm = dynamic_cast<MoveDownMessage *>(&message);
+		if (mdm)
+		{
+			mMovement.y = -mSpeed;
+		}
+	}
+
+	void OnMoveLeft(GameMessage& message)
+	{
+		MoveLeftMessage  * mlm = dynamic_cast<MoveLeftMessage *>(&message);
+		if (mlm)
+		{
+			mMovement.x = -mSpeed;
+		}
+	}
+
+	void OnMoveRight(GameMessage& message)
+	{
+		MoveRightMessage * mrm = dynamic_cast<MoveRightMessage *>(&message);
+		if (mrm)
+		{
+			mMovement.x = mSpeed;
+		}
+	}
 };
 
 // *************************************************
@@ -321,10 +402,10 @@ public:
 		if (!mInitialized)
 		{
 			assert(g_pEventManager);
-			g_pEventManager->Register(this, IEventManager::EM_Event::MoveUp, 0);
-			g_pEventManager->Register(this, IEventManager::EM_Event::MoveDown, 0);
-			g_pEventManager->Register(this, IEventManager::EM_Event::MoveLeft, 0);
-			g_pEventManager->Register(this, IEventManager::EM_Event::MoveRight, 0);
+			g_pEventManager->Register(this, IEventManager::EM_Event::MoveUp    , 0);
+			g_pEventManager->Register(this, IEventManager::EM_Event::MoveDown  , 0);
+			g_pEventManager->Register(this, IEventManager::EM_Event::MoveLeft  , 0);
+			g_pEventManager->Register(this, IEventManager::EM_Event::MoveRight , 0);
 
 			mInitialized = true;
 		}
@@ -375,9 +456,28 @@ public:
 	C_Player(Entity * owner) :
 		Component(owner) {}
 
+	virtual ~C_Player()
+	{
+		End();
+	}
+
+	virtual void Init()
+	{
+		mInitialized = true;
+	}
+
+	virtual void End()
+	{
+		mInitialized = false;
+	}
+
 	virtual void Run(float deltaTime)
 	{
 	}
+
+private:
+
+	bool mInitialized;
 };
 
 // *************************************************
@@ -389,16 +489,35 @@ class C_Enemy : public Component, public IMessageReceiver
 
 public:
 
-	enum State
+	enum CE_State
 	{
-		CES_PATROLLING,
-		CES_PURSUING
+		Patrolling,
+		Pursuing
 	};
 
 	C_Enemy(Entity * owner, float pursuingSpeed) :
 		Component       (owner),
 		mPursuingSpeed (pursuingSpeed),
-		mState         (CES_PATROLLING) {}
+		mState         (Patrolling) {}
+
+	virtual ~C_Enemy()
+	{
+		End();
+	}
+
+	virtual void Init()
+	{
+		mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::RequirePursuingSpeed, std::bind(&C_Enemy::OnRequirePursuingSpeed, this, std::placeholders::_1)));
+
+		mInitialized = true;
+	}
+
+	virtual void End()
+	{
+		mMessageCallbacks.clear();
+
+		mInitialized = false;
+	}
 
 	virtual void Run(float deltaTime)
 	{
@@ -435,7 +554,7 @@ public:
 		const   std::vector<vec2> * routePoints  = routeMessage.GetRoutePoints();
 		uint8_t currentRoutePoint                = routeMessage.GetCurrentRoutePoint();
 
-		if (CES_PATROLLING == mState && routePoints && !routePoints->empty())
+		if (Patrolling == mState && routePoints && !routePoints->empty())
 		{
 			vec2 nextRoutePoint = (*routePoints)[currentRoutePoint];
 
@@ -457,7 +576,7 @@ public:
 				{
 					enemy_sights = true;
 					OutputDebugString("Enemy sights player\n");
-					mState = CES_PURSUING;
+					mState = Pursuing;
 				}
 			}
 			else if (movement.x > 0 && playerPos.x > pos.x)
@@ -467,7 +586,7 @@ public:
 				{
 					enemy_sights = true;
 					OutputDebugString("Enemy sights player\n");
-					mState = CES_PURSUING;
+					mState = Pursuing;
 				}
 			}
 		} 
@@ -488,6 +607,20 @@ public:
 
 	void ReceiveMessage(GameMessage &message)
 	{
+		GameMessage::GM_Type messageType = message.GetType();
+		if (mMessageCallbacks.end() != mMessageCallbacks.find(messageType))
+			mMessageCallbacks[messageType](message);
+	}
+
+private:
+
+	CE_State           mState;
+	float              mPursuingSpeed;
+	bool               mInitialized;
+	MessageCallbackMap mMessageCallbacks;
+
+	void OnRequirePursuingSpeed(GameMessage& message)
+	{
 		RequirePursuingSpeedMessage * rpsm = dynamic_cast<RequirePursuingSpeedMessage *>(&message);
 		if (rpsm)
 		{
@@ -496,10 +629,6 @@ public:
 		}
 	}
 
-private:
-
-	State mState;
-	float mPursuingSpeed;
 };
 
 // *************************************************
@@ -513,6 +642,26 @@ public:
 	C_RoutePath(Entity * owner) :
 		Component           (owner),
 		mCurrentRoutePoint (0) {}
+
+	virtual ~C_RoutePath()
+	{
+		End();
+	}
+
+	virtual void Init()
+	{
+		mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::RequireRoute              , std::bind(&C_RoutePath::OnRequireRoute              , this, std::placeholders::_1)));
+		mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::IncreaseCurrentRoutePoint , std::bind(&C_RoutePath::OnIncreaseCurrentRoutePoint , this, std::placeholders::_1)));
+
+		mInitialized = true;
+	}
+
+	virtual void End()
+	{
+		mMessageCallbacks.clear();
+
+		mInitialized = false;
+	}
 
 	virtual void Run(float deltaTime)
 	{
@@ -547,29 +696,39 @@ public:
 
 	void ReceiveMessage(GameMessage &message)
 	{
+		GameMessage::GM_Type messageType = message.GetType();
+		if (mMessageCallbacks.end() != mMessageCallbacks.find(messageType))
+			mMessageCallbacks[messageType](message);
+	}
+
+private:
+
+	std::vector<vec2>  mRoutePoints;
+	uint8_t            mCurrentRoutePoint;
+	bool               mInitialized;
+	MessageCallbackMap mMessageCallbacks;
+
+	void OnRequireRoute(GameMessage& message)
+	{
 		RequireRouteMessage * rrm = dynamic_cast<RequireRouteMessage *>(&message);
 		if (rrm)
 		{
 			rrm->SetCurrentRoutePoint(mCurrentRoutePoint);
 			rrm->SetRoutePoints(&mRoutePoints);
 		}
-		else
-		{
-			IncreaseCurrentRoutePointMessage * icrpm = dynamic_cast<IncreaseCurrentRoutePointMessage *>(&message);
-			if (icrpm)
-			{ 
-				if (abs(mRoutePoints[mCurrentRoutePoint].x - icrpm->GetCurrentX()) < 2 && abs(mRoutePoints[mCurrentRoutePoint].y - icrpm->GetCurrentY()) < 2)
-					++mCurrentRoutePoint;
-				if(mCurrentRoutePoint >= mRoutePoints.size())
-					mCurrentRoutePoint = 0;
-			}
-		}
 	}
 
-private:
-
-	std::vector<vec2> mRoutePoints;
-	uint8_t           mCurrentRoutePoint;
+	void OnIncreaseCurrentRoutePoint(GameMessage& message)
+	{
+		IncreaseCurrentRoutePointMessage * icrpm = dynamic_cast<IncreaseCurrentRoutePointMessage *>(&message);
+		if (icrpm)
+		{ 
+			if (abs(mRoutePoints[mCurrentRoutePoint].x - icrpm->GetCurrentX()) < 2 && abs(mRoutePoints[mCurrentRoutePoint].y - icrpm->GetCurrentY()) < 2)
+				++mCurrentRoutePoint;
+			if(mCurrentRoutePoint >= mRoutePoints.size())
+				mCurrentRoutePoint = 0;
+		}
+	}
 };
 
 // *************************************************
@@ -583,9 +742,28 @@ public:
 	C_RigidBody(Entity * owner) :
 		Component(owner) {}
 
+	virtual ~C_RigidBody()
+	{
+		End();
+	}
+
+	virtual void Init()
+	{
+		mInitialized = true;
+	}
+
+	virtual void End()
+	{
+		mInitialized = false;
+	}
+
 	virtual void Run(float deltaTime)
 	{
 	}
+
+private:
+
+	bool mInitialized;
 };
 
 // *************************************************
@@ -599,9 +777,28 @@ public:
 	C_Goal(Entity * owner) :
 		Component(owner) {}
 
+	virtual ~C_Goal()
+	{
+		End();
+	}
+
+	virtual void Init()
+	{
+		mInitialized = true;
+	}
+
+	virtual void End()
+	{
+		mInitialized = false;
+	}
+
 	virtual void Run(float deltaTime)
 	{
 	}
+
+private:
+
+	bool mInitialized;
 };
 
 #endif

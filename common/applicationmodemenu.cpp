@@ -32,7 +32,7 @@ ApplicationModeMenu::~ApplicationModeMenu()
 
 IdMode ApplicationModeMenu::GetId()
 {
-	return AM_MENU;
+	return AM_Menu;
 }
 
 // *************************************************
@@ -126,6 +126,7 @@ void ApplicationModeMenu::ProcessInput()
 
 void ApplicationModeMenu::Run(float deltaTime)
 {
+	if (mCurrentContainer) mCurrentContainer->Update(deltaTime);
 }
 
 // *************************************************
@@ -215,7 +216,7 @@ Button * ApplicationModeMenu::InitButton(std::function<void()> clickFunction, fl
 void ApplicationModeMenu::StartLevel1()
 {
 	g_gameLevel = 1;
-	g_pApplicationManager->SwitchMode(AM_GAME);
+	g_pApplicationManager->SwitchMode(AM_Game);
 }
 
 // *************************************************
@@ -225,7 +226,7 @@ void ApplicationModeMenu::StartLevel1()
 void ApplicationModeMenu::StartLevel2()
 {
 	g_gameLevel = 2;
-	g_pApplicationManager->SwitchMode(AM_GAME);
+	g_pApplicationManager->SwitchMode(AM_Game);
 }
 
 // *************************************************
@@ -235,7 +236,7 @@ void ApplicationModeMenu::StartLevel2()
 void ApplicationModeMenu::StartLevel3()
 {
 	g_gameLevel = 3;
-	g_pApplicationManager->SwitchMode(AM_GAME);
+	g_pApplicationManager->SwitchMode(AM_Game);
 }
 
 // *************************************************

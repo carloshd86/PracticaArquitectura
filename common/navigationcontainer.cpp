@@ -2,9 +2,10 @@
 #include "control.h"
 
 
-NavigationContainer::NavigationContainer() :
-	Container     (),
-	mFocusedIndex (-1) {}
+NavigationContainer::NavigationContainer(bool allowNoFocused) :
+	Container       (),
+	mFocusedIndex   (-1),
+    mAllowNoFocused (allowNoFocused) {}
 
 // *************************************************
 //
@@ -12,6 +13,16 @@ NavigationContainer::NavigationContainer() :
 
 NavigationContainer::~NavigationContainer()
 {
+}
+
+// *************************************************
+//
+// *************************************************
+
+void NavigationContainer::Update(float deltaTime)
+{
+	Container::Update(deltaTime);
+	if (!mAllowNoFocused && !mControls.empty() && mFocusedIndex < 0) FocusNextControl();
 }
 
 // *************************************************

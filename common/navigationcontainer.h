@@ -12,8 +12,10 @@ class NavigationContainer : public Container
 
 public:
 
-	NavigationContainer();
+	NavigationContainer(bool allowNoFocused = false);
 	virtual ~NavigationContainer();
+
+	virtual void Update (float deltaTime);
 
 	virtual Control * GetFocusedControl    ();
 	virtual void      FocusNextControl     ();
@@ -22,7 +24,8 @@ public:
 
 private:
 
-	int mFocusedIndex;
+	int  mFocusedIndex;
+	bool mAllowNoFocused;
 };
 
 #endif
