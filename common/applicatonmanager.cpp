@@ -8,7 +8,8 @@
 ApplicationManager::ApplicationManager() : 
 	mDesiredMode      (AM_Menu),
 	m_pGameMode       (nullptr),
-	mLang             (DEFAULT_LANG) {}
+	mLang             (DEFAULT_LANG),
+	mAudioActivated   (true) {}
 
 // *************************************************
 //
@@ -98,4 +99,22 @@ Properties::P_Language ApplicationManager::GetLang() const
 void ApplicationManager::SetLang(Properties::P_Language lang)
 {
 	mLang = lang;
+}
+
+// *************************************************
+//
+// *************************************************
+
+bool ApplicationManager::IsAudioActivated() const
+{
+	return mAudioActivated;
+}
+
+// *************************************************
+//
+// *************************************************
+
+void ApplicationManager::SetAudioActivated(bool audioActivated)
+{
+	mAudioActivated = audioActivated;
 }

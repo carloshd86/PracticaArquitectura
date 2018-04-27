@@ -44,6 +44,8 @@ void CoreGraphicsEngine::Init()
 	if (!mInitialized)
 	{
 		if (!mBackgroundImage.empty()) mBackground = CORE_LoadPNG(mBackgroundImage.c_str(), true);
+		mOverlayActive = false;
+
 		mInitialized = true;
 	}
 }

@@ -38,10 +38,10 @@ class C_Renderable : public Component, public IMessageReceiver
 public:
 
 	C_Renderable(Entity * owner, vec2 pos, vec2 size, const char * image) :
-		Component     (owner),
+		Component    (owner),
 		mPos         (pos),
 		mSize        (size),
-		mImage       (image),
+		m_pImage     (image),
 	    mInitialized (false) {}
 
 	virtual ~C_Renderable()
@@ -54,7 +54,7 @@ public:
 		if (!mInitialized)
 		{
 			assert(g_pGraphicsEngine);
-			m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage);
+			m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, m_pImage);
 
 			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::SetPosition     , std::bind(&C_Renderable::OnSetPosition     , this, std::placeholders::_1)));
 			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::AddPosition     , std::bind(&C_Renderable::OnAddPosition     , this, std::placeholders::_1)));
@@ -118,7 +118,7 @@ private:
 	
 	vec2               mPos;
 	vec2               mSize;
-	const char        *mImage;
+	const char        *m_pImage;
 	ISprite           *m_pSprite;
 	bool               mInitialized;
 	MessageCallbackMap mMessageCallbacks;
@@ -178,11 +178,12 @@ private:
 		if (csm)
 		{
 			const char * requiredTexture = csm->GetImage();
-			if (strcmp(requiredTexture, mImage)) {
+			if (strcmp(requiredTexture, m_pImage)) 
+			{
 				// TODO cuidado con esto
-				mImage = requiredTexture;
+				m_pImage = requiredTexture;
 				g_pGraphicsEngine->ReleaseSprite(m_pSprite);
-				m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage);
+				m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, m_pImage);
 			}
 		}
 	}

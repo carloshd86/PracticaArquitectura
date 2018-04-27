@@ -362,13 +362,13 @@ public:
 
 	ChangeSpriteMessage(const char * image) : 
 		GameMessage (GM_Type::ChangeSprite),
-		mImage      (image) {}
+		m_pImage    (image) {}
 
-	const char * GetImage() const { return mImage; }
+	const char * GetImage() const { return m_pImage; }
 
 private:
 
-	const char * mImage;
+	const char * m_pImage;
 };
 
 #endif

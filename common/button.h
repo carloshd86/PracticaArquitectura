@@ -41,7 +41,7 @@ private:
 	Properties *m_pProperties;
 	std::string mTextKey;
 	std::string mText;
-	IListener  *mListener;
+	IListener  *m_pListener;
 };
 
 

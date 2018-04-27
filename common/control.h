@@ -23,7 +23,7 @@ public:
 
 	virtual bool GetVisible () const;
 	virtual void SetVisible (bool visible);
-
+	
 
 protected:
 

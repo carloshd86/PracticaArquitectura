@@ -99,6 +99,9 @@
     <ClCompile Include="..\..\common\applicatonmanager.cpp">
       <Filter>ApplicationManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\checkbox.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\control.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="..\..\common\game.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\checkbox.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

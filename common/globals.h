@@ -16,11 +16,6 @@ extern int                  g_gameLevel;
 extern IGraphicsEngine    * g_pGraphicsEngine;
 extern IEventManager      * g_pEventManager;
 
-
-const int KEY_LEVEL_1 = 0x31;
-const int KEY_LEVEL_2 = 0x32;
-const int KEY_LEVEL_3 = 0x33;
-
 constexpr const char * LEVEL_JSON_KEY          = "level";
 constexpr const char * GOAL_JSON_KEY           = "goal";
 constexpr const char * PLAYER_JSON_KEY         = "player";
