@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "properties.h"
 #include <fstream>
 #include <algorithm>

@@ -1,5 +1,5 @@
-#include "sysinputmanager.h"
 #include "stdafx.h"
+#include "sysinputmanager.h"
 #include "globals.h"
 #include "sys.h"
 #include <algorithm>

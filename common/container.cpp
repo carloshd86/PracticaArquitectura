@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "container.h"
 #include "control.h"
 
