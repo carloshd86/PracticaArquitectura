@@ -10,7 +10,8 @@
 
 
 ApplicationModeMenu::ApplicationModeMenu () :
-	mCurrentContainer (nullptr) {}
+	mCurrentContainer (nullptr),
+	mMusicId          (0) {}
 
 // *************************************************
 //
@@ -80,7 +81,7 @@ void ApplicationModeMenu::Activate()
 		     
 	Button   * spanishButton       = InitButton   (std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::Spanish) , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.spanish.text");
 	Button   * englishButton       = InitButton   (std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::English) , SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.english.text");
-	Checkbox * audioCheckbox       = InitCheckbox (SCR_HEIGHT/4.f, 230.f, 250.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.activateAudio.text", g_pApplicationManager->IsAudioActivated());
+	Checkbox * audioCheckbox       = InitCheckbox (                                                                                          SCR_HEIGHT/4.f, 230.f, 250.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.activateAudio.text", g_pApplicationManager->IsAudioActivated());
 	mControlMap[audioCheckbox]     = std::bind(&ApplicationModeMenu::ChangeActivatedAudio, this, audioCheckbox);
 	Button   * optionsReturnButton = InitButton   (std::bind(&ApplicationModeMenu::OpenMenu       , this, 0)                               , SCR_HEIGHT/4.f, 180.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
@@ -88,6 +89,9 @@ void ApplicationModeMenu::Activate()
 	mContainers.push_back(optionsContainer);
 
 	g_pGraphicsEngine->Init();
+
+	mMusicId = g_pSoundManager->LoadWav("../data/Superboy.wav");
+	ChangeActivatedAudio(audioCheckbox);
 }
 
 // *************************************************
@@ -140,7 +144,7 @@ void ApplicationModeMenu::Run(float deltaTime)
 
 void ApplicationModeMenu::Render()
 {
-	glColor3f(0.f, 1.f, 1.f);
+	glColor3f(1.f, 1.f, 1.f);
 	glClear( GL_COLOR_BUFFER_BIT );
 
 	FONT_DrawString(vmake(SCR_HEIGHT/4.f, 400.f), m_pProperties->GetProperty("main_menu.title.text").c_str());
@@ -221,7 +225,7 @@ Button * ApplicationModeMenu::InitButton(std::function<void()> clickFunction, fl
 
 	button->SetListener(this);
 
-	g_pEventManager->Register(button  , IEventManager::EM_Event::SinglePressEnter, 0);
+	g_pEventManager->Register(button, IEventManager::EM_Event::SinglePressEnter, 0);
 
 	mControlMap[button] = clickFunction;
 
@@ -238,7 +242,7 @@ Checkbox * ApplicationModeMenu::InitCheckbox(float x, float y, float width, floa
 
 	checkbox->SetListener(this);
 
-	g_pEventManager->Register(checkbox  , IEventManager::EM_Event::SinglePressEnter, 0);
+	g_pEventManager->Register(checkbox, IEventManager::EM_Event::SinglePressEnter, 0);
 
 	return checkbox;
 }
@@ -287,9 +291,7 @@ void ApplicationModeMenu::OpenMenu(int index)
 	}
 
 	if (static_cast<int>(mContainers.size()) > index) mCurrentContainer = mContainers[index];
-	//std::vector<Control *> containerControls = mCurrentContainer->GetControls();
-	//if(!containerControls.empty()) containerControls[0]->SetFocused(true);
-	
+
 	if (mCurrentContainer)
 	{
 		mCurrentContainer->SetVisible(true);
@@ -303,10 +305,9 @@ void ApplicationModeMenu::OpenMenu(int index)
 
 void ApplicationModeMenu::ChangeActivatedAudio(Checkbox * checkbox)
 {
-	bool checkboxChecked = !checkbox->IsChecked();
-	checkbox->SetChecked(checkboxChecked);
+	bool checkboxChecked = checkbox->IsChecked();
 	g_pApplicationManager->SetAudioActivated(checkboxChecked);
-	// TODO poner audio en play o false
+	if (mMusicId) checkboxChecked ? g_pSoundManager->PlayMusic(mMusicId) : g_pSoundManager->StopMusic();
 }
 
 // *************************************************

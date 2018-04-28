@@ -76,9 +76,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>${ProjectDir}../../../../common/openal;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenAL32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>${ProjectDir}../../../../common/openal;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -123,19 +125,20 @@
     <ClCompile Include="..\..\common\container.cpp" />
     <ClCompile Include="..\..\common\control.cpp" />
     <ClCompile Include="..\..\common\core.cpp" />
+    <ClCompile Include="..\..\common\swalibsoundmanager.cpp" />
     <ClCompile Include="..\..\common\entity.cpp" />
     <ClCompile Include="..\..\common\game.cpp" />
     <ClCompile Include="..\..\common\applicatonmanager.cpp" />
     <ClCompile Include="..\..\common\navigationcontainer.cpp" />
     <ClCompile Include="..\..\common\properties.cpp" />
     <ClCompile Include="..\..\common\sysinputmanager.cpp" />
-    <ClCompile Include="..\..\common\coregraphicsengine.cpp" />
+    <ClCompile Include="..\..\common\swalibgraphicsengine.cpp" />
     <ClCompile Include="..\..\common\main.cpp" />
     <ClCompile Include="..\..\common\font.cpp" />
     <ClCompile Include="..\..\common\applicationmodemenu.cpp" />
     <ClCompile Include="..\..\common\applicationmodegame.cpp" />
     <ClCompile Include="..\..\common\lodepng.cpp" />
-    <ClCompile Include="..\..\common\coresprite.cpp" />
+    <ClCompile Include="..\..\common\swalibsprite.cpp" />
     <ClCompile Include="..\..\common\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -148,11 +151,13 @@
     <ClInclude Include="..\..\common\components.h" />
     <ClInclude Include="..\..\common\container.h" />
     <ClInclude Include="..\..\common\control.h" />
+    <ClInclude Include="..\..\common\swalibsoundmanager.h" />
     <ClInclude Include="..\..\common\entity.h" />
     <ClInclude Include="..\..\common\eventmanager.h" />
     <ClInclude Include="..\..\common\graphicsengine.h" />
     <ClInclude Include="..\..\common\navigationcontainer.h" />
     <ClInclude Include="..\..\common\properties.h" />
+    <ClInclude Include="..\..\common\soundmanager.h" />
     <ClInclude Include="..\..\common\sprite.h" />
     <ClInclude Include="..\..\common\sysinputmanager.h" />
     <ClInclude Include="..\..\common\globals.h" />
@@ -162,12 +167,12 @@
     <ClInclude Include="..\..\common\applicationmanager.h" />
     <ClInclude Include="..\..\common\applicationmodemenu.h" />
     <ClInclude Include="..\..\common\applicationmodegame.h" />
-    <ClInclude Include="..\..\common\coregraphicsengine.h" />
+    <ClInclude Include="..\..\common\swalibgraphicsengine.h" />
     <ClInclude Include="..\..\common\lodepng.h" />
     <ClInclude Include="..\..\common\applicationmode.h" />
     <ClInclude Include="..\..\common\messagereceiver.h" />
     <ClInclude Include="..\..\common\messages.h" />
-    <ClInclude Include="..\..\common\coresprite.h" />
+    <ClInclude Include="..\..\common\swalibsprite.h" />
     <ClInclude Include="..\..\common\stdafx.h" />
     <ClInclude Include="..\..\common\sys.h" />
   </ItemGroup>

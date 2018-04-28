@@ -3,6 +3,7 @@
 
 
 #include "graphicsengine.h"
+#include "soundmanager.h"
 #include "eventmanager.h"
 #include "properties.h"
 
@@ -14,6 +15,7 @@ extern ApplicationManager * g_pApplicationManager;
 extern Game               * g_pGame;
 extern int                  g_gameLevel;
 extern IGraphicsEngine    * g_pGraphicsEngine;
+extern ISoundManager      * g_pSoundManager;
 extern IEventManager      * g_pEventManager;
 
 constexpr const char * LEVEL_JSON_KEY          = "level";

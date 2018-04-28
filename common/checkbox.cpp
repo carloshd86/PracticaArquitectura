@@ -8,7 +8,7 @@
 
 const char * Checkbox::UNCHECKED_IMAGE = "../data/checkbox-unchecked.png";
 const char * Checkbox::CHECKED_IMAGE   = "../data/checkbox-checked.png";
-const vec2   Checkbox::IMAGE_SIZE      { 25.f, 25.f};
+const vec2   Checkbox::IMAGE_SIZE      { 25.f, 25.f };
 
 // *************************************************
 //
@@ -31,10 +31,9 @@ Checkbox::Checkbox(float x, float y, float width, float height, Container * pare
 {
 	assert(g_pGraphicsEngine);
 	mText =  m_pProperties->GetProperty(mTextKey);
-	SetChecked(checked);
 	mCheckBoxPos = FONT_GetStringNextPos(vmake(mX, mY), mText.c_str());
 	mCheckBoxPos = vadd(mCheckBoxPos, vmake(16.f, 0.f));
-	m_pSprite = g_pGraphicsEngine->RequireSprite(mCheckBoxPos, IMAGE_SIZE, m_pImage);
+	SetChecked(checked);
 }
 
 // *************************************************
@@ -55,7 +54,7 @@ bool Checkbox::ProcessEvent(IEventManager::EM_Event event)
 	if(!mFocused) return true;
 
 	switch (event) {
-		case IEventManager::EM_Event::SinglePressEnter: { if (mFocused) m_pListener->OnClick(this); break; }
+	case IEventManager::EM_Event::SinglePressEnter: { if (mFocused) { SetChecked(!mChecked); m_pListener->OnClick(this); break; } }
 	}
 
 	return true;
@@ -105,7 +104,7 @@ void Checkbox::SetChecked(bool checked)
 	if (changeImage)
 	{
 		m_pImage = NEXT_IMAGE;
-		m_pSprite = g_pGraphicsEngine->RequireSprite(mCheckBoxPos, IMAGE_SIZE, m_pImage);
+		m_pSprite = g_pGraphicsEngine->RequireSprite(mCheckBoxPos, IMAGE_SIZE, m_pImage, false);
 	}
 }
 

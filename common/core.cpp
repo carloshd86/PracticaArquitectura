@@ -307,10 +307,10 @@ ALuint CORE_LoadWav(const char filename[])
   ALuint          retval = UINT_MAX;
   CORE_RIFFHeader hdr;
   
-  int fd = open(filename, O_RDONLY);
+  int fd = _open(filename, O_RDONLY);
   if (fd != -1)
   {
-    read(fd, &hdr, sizeof(hdr));
+    _read(fd, &hdr, sizeof(hdr));
 
     if (  hdr.chunkID[0] == 'R' && hdr.chunkID[1] == 'I' && hdr.chunkID[2] == 'F' && hdr.chunkID[3] == 'F'
        && hdr.format [0] == 'W' && hdr.format [1] == 'A' && hdr.format [2] == 'V' && hdr.format [3] == 'E' )
@@ -321,15 +321,15 @@ ALuint CORE_LoadWav(const char filename[])
       for (;;)
       {
         CORE_RIFFChunkHeader chunkhdr;
-        if (read(fd, &chunkhdr, sizeof(chunkhdr)) < sizeof(chunkhdr))
+        if (_read(fd, &chunkhdr, sizeof(chunkhdr)) < sizeof(chunkhdr))
           break;
 
         dword chunkdatasize = READ_LE_DWORD(chunkhdr.subChunkSize);
 
         if (chunkhdr.subChunkID[0] == 'f' && chunkhdr.subChunkID[1] == 'm' && chunkhdr.subChunkID[2] == 't' && chunkhdr.subChunkID[3] == ' ')
         {
-          read(fd, &fmt, sizeof(fmt));
-          lseek(fd, ((1 + chunkdatasize) & -2) - sizeof(fmt), SEEK_CUR); // Skip to next chunk
+          _read(fd, &fmt, sizeof(fmt));
+          _lseek(fd, ((1 + chunkdatasize) & -2) - sizeof(fmt), SEEK_CUR); // Skip to next chunk
         }
         else if (chunkhdr.subChunkID[0] == 'd' && chunkhdr.subChunkID[1] == 'a' && chunkhdr.subChunkID[2] == 't' && chunkhdr.subChunkID[3] == 'a')
         {
@@ -337,7 +337,7 @@ ALuint CORE_LoadWav(const char filename[])
           if (contentsize > sizeof(soundloadbuffer))
             contentsize = sizeof(soundloadbuffer);
 
-          read(fd, soundloadbuffer, contentsize);
+          _read(fd, soundloadbuffer, contentsize);
 
           bool valid = true;
           ALsizei al_size = contentsize;
@@ -367,10 +367,10 @@ ALuint CORE_LoadWav(const char filename[])
           break;
         }
         else
-          lseek(fd, ((1 + READ_LE_DWORD(chunkhdr.subChunkSize)) & -2), SEEK_CUR); // Skip to next chunk
+          _lseek(fd, ((1 + READ_LE_DWORD(chunkhdr.subChunkSize)) & -2), SEEK_CUR); // Skip to next chunk
       }
     }
-    close(fd);
+    _close(fd);
   }
 
   return retval;

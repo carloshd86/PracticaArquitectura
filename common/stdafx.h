@@ -16,6 +16,10 @@
 #include <gl/gl.h>
 #include <GL/glu.h>
 
+#ifndef SWALIB_SOUND
+#define SWALIB_SOUND
+#endif
+
 #ifdef SWALIB_SOUND
 #include <al.h>
 #include <alc.h>

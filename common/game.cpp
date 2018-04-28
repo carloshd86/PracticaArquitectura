@@ -6,7 +6,7 @@
 #include "gameinputmanager.h"
 #include "messagereceiver.h"
 #include "messages.h"
-#include "rapidjson\document.h"
+#include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
 #include <assert.h>
 #include <fstream>

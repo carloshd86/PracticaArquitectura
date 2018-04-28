@@ -40,6 +40,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{77766e2b-86ff-4fff-836e-acc60f19dc83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SoundManager">
+      <UniqueIdentifier>{6d905479-87a0-4808-af3c-2fcf0378501c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\common\container.cpp">
@@ -66,9 +69,6 @@
     <ClCompile Include="..\..\common\entity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\common\coregraphicsengine.cpp">
-      <Filter>GraphicsEngine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\common\core.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
@@ -87,9 +87,6 @@
     <ClCompile Include="..\..\common\properties.cpp">
       <Filter>Properties</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\common\coresprite.cpp">
-      <Filter>Sprites</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\common\game.cpp">
       <Filter>Game</Filter>
     </ClCompile>
@@ -101,6 +98,15 @@
     </ClCompile>
     <ClCompile Include="..\..\common\checkbox.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\swalibgraphicsengine.cpp">
+      <Filter>GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\swalibsoundmanager.cpp">
+      <Filter>SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\swalibsprite.cpp">
+      <Filter>Sprites</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,9 +149,6 @@
     <ClInclude Include="..\..\common\graphicsengine.h">
       <Filter>GraphicsEngine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\coregraphicsengine.h">
-      <Filter>GraphicsEngine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\common\core.h">
       <Filter>Lib</Filter>
     </ClInclude>
@@ -176,14 +179,23 @@
     <ClInclude Include="..\..\common\sprite.h">
       <Filter>Sprites</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\coresprite.h">
-      <Filter>Sprites</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\common\game.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\checkbox.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\soundmanager.h">
+      <Filter>SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\swalibgraphicsengine.h">
+      <Filter>GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\swalibsoundmanager.h">
+      <Filter>SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\swalibsprite.h">
+      <Filter>Sprites</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
