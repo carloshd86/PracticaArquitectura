@@ -9,7 +9,9 @@ enum IdMode
 {
 	AM_Null,
 	AM_Menu,
-	AM_Game
+	AM_Game,
+	AM_LevelCompleted,
+	AM_GameOver
 };
 
 class ApplicationMode 

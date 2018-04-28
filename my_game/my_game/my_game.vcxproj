@@ -120,6 +120,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\common\applicationmodegameover.cpp" />
+    <ClCompile Include="..\..\common\applicationmodelevelcompleted.cpp" />
     <ClCompile Include="..\..\common\button.cpp" />
     <ClCompile Include="..\..\common\checkbox.cpp" />
     <ClCompile Include="..\..\common\container.cpp" />
@@ -146,6 +148,8 @@
     <ClCompile Include="..\..\common\sys_win.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\common\applicationmodegameover.h" />
+    <ClInclude Include="..\..\common\applicationmodelevelcompleted.h" />
     <ClInclude Include="..\..\common\button.h" />
     <ClInclude Include="..\..\common\checkbox.h" />
     <ClInclude Include="..\..\common\components.h" />

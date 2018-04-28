@@ -4,7 +4,6 @@
 #include "core.h"
 #include "font.h"
 #include "applicationmanager.h"
-#include "game.h"
 #include "swalibgraphicsengine.h"
 #include "swalibsoundmanager.h"
 #include "sysinputmanager.h"
@@ -14,7 +13,7 @@
 
 ApplicationManager * g_pApplicationManager;
 Game               * g_pGame;
-int                  g_gameLevel;
+Game::GameLevel      g_gameLevel;
 IGraphicsEngine    * g_pGraphicsEngine;
 ISoundManager      * g_pSoundManager;
 IEventManager      * g_pEventManager;

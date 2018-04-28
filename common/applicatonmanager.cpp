@@ -3,6 +3,8 @@
 #include "applicationmanager.h"
 #include "applicationmodegame.h"
 #include "applicationmodemenu.h"
+#include "applicationmodelevelcompleted.h"
+#include "applicationmodegameover.h"
 
 
 ApplicationManager::ApplicationManager() : 
@@ -47,9 +49,11 @@ void ApplicationManager::ManageModeChange()
 
 		switch (mDesiredMode)
 		{
-			case AM_Menu: m_pGameMode = new ApplicationModeMenu(); break;
-			case AM_Game: m_pGameMode = new ApplicationModeGame(); break; 
-			default:      m_pGameMode = nullptr;                   break; 
+			case AM_Menu           : m_pGameMode = new ApplicationModeMenu();           break;
+			case AM_Game           : m_pGameMode = new ApplicationModeGame();           break;
+			case AM_LevelCompleted : m_pGameMode = new ApplicationModeLevelCompleted(); break; 
+			case AM_GameOver       : m_pGameMode = new ApplicationModeGameOver();       break; 
+			default                : m_pGameMode = nullptr;                             break; 
 		}
 
 		m_pGameMode->Activate();

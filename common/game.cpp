@@ -394,7 +394,7 @@ void Game::CheckCollisions()
 		OutputDebugString("Player reaches goal\n");
 		m_pPlayer->ReceiveMessage(GoalReachedMessage());
 
-		g_pApplicationManager->SwitchMode(AM_Menu);
+		g_pApplicationManager->SwitchMode(AM_LevelCompleted);
 	}
 
 	for (auto enemy : mEnemies)
@@ -414,7 +414,7 @@ void Game::CheckCollisions()
 			OutputDebugString("Enemy hits player\n");
 			m_pPlayer->ReceiveMessage(EnemyCollisionMessage());
 
-			g_pApplicationManager->SwitchMode(AM_Menu);
+			g_pApplicationManager->SwitchMode(AM_GameOver);
 			break;
 		}
 	}
@@ -470,4 +470,19 @@ Game::GameLevel Game::GetGameLevel() const
 void Game::SetGameLevel(GameLevel level)
 {
 	mGameLevel = level;
+}
+
+// *************************************************
+//
+// *************************************************
+
+Game::GameLevel Game::GetNextLevel(GameLevel level)
+{
+	switch (level)
+	{
+		case Game::Level1: return Level2;
+		case Game::Level2: return Level3;
+		case Game::Level3: return Level1;
+		default:           return Level1;
+	}
 }

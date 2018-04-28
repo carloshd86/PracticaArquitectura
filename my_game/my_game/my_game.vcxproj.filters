@@ -108,6 +108,12 @@
     <ClCompile Include="..\..\common\swalibsprite.cpp">
       <Filter>Sprites</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\applicationmodegameover.cpp">
+      <Filter>ApplicationModes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\applicationmodelevelcompleted.cpp">
+      <Filter>ApplicationModes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\control.h">
@@ -196,6 +202,12 @@
     </ClInclude>
     <ClInclude Include="..\..\common\swalibsprite.h">
       <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\applicationmodegameover.h">
+      <Filter>ApplicationModes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\applicationmodelevelcompleted.h">
+      <Filter>ApplicationModes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

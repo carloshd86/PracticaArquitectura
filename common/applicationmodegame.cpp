@@ -45,7 +45,6 @@ IdMode ApplicationModeGame::GetId()
 void ApplicationModeGame::Activate()
 {
 	assert(g_pEventManager);
-	assert(g_gameLevel>= 1 && g_gameLevel <= 3);
 
 	// Properties
 	m_pProperties = Properties::Instance("messages", g_pApplicationManager->GetLang());
@@ -60,7 +59,7 @@ void ApplicationModeGame::Activate()
 	NavigationContainer * mainContainer = new NavigationContainer();
 	mCurrentContainer = mainContainer;
 
-	Button * resumeGameButton = InitButton(std::bind(&ApplicationModeGame::ResumeGame, this)  , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, "main_menu.resumeGame.text");
+	Button * resumeGameButton = InitButton(std::bind(&ApplicationModeGame::ResumeGame, this)  , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, "main_menu.resume_game.text");
 	Button * optionsButton    = InitButton(std::bind(&ApplicationModeGame::OpenMenu, this, 1) , SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, "main_menu.options.text");
 	Button * quitButton       = InitButton(std::bind(&ApplicationModeGame::QuitGame, this)    , SCR_HEIGHT/4.f, 230.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, "main_menu.exit.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
@@ -73,7 +72,7 @@ void ApplicationModeGame::Activate()
 
 	Button   * spanishButton       = InitButton   (std::bind(&ApplicationModeGame::ChangeLanguage , this, Properties::P_Language::Spanish) , SCR_HEIGHT/4.f, 380.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.spanish.text");
 	Button   * englishButton       = InitButton   (std::bind(&ApplicationModeGame::ChangeLanguage , this, Properties::P_Language::English) , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.english.text");
-	Checkbox * audioCheckbox       = InitCheckbox (                                                                                          SCR_HEIGHT/4.f, 280.f, 250.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.activateAudio.text", g_pApplicationManager->IsAudioActivated());
+	Checkbox * audioCheckbox       = InitCheckbox (                                                                                          SCR_HEIGHT/4.f, 280.f, 250.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.activate_audio.text", g_pApplicationManager->IsAudioActivated());
 	mControlMap[audioCheckbox]     = std::bind(&ApplicationModeGame::ChangeActivatedAudio, this, audioCheckbox);
 	Button   * optionsReturnButton = InitButton   (std::bind(&ApplicationModeGame::OpenMenu       , this, 0)                               , SCR_HEIGHT/4.f, 230.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
@@ -82,12 +81,8 @@ void ApplicationModeGame::Activate()
 
 	// Game
 	if (!g_pGame) g_pGame = new Game();
-	switch (g_gameLevel)
-	{
-		case 1: g_pGame->SetGameLevel(Game::GameLevel::Level1); break;
-		case 2: g_pGame->SetGameLevel(Game::GameLevel::Level2); break;
-		case 3: g_pGame->SetGameLevel(Game::GameLevel::Level3); break;
-	}
+	g_pGame->SetGameLevel(g_gameLevel);
+
 	g_pGame->Init();
 	g_pGraphicsEngine->Init();
 	g_pGraphicsEngine->SetOverlayActive(false);
@@ -118,6 +113,7 @@ void ApplicationModeGame::Deactivate()
 	}
 
 	g_pEventManager->Unregister(this);
+	g_pSoundManager->UnloadWav(mMusicId);
 	g_pGraphicsEngine->End();
 	g_pGame->End();
 }
