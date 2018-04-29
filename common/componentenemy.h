@@ -3,6 +3,7 @@
 
 
 #include "component.h"
+#include "asserts.h"
 
 
 class C_Enemy : public Component, public IMessageReceiver
@@ -46,7 +47,7 @@ public:
 
 	virtual void Run(float deltaTime)
 	{
-		assert(g_pGame);		
+		GAME_ASSERT(g_pGame);		
 		Entity * player = g_pGame->GetPlayer();
 
 		RequireRenderPositionMessage positionMessage;
@@ -61,11 +62,11 @@ public:
 		player->ReceiveMessage(playerPositionMessage);
 		player->ReceiveMessage(playerSizeMessage);
 
-		assert(positionMessage.GetProcessed());
-		assert(sizeMessage.GetProcessed());
-		assert(movementMessage.GetProcessed());
-		assert(playerPositionMessage.GetProcessed());
-		assert(playerSizeMessage.GetProcessed());
+		GAME_ASSERT(positionMessage.GetProcessed());
+		GAME_ASSERT(sizeMessage.GetProcessed());
+		GAME_ASSERT(movementMessage.GetProcessed());
+		GAME_ASSERT(playerPositionMessage.GetProcessed());
+		GAME_ASSERT(playerSizeMessage.GetProcessed());
 
 		RequireRouteMessage routeMessage;
 		mOwner->ReceiveMessage(routeMessage);

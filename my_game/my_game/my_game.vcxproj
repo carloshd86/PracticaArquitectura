@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\common\applicationmodegameover.h" />
     <ClInclude Include="..\..\common\applicationmodelevelcompleted.h" />
+    <ClInclude Include="..\..\common\asserts.h" />
     <ClInclude Include="..\..\common\button.h" />
     <ClInclude Include="..\..\common\checkbox.h" />
     <ClInclude Include="..\..\common\componentenemy.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="..\..\common\component.h" />
     <ClInclude Include="..\..\common\container.h" />
     <ClInclude Include="..\..\common\control.h" />
+    <ClInclude Include="..\..\common\memorycontrol.h" />
     <ClInclude Include="..\..\common\swalibsoundmanager.h" />
     <ClInclude Include="..\..\common\entity.h" />
     <ClInclude Include="..\..\common\eventmanager.h" />

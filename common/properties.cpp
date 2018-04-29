@@ -2,7 +2,7 @@
 #include "properties.h"
 #include <fstream>
 #include <algorithm>
-#include <assert.h>
+#include "asserts.h"
 
 
 Properties *  Properties::mInstance = nullptr;
@@ -33,9 +33,9 @@ Properties * Properties::Instance(const char * file, const P_Language lang)
 	delete mInstance;
 	mInstance = nullptr;
 
-	assert(file);
+	GAME_ASSERT(file);
 	const char * languageSuffix = GetLanguageSuffix(lang);
-	assert(languageSuffix);
+	GAME_ASSERT(languageSuffix);
 
 	mInstance = new Properties(lang);
 
@@ -46,7 +46,7 @@ Properties * Properties::Instance(const char * file, const P_Language lang)
 	propertiesSrc.append(".properties");
 
 	std::ifstream propertiesFile(propertiesSrc, std::ios::binary);
-	assert(propertiesFile.is_open());
+	GAME_ASSERT(propertiesFile.is_open());
 
 	std::string line;
 	std::string key;

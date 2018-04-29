@@ -8,7 +8,7 @@
 #include "messages.h"
 #include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
-#include <assert.h>
+#include "asserts.h"
 #include <fstream>
 #include "component.h"
 #include "componentenemy.h"
@@ -55,10 +55,10 @@ void Game::Init()
 			case Level3: jsonSrc = "../data/level3.json"; break;
 		}
 
-		assert(jsonSrc);
+		GAME_ASSERT(jsonSrc);
 
 		std::ifstream file(jsonSrc, std::ios::binary | std::ios::ate);
-		assert(file.is_open());
+		GAME_ASSERT(file.is_open());
 
 		std::vector<char> json(static_cast<uint16_t>(file.tellg()));
 		file.seekg(0);
@@ -72,12 +72,12 @@ void Game::Init()
 			OutputDebugStringA(std::to_string(ok.Offset()).c_str());
 			exit(EXIT_FAILURE);
 		}
-		assert(document.IsObject());
+		GAME_ASSERT(document.IsObject());
 	
 		// Level
-		assert(document.HasMember(LEVEL_JSON_KEY));
-		assert(document[LEVEL_JSON_KEY].IsObject());
-		assert(document[LEVEL_JSON_KEY].HasMember(BACKGROUND_IMG_JSON_KEY));
+		GAME_ASSERT(document.HasMember(LEVEL_JSON_KEY));
+		GAME_ASSERT(document[LEVEL_JSON_KEY].IsObject());
+		GAME_ASSERT(document[LEVEL_JSON_KEY].HasMember(BACKGROUND_IMG_JSON_KEY));
 
 		const char * backgroundImg    = document[LEVEL_JSON_KEY][BACKGROUND_IMG_JSON_KEY].GetString();
 		std::string  backgroundImgSrc = "../data/";
@@ -95,14 +95,14 @@ void Game::Init()
 		g_pGraphicsEngine->SetBackgroundColor(backgroundR, backgroundG, backgroundB);
 
 		// Player
-		assert(document.HasMember(PLAYER_JSON_KEY));
-		assert(document[PLAYER_JSON_KEY].IsObject());
-		assert(document[PLAYER_JSON_KEY].HasMember(POS_X_JSON_KEY));
-		assert(document[PLAYER_JSON_KEY].HasMember(POS_Y_JSON_KEY));
-		assert(document[PLAYER_JSON_KEY].HasMember(WIDTH_JSON_KEY));
-		assert(document[PLAYER_JSON_KEY].HasMember(HEIGHT_JSON_KEY));
-		assert(document[PLAYER_JSON_KEY].HasMember(SPEED_JSON_KEY));
-		assert(document[PLAYER_JSON_KEY].HasMember(IMG_JSON_KEY));
+		GAME_ASSERT(document.HasMember(PLAYER_JSON_KEY));
+		GAME_ASSERT(document[PLAYER_JSON_KEY].IsObject());
+		GAME_ASSERT(document[PLAYER_JSON_KEY].HasMember(POS_X_JSON_KEY));
+		GAME_ASSERT(document[PLAYER_JSON_KEY].HasMember(POS_Y_JSON_KEY));
+		GAME_ASSERT(document[PLAYER_JSON_KEY].HasMember(WIDTH_JSON_KEY));
+		GAME_ASSERT(document[PLAYER_JSON_KEY].HasMember(HEIGHT_JSON_KEY));
+		GAME_ASSERT(document[PLAYER_JSON_KEY].HasMember(SPEED_JSON_KEY));
+		GAME_ASSERT(document[PLAYER_JSON_KEY].HasMember(IMG_JSON_KEY));
 
 		float        playerPosX   = document[PLAYER_JSON_KEY][POS_X_JSON_KEY].GetFloat();
 		float        playerPosY   = document[PLAYER_JSON_KEY][POS_Y_JSON_KEY].GetFloat();
@@ -129,13 +129,13 @@ void Game::Init()
 		mEntities.push_back(m_pPlayer);
 
 		// Goal
-		assert(document.HasMember(GOAL_JSON_KEY));
-		assert(document[GOAL_JSON_KEY].IsObject());
-		assert(document[GOAL_JSON_KEY].HasMember(POS_X_JSON_KEY));
-		assert(document[GOAL_JSON_KEY].HasMember(POS_Y_JSON_KEY));
-		assert(document[GOAL_JSON_KEY].HasMember(WIDTH_JSON_KEY));
-		assert(document[GOAL_JSON_KEY].HasMember(HEIGHT_JSON_KEY));
-		assert(document[GOAL_JSON_KEY].HasMember(IMG_JSON_KEY));
+		GAME_ASSERT(document.HasMember(GOAL_JSON_KEY));
+		GAME_ASSERT(document[GOAL_JSON_KEY].IsObject());
+		GAME_ASSERT(document[GOAL_JSON_KEY].HasMember(POS_X_JSON_KEY));
+		GAME_ASSERT(document[GOAL_JSON_KEY].HasMember(POS_Y_JSON_KEY));
+		GAME_ASSERT(document[GOAL_JSON_KEY].HasMember(WIDTH_JSON_KEY));
+		GAME_ASSERT(document[GOAL_JSON_KEY].HasMember(HEIGHT_JSON_KEY));
+		GAME_ASSERT(document[GOAL_JSON_KEY].HasMember(IMG_JSON_KEY));
 
 		float        goalPosX   = document[GOAL_JSON_KEY][POS_X_JSON_KEY].GetFloat();
 		float        goalPosY   = document[GOAL_JSON_KEY][POS_Y_JSON_KEY].GetFloat();
@@ -163,16 +163,16 @@ void Game::Init()
 			{
 				auto& jsonEnemy = item.GetObjectA();
 
-				assert(jsonEnemy.HasMember(POS_X_JSON_KEY));
-				assert(jsonEnemy.HasMember(POS_Y_JSON_KEY));
-				assert(jsonEnemy.HasMember(WIDTH_JSON_KEY));
-				assert(jsonEnemy.HasMember(HEIGHT_JSON_KEY));
-				assert(jsonEnemy.HasMember(SPEED_JSON_KEY));
-				assert(jsonEnemy.HasMember(PURSUING_SPEED_JSON_KEY));
-				assert(jsonEnemy.HasMember(IMG_LEFT_JSON_KEY));
-				assert(jsonEnemy.HasMember(IMG_RIGHT_JSON_KEY));
-				assert(jsonEnemy.HasMember(IMG_ALERT_LEFT_JSON_KEY));
-				assert(jsonEnemy.HasMember(IMG_ALERT_RIGHT_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(POS_X_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(POS_Y_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(WIDTH_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(HEIGHT_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(SPEED_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(PURSUING_SPEED_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(IMG_LEFT_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(IMG_RIGHT_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(IMG_ALERT_LEFT_JSON_KEY));
+				GAME_ASSERT(jsonEnemy.HasMember(IMG_ALERT_RIGHT_JSON_KEY));
 
 				float        enemyPosX          = jsonEnemy[POS_X_JSON_KEY].GetFloat();
 				float        enemyPosY          = jsonEnemy[POS_Y_JSON_KEY].GetFloat();
@@ -208,8 +208,8 @@ void Game::Init()
 					{
 						auto& routePoint = point.GetObjectA();
 
-						assert(routePoint.HasMember(POS_X_JSON_KEY));
-						assert(routePoint.HasMember(POS_Y_JSON_KEY));
+						GAME_ASSERT(routePoint.HasMember(POS_X_JSON_KEY));
+						GAME_ASSERT(routePoint.HasMember(POS_Y_JSON_KEY));
 
 						float routePointX = routePoint[POS_X_JSON_KEY].GetFloat();
 						float routePointY = routePoint[POS_Y_JSON_KEY].GetFloat();
@@ -230,11 +230,11 @@ void Game::Init()
 			{
 				auto& jsonWall = item.GetObjectA();
 
-				assert(jsonWall.HasMember(POS_X_JSON_KEY));
-				assert(jsonWall.HasMember(POS_Y_JSON_KEY));
-				assert(jsonWall.HasMember(WIDTH_JSON_KEY));
-				assert(jsonWall.HasMember(HEIGHT_JSON_KEY));
-				assert(jsonWall.HasMember(IMG_JSON_KEY));
+				GAME_ASSERT(jsonWall.HasMember(POS_X_JSON_KEY));
+				GAME_ASSERT(jsonWall.HasMember(POS_Y_JSON_KEY));
+				GAME_ASSERT(jsonWall.HasMember(WIDTH_JSON_KEY));
+				GAME_ASSERT(jsonWall.HasMember(HEIGHT_JSON_KEY));
+				GAME_ASSERT(jsonWall.HasMember(IMG_JSON_KEY));
 
 				float        wallPosX = jsonWall[POS_X_JSON_KEY].GetFloat();
 				float        wallPosY = jsonWall[POS_Y_JSON_KEY].GetFloat();
@@ -328,17 +328,17 @@ void Game::MoveEntities()
 {
 	RequireRigidbodyPositionMessage positionMessage;
 	m_pPlayer->ReceiveMessage(positionMessage);
-	assert(positionMessage.GetProcessed());
+	GAME_ASSERT(positionMessage.GetProcessed());
 	vec2 playerPos = vmake(positionMessage.GetX(), positionMessage.GetY());
 
 	RequireRigidbodySizeMessage sizeMessage;
 	m_pPlayer->ReceiveMessage(sizeMessage);
-	assert(sizeMessage.GetProcessed());
+	GAME_ASSERT(sizeMessage.GetProcessed());
 	vec2 playerSize = vmake(sizeMessage.GetX(), sizeMessage.GetY());
 
 	RequireMovementMessage movementMessage;
 	m_pPlayer->ReceiveMessage(movementMessage);
-	assert(movementMessage.GetProcessed());
+	GAME_ASSERT(movementMessage.GetProcessed());
 	vec2 playerMovement = vmake(movementMessage.GetX(), movementMessage.GetY());
 	
 	vec2 playerPosCheck;
@@ -347,12 +347,12 @@ void Game::MoveEntities()
 	{
 		positionMessage.SetProcessed(false);
 		wall->ReceiveMessage(positionMessage);
-		assert(positionMessage.GetProcessed());
+		GAME_ASSERT(positionMessage.GetProcessed());
 		vec2 wallPos = vmake(positionMessage.GetX(), positionMessage.GetY());
 
 		sizeMessage.SetProcessed(false);
 		wall->ReceiveMessage(sizeMessage);
-		assert(sizeMessage.GetProcessed());
+		GAME_ASSERT(sizeMessage.GetProcessed());
 		vec2 wallSize = vmake(sizeMessage.GetX(), sizeMessage.GetY());
 
 		// Player with wall
@@ -378,18 +378,18 @@ void Game::MoveEntities()
 		{
 			movementMessage.SetProcessed(false);
 			enemy->ReceiveMessage(movementMessage);
-			assert(movementMessage.GetProcessed());
+			GAME_ASSERT(movementMessage.GetProcessed());
 			vec2 enemyMovement = vmake(movementMessage.GetX(), movementMessage.GetY());
 			if (enemyMovement.x || enemyMovement.y)
 			{
 				positionMessage.SetProcessed(false);
 				enemy->ReceiveMessage(positionMessage);
-				assert(positionMessage.GetProcessed());
+				GAME_ASSERT(positionMessage.GetProcessed());
 				vec2 enemyPos = vmake(positionMessage.GetX(), positionMessage.GetY());
 
 				sizeMessage.SetProcessed(false);
 				enemy->ReceiveMessage(sizeMessage);
-				assert(sizeMessage.GetProcessed());
+				GAME_ASSERT(sizeMessage.GetProcessed());
 				vec2 enemySize = vmake(sizeMessage.GetX(), sizeMessage.GetY());
 
 				vec2 enemyPosCheck = vmake(enemyPos.x, enemyPos.y - enemyMovement.y);
@@ -417,22 +417,22 @@ void Game::CheckCollisions()
 {
 	RequireRigidbodyPositionMessage positionMessage;
 	m_pPlayer->ReceiveMessage(positionMessage);
-	assert(positionMessage.GetProcessed());
+	GAME_ASSERT(positionMessage.GetProcessed());
 	vec2 playerPos = vmake(positionMessage.GetX(), positionMessage.GetY());
 
 	RequireRigidbodySizeMessage sizeMessage;
 	m_pPlayer->ReceiveMessage(sizeMessage);
-	assert(sizeMessage.GetProcessed());
+	GAME_ASSERT(sizeMessage.GetProcessed());
 	vec2 playerSize = vmake(sizeMessage.GetX(), sizeMessage.GetY());
 
 	positionMessage.SetProcessed(false);
 	m_pGoal->ReceiveMessage(positionMessage);
-	assert(positionMessage.GetProcessed());
+	GAME_ASSERT(positionMessage.GetProcessed());
 	vec2 goalPos = vmake(positionMessage.GetX(), positionMessage.GetY());
 
 	sizeMessage.SetProcessed(false);
 	m_pGoal->ReceiveMessage(sizeMessage);
-	assert(sizeMessage.GetProcessed());
+	GAME_ASSERT(sizeMessage.GetProcessed());
 	vec2 goalSize = vmake(sizeMessage.GetX(), sizeMessage.GetY());
 
 	if (CheckRectCollision(playerPos, playerSize, goalPos, goalSize))
@@ -447,12 +447,12 @@ void Game::CheckCollisions()
 	{
 		positionMessage.SetProcessed(false);
 		enemy->ReceiveMessage(positionMessage);
-		assert(positionMessage.GetProcessed());
+		GAME_ASSERT(positionMessage.GetProcessed());
 		vec2 enemyPos = vmake(positionMessage.GetX(), positionMessage.GetY());
 
 		sizeMessage.SetProcessed(false);
 		enemy->ReceiveMessage(sizeMessage);
-		assert(sizeMessage.GetProcessed());
+		GAME_ASSERT(sizeMessage.GetProcessed());
 		vec2 enemySize = vmake(sizeMessage.GetX(), sizeMessage.GetY());
 
 		if (CheckRectCollision(playerPos, playerSize, enemyPos, enemySize))

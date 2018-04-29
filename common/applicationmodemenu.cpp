@@ -6,7 +6,7 @@
 #include "core.h"
 #include "font.h"
 #include "button.h"
-#include <assert.h>
+#include "asserts.h"
 
 
 ApplicationModeMenu::ApplicationModeMenu () :
@@ -45,10 +45,10 @@ IdMode ApplicationModeMenu::GetId()
 
 void ApplicationModeMenu::Activate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	m_pProperties = Properties::Instance("messages", g_pApplicationManager->GetLang());
-	assert(m_pProperties);
+	GAME_ASSERT(m_pProperties);
 
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressUp     , 0);
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressDown   , 0);
@@ -104,7 +104,7 @@ void ApplicationModeMenu::Activate()
 
 void ApplicationModeMenu::Deactivate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	Properties::RemoveInstance();
 	m_pProperties = nullptr;
@@ -130,7 +130,7 @@ void ApplicationModeMenu::Deactivate()
 
 void ApplicationModeMenu::ProcessInput()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 	g_pEventManager->UpdateEvents();
 }
 
@@ -168,7 +168,7 @@ void ApplicationModeMenu::ChangeLanguage(Properties::P_Language lang)
 	{
 		g_pApplicationManager->SetLang(lang);
 		m_pProperties = Properties::Instance("messages", lang);
-		assert(m_pProperties);
+		GAME_ASSERT(m_pProperties);
 
 		for (auto container : mContainers)
 		{

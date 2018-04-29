@@ -5,7 +5,7 @@
 #include "sys.h"
 #include "core.h"
 #include "font.h"
-#include <assert.h>
+#include "asserts.h"
 
 
 ApplicationModeLevelCompleted::ApplicationModeLevelCompleted () :
@@ -34,10 +34,10 @@ IdMode ApplicationModeLevelCompleted::GetId()
 
 void ApplicationModeLevelCompleted::Activate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	m_pProperties = Properties::Instance("messages", g_pApplicationManager->GetLang());
-	assert(m_pProperties);
+	GAME_ASSERT(m_pProperties);
 
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressEnter , 0);
 
@@ -53,7 +53,7 @@ void ApplicationModeLevelCompleted::Activate()
 
 void ApplicationModeLevelCompleted::Deactivate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	Properties::RemoveInstance();
 	m_pProperties = nullptr;
@@ -69,7 +69,7 @@ void ApplicationModeLevelCompleted::Deactivate()
 
 void ApplicationModeLevelCompleted::ProcessInput()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 	g_pEventManager->UpdateEvents();
 }
 
@@ -110,7 +110,7 @@ void ApplicationModeLevelCompleted::ChangeLanguage(Properties::P_Language lang)
 	{
 		g_pApplicationManager->SetLang(lang);
 		m_pProperties = Properties::Instance("messages", lang);
-		assert(m_pProperties);
+		GAME_ASSERT(m_pProperties);
 	}
 }
 

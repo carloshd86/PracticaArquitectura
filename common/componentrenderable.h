@@ -3,6 +3,7 @@
 
 
 #include "component.h"
+#include "asserts.h"
 
 
 class C_Renderable : public Component, public IMessageReceiver
@@ -25,7 +26,7 @@ public:
 	{
 		if (!mInitialized)
 		{
-			assert(g_pGraphicsEngine);
+			GAME_ASSERT(g_pGraphicsEngine);
 			m_pSprite = g_pGraphicsEngine->RequireSprite(mPos, mSize, mImage.c_str());
 
 			mMessageCallbacks.insert(std::pair<GameMessage::GM_Type, MessageCallbackFun>(GameMessage::GM_Type::SetPosition           , std::bind(&C_Renderable::OnSetPosition     , this, std::placeholders::_1)));
@@ -43,7 +44,7 @@ public:
 	{
 		if (mInitialized)
 		{
-			assert(g_pGraphicsEngine);
+			GAME_ASSERT(g_pGraphicsEngine);
 			g_pGraphicsEngine->ReleaseSprite(m_pSprite);
 
 			mMessageCallbacks.clear();

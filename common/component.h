@@ -7,7 +7,6 @@
 #include "messages.h"
 #include "game.h"
 #include "graphicsengine.h"
-#include <assert.h>
 #include <functional>
 
 

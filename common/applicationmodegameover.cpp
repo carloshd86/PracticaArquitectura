@@ -5,7 +5,7 @@
 #include "sys.h"
 #include "core.h"
 #include "font.h"
-#include <assert.h>
+#include "asserts.h"
 
 
 ApplicationModeGameOver::ApplicationModeGameOver () :
@@ -35,10 +35,10 @@ IdMode ApplicationModeGameOver::GetId()
 
 void ApplicationModeGameOver::Activate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	m_pProperties = Properties::Instance("messages", g_pApplicationManager->GetLang());
-	assert(m_pProperties);
+	GAME_ASSERT(m_pProperties);
 
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressEnter , 0);
 
@@ -55,7 +55,7 @@ void ApplicationModeGameOver::Activate()
 
 void ApplicationModeGameOver::Deactivate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	Properties::RemoveInstance();
 	m_pProperties = nullptr;
@@ -71,7 +71,7 @@ void ApplicationModeGameOver::Deactivate()
 
 void ApplicationModeGameOver::ProcessInput()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 	g_pEventManager->UpdateEvents();
 }
 
@@ -108,7 +108,7 @@ void ApplicationModeGameOver::ChangeLanguage(Properties::P_Language lang)
 	{
 		g_pApplicationManager->SetLang(lang);
 		m_pProperties = Properties::Instance("messages", lang);
-		assert(m_pProperties);
+		GAME_ASSERT(m_pProperties);
 	}
 }
 

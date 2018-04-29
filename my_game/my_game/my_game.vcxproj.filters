@@ -230,5 +230,11 @@
     <ClInclude Include="..\..\common\component.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\common\asserts.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\memorycontrol.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

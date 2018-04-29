@@ -8,7 +8,7 @@
 #include "sys.h"
 #include "core.h"
 #include "font.h"
-#include <assert.h>
+#include "asserts.h"
 
 
 ApplicationModeGame::ApplicationModeGame () :
@@ -44,11 +44,11 @@ IdMode ApplicationModeGame::GetId()
 
 void ApplicationModeGame::Activate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	// Properties
 	m_pProperties = Properties::Instance("messages", g_pApplicationManager->GetLang());
-	assert(m_pProperties);
+	GAME_ASSERT(m_pProperties);
 
 	// Register events for this 
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressUp     , 0);
@@ -97,7 +97,7 @@ void ApplicationModeGame::Activate()
 
 void ApplicationModeGame::Deactivate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	Properties::RemoveInstance();
 	m_pProperties = nullptr;
@@ -124,7 +124,7 @@ void ApplicationModeGame::Deactivate()
 
 void ApplicationModeGame::ProcessInput()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 	g_pEventManager->UpdateEvents();
 }
 
@@ -230,7 +230,7 @@ void ApplicationModeGame::ChangeLanguage(Properties::P_Language lang)
 	{
 		g_pApplicationManager->SetLang(lang);
 		m_pProperties = Properties::Instance("messages", lang);
-		assert(m_pProperties);
+		GAME_ASSERT(m_pProperties);
 
 		for (auto container : mContainers)
 		{

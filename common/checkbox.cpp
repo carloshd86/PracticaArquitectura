@@ -3,7 +3,7 @@
 #include "checkbox.h"
 #include "sys.h"
 #include "font.h"
-#include <assert.h>
+#include "asserts.h"
 
 
 const char * Checkbox::UNCHECKED_IMAGE = "../data/checkbox-unchecked.png";
@@ -29,7 +29,7 @@ Checkbox::Checkbox(float x, float y, float width, float height, Container * pare
 	m_pImage      (nullptr),
 	m_pListener   (nullptr)
 {
-	assert(g_pGraphicsEngine);
+	GAME_ASSERT(g_pGraphicsEngine);
 	mText =  m_pProperties->GetProperty(mTextKey);
 	mCheckBoxPos = FONT_GetStringNextPos(vmake(mX, mY), mText.c_str());
 	mCheckBoxPos = vadd(mCheckBoxPos, vmake(16.f, 0.f));

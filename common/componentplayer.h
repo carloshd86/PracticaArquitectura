@@ -3,6 +3,7 @@
 
 
 #include "component.h"
+#include "asserts.h"
 
 
 class C_Player : public Component, public IEventManager::IListener
@@ -22,7 +23,7 @@ public:
 	{
 		if (!mInitialized)
 		{
-			assert(g_pEventManager);
+			GAME_ASSERT(g_pEventManager);
 			g_pEventManager->Register(this, IEventManager::EM_Event::MoveUp    , 0);
 			g_pEventManager->Register(this, IEventManager::EM_Event::MoveDown  , 0);
 			g_pEventManager->Register(this, IEventManager::EM_Event::MoveLeft  , 0);
@@ -36,7 +37,7 @@ public:
 	{
 		if (mInitialized)
 		{
-			assert(g_pEventManager);
+			GAME_ASSERT(g_pEventManager);
 			g_pEventManager->Unregister(this);
 
 			mInitialized = false;
