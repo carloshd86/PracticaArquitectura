@@ -38,6 +38,7 @@ private:
 	std::map<Control *, std::function<void()>> mControlMap;
 	Properties                                *m_pProperties;
 	unsigned int                               mMusicId;
+	ISprite                                   *m_pSprite;
 
 	Button   * InitButton   (std::function<void()> clickFunction, float x, float y, float width, float height, Container * parent, const char * textKey, float rOn = 1.f, float gOn = 1.f, float bOn = 0.f, float rOff = 1.f, float gOff = 1.f, float bOff = 1.f);
 	Checkbox * InitCheckbox (float x, float y, float width, float height, Container * parent, const char * textKey, bool checked, float rOn = 1.f, float gOn = 1.f, float bOn = 0.f, float rOff = 1.f, float gOff = 1.f, float bOff = 1.f);

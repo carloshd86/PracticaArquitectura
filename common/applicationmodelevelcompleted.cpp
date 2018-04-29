@@ -94,8 +94,9 @@ void ApplicationModeLevelCompleted::Render()
 	else                                       FONT_DrawString(vmake(SCR_HEIGHT/6.f, 350.f), m_pProperties->GetProperty("level_completed.title.text").c_str());
 
 	glColor3f(1.f, 1.f, 1.f);
-	if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(20.f, 300.f), m_pProperties->GetProperty("level_completed_final.press_enter.text").c_str());
-	else                                       FONT_DrawString(vmake(20.f, 300.f), m_pProperties->GetProperty("level_completed.press_enter.text").c_str());
+	FONT_DrawString(vmake(SCR_HEIGHT/6.f, 300.f), m_pProperties->GetProperty("game.press_enter.text").c_str());
+	if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(20.f, 270.f), m_pProperties->GetProperty("level_completed_final.press_enter.text").c_str());
+	else                                       FONT_DrawString(vmake(20.f, 270.f), m_pProperties->GetProperty("level_completed.press_enter.text").c_str());
 }
 
 // *************************************************

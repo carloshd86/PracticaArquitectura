@@ -17,6 +17,7 @@ ApplicationModeGameOver::ApplicationModeGameOver () :
 
 ApplicationModeGameOver::~ApplicationModeGameOver()
 {
+	if (m_pSprite) g_pGraphicsEngine->ReleaseSprite(m_pSprite);
 }
 
 // *************************************************
@@ -42,6 +43,7 @@ void ApplicationModeGameOver::Activate()
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressEnter , 0);
 
 	g_pGraphicsEngine->Init();
+	m_pSprite = g_pGraphicsEngine->RequireSprite(vmake(SCR_HEIGHT/4.f, 350.f), vmake(400.f, 56.f), "../data/gameover.png", false);
 
 	mMusicId = g_pSoundManager->LoadWav("../data/DefenseLine.wav");
 	if (mMusicId && g_pApplicationManager->IsAudioActivated()) g_pSoundManager->PlayMusic(mMusicId);
@@ -87,13 +89,11 @@ void ApplicationModeGameOver::Run(float deltaTime)
 
 void ApplicationModeGameOver::Render()
 {
-	glColor3f(1.f, 1.f, 1.f);
+	glClearColor(0.f,0.f, 0.f, 1.f);
 	glClear( GL_COLOR_BUFFER_BIT );
 
-	glColor3f(1.f, 0.f, 0.f);
-	FONT_DrawString(vmake(SCR_HEIGHT/6.f, 350.f), m_pProperties->GetProperty("game_over.title.text").c_str());
-
 	glColor3f(1.f, 1.f, 1.f);
+	if (m_pSprite) g_pGraphicsEngine->RenderSprite(m_pSprite);
 	FONT_DrawString(vmake(20.f, 300.f), m_pProperties->GetProperty("game_over.press_enter.text").c_str());
 }
 

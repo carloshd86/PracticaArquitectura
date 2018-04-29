@@ -11,7 +11,8 @@
 
 ApplicationModeMenu::ApplicationModeMenu () :
 	mCurrentContainer (nullptr),
-	mMusicId          (0) {}
+	mMusicId          (0),
+	m_pSprite         (nullptr) {}
 
 // *************************************************
 //
@@ -19,6 +20,8 @@ ApplicationModeMenu::ApplicationModeMenu () :
 
 ApplicationModeMenu::~ApplicationModeMenu()
 {
+	if (m_pSprite) g_pGraphicsEngine->ReleaseSprite(m_pSprite);
+
 	auto it = mContainers.begin();
 	while (it != mContainers.end()) 
 	{
@@ -89,6 +92,7 @@ void ApplicationModeMenu::Activate()
 	mContainers.push_back(optionsContainer);
 
 	g_pGraphicsEngine->Init();
+	m_pSprite = g_pGraphicsEngine->RequireSprite(vmake(SCR_HEIGHT/4.f, 400.f), vmake(400.f, 56.f), "../data/title.png", false);
 
 	mMusicId = g_pSoundManager->LoadWav("../data/Superboy.wav");
 	ChangeActivatedAudio(audioCheckbox);
@@ -145,10 +149,11 @@ void ApplicationModeMenu::Run(float deltaTime)
 
 void ApplicationModeMenu::Render()
 {
+	glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 	glClear( GL_COLOR_BUFFER_BIT );
 
-	glColor3f(0.f, 1.f, 1.f);
-	FONT_DrawString(vmake(SCR_HEIGHT/4.f, 400.f), m_pProperties->GetProperty("main_menu.title.text").c_str());
+	glColor3f(1.f, 1.f, 1.f);
+	if (m_pSprite) g_pGraphicsEngine->RenderSprite(m_pSprite);
 	mCurrentContainer->Render();
 }
 
