@@ -9,7 +9,7 @@
 
 
 ApplicationModeLevelCompleted::ApplicationModeLevelCompleted () :
-	mMusicId          (0) {}
+	mMusicId (0), mExitScreen(false) {}
 
 // *************************************************
 //
@@ -87,16 +87,19 @@ void ApplicationModeLevelCompleted::Run(float deltaTime)
 
 void ApplicationModeLevelCompleted::Render()
 {
-	glClear( GL_COLOR_BUFFER_BIT );
+	if (!mExitScreen)
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
 
-	glColor3f(1.f, 1.f, 0.f);
-	if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(SCR_HEIGHT/4.5f, 350.f), m_pProperties->GetProperty("level_completed_final.title.text").c_str());
-	else                                       FONT_DrawString(vmake(SCR_HEIGHT/4.f, 350.f), m_pProperties->GetProperty("level_completed.title.text").c_str());
+		glColor3f(1.f, 1.f, 0.f);
+		if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(SCR_HEIGHT / 4.5f, 350.f), m_pProperties->GetProperty("level_completed_final.title.text").c_str());
+		else                                       FONT_DrawString(vmake(SCR_HEIGHT / 4.f, 350.f), m_pProperties->GetProperty("level_completed.title.text").c_str());
 
-	glColor3f(1.f, 1.f, 1.f);
-	FONT_DrawString(vmake(SCR_HEIGHT/3.f, 300.f), m_pProperties->GetProperty("game.press_enter.text").c_str());
-	if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(SCR_HEIGHT/4.5f, 270.f), m_pProperties->GetProperty("level_completed_final.press_enter.text").c_str());
-	else                                       FONT_DrawString(vmake(SCR_HEIGHT/7.f, 270.f), m_pProperties->GetProperty("level_completed.press_enter.text").c_str());
+		glColor3f(1.f, 1.f, 1.f);
+		FONT_DrawString(vmake(SCR_HEIGHT / 3.f, 300.f), m_pProperties->GetProperty("game.press_enter.text").c_str());
+		if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(SCR_HEIGHT / 4.5f, 270.f), m_pProperties->GetProperty("level_completed_final.press_enter.text").c_str());
+		else                                       FONT_DrawString(vmake(SCR_HEIGHT / 7.f, 270.f), m_pProperties->GetProperty("level_completed.press_enter.text").c_str());
+	}
 }
 
 // *************************************************
@@ -124,7 +127,7 @@ bool ApplicationModeLevelCompleted::ProcessEvent(IEventManager::EM_Event event)
 	{
 		case IEventManager::EM_Event::SinglePressEnter: 
 			if (g_gameLevel == Game::FINAL_GAME_LEVEL) g_pApplicationManager->SwitchMode(AM_Menu); 
-			else                                     { g_pApplicationManager->SwitchMode(AM_Game); g_gameLevel = Game::GetNextLevel(g_gameLevel); }
+			else                                     { g_pApplicationManager->SwitchMode(AM_Game); g_gameLevel = Game::GetNextLevel(g_gameLevel); mExitScreen = true; }
 			break;
 	}
 

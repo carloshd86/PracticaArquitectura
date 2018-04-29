@@ -27,6 +27,7 @@ private:
 
 	Properties  *m_pProperties;
 	unsigned int mMusicId;
+	bool         mExitScreen;
 };
 
 #endif
