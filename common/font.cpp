@@ -80,3 +80,12 @@ void FONT_DrawString(vec2 p0, const char string[])
     p0 = vadd(p0, vmake(16.f, 0.f));
   }
 }
+
+//-----------------------------------------------------------------------------
+vec2 FONT_GetStringNextPos(vec2 p0, const char string[])
+{
+	int n = (int)strlen(string);
+	for (int i = 0; i < n; i++) p0 = vadd(p0, vmake(16.f, 0.f));
+
+	return p0;
+}

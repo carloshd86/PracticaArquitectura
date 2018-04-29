@@ -15,7 +15,7 @@ Button::Button(float x, float y, float width, float height, Container * parent, 
 	m_rOff        (rOff),
 	m_gOff        (gOff),
 	m_bOff        (bOff),
-	mListener     (nullptr)
+	m_pListener   (nullptr)
 {
 	mText =  m_pProperties->GetProperty(mTextKey);
 }
@@ -37,7 +37,7 @@ bool Button::ProcessEvent(IEventManager::EM_Event event)
 	if(!mFocused) return true;
 
 	switch (event) {
-		case IEventManager::EM_Event::SinglePressEnter: { if (mFocused) mListener->OnClick(this); break; }
+		case IEventManager::EM_Event::SinglePressEnter: { if (mFocused) m_pListener->OnClick(this); break; }
 	}
 
 	return true;
@@ -81,6 +81,6 @@ void Button::SetProperties(Properties * properties)
 
 void Button::SetListener(Button::IListener * listener)
 {
-	mListener = listener;
+	m_pListener = listener;
 }
 

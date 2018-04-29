@@ -20,6 +20,8 @@ public:
 		Level3
 	};
 
+	static const GameLevel FINAL_GAME_LEVEL = Level3;
+
 	Game();
 	~Game();
 
@@ -30,6 +32,8 @@ public:
 	Entity           * GetPlayer       () const;
 	GameLevel          GetGameLevel    () const;
 	void               SetGameLevel    (GameLevel level);
+	
+	static GameLevel GetNextLevel(GameLevel level);
 
 private:
 

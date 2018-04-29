@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "navigationcontainer.h"
 #include "control.h"
 

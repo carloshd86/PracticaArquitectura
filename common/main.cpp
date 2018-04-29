@@ -4,26 +4,31 @@
 #include "core.h"
 #include "font.h"
 #include "applicationmanager.h"
-#include "game.h"
-#include "coregraphicsengine.h"
+#include "swalibgraphicsengine.h"
+#include "swalibsoundmanager.h"
 #include "sysinputmanager.h"
+#include "memorycontrol.h"
 
 
 //-----------------------------------------------------------------------------
 
 ApplicationManager * g_pApplicationManager;
 Game               * g_pGame;
-int                  g_gameLevel;
+Game::GameLevel      g_gameLevel;
 IGraphicsEngine    * g_pGraphicsEngine;
+ISoundManager      * g_pSoundManager;
 IEventManager      * g_pEventManager;
 
 //-----------------------------------------------------------------------------
 int Main(void)
 {
-  g_pApplicationManager = new ApplicationManager();
+  g_pApplicationManager = GAME_NEW(ApplicationManager, ());
  
-  g_pGraphicsEngine     = new CoreGraphicsEngine();
+  g_pGraphicsEngine = GAME_NEW(SwalibGraphicsEngine, ());
   g_pGraphicsEngine->Init();
+
+  g_pSoundManager = GAME_NEW(SwalibSoundManager, ());
+  g_pSoundManager->InitSound();
 
   g_pEventManager = SysInputManager::Instance();
 
@@ -62,11 +67,13 @@ int Main(void)
   }
 
   FONT_End();
+  g_pSoundManager->EndSound();
 
-  delete g_pGame;
-  delete g_pGraphicsEngine;
-  delete g_pEventManager;
-  delete g_pApplicationManager;
+  GAME_DELETE(g_pGame);
+  GAME_DELETE(g_pSoundManager);
+  GAME_DELETE(g_pGraphicsEngine);
+  GAME_DELETE(g_pEventManager);
+  GAME_DELETE(g_pApplicationManager);
   
   return 0;
 }

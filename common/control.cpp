@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "control.h"
+
 
 
 Control::Control(float x, float y, float width, float height, Container * parent) :

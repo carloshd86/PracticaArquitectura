@@ -1,5 +1,7 @@
+#include "stdafx.h"
 #include "container.h"
 #include "control.h"
+#include "memorycontrol.h"
 
 
 Container::Container() :
@@ -20,7 +22,7 @@ const std::vector<Control *>& Container::GetControls() const
 
 Container::~Container()
 {
-	for (auto control : mControls) delete control;
+	for (auto control : mControls) GAME_DELETE(control);
 }
 
 // *************************************************
@@ -48,7 +50,7 @@ void Container::RemoveControl(Control *& control)
 		}
 	}
 
-	delete control;
+	GAME_DELETE(control);
 	control = nullptr;
 }
 
@@ -61,7 +63,7 @@ void Container::Clear()
 	auto it = mControls.begin();
 	while (it != mControls.end()) 
 	{
-		delete (*it);
+		GAME_DELETE((*it));
 		it = mControls.erase(it);
 	}
 }

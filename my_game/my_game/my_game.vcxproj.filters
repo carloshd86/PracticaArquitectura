@@ -40,6 +40,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{77766e2b-86ff-4fff-836e-acc60f19dc83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SoundManager">
+      <UniqueIdentifier>{6d905479-87a0-4808-af3c-2fcf0378501c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\common\container.cpp">
@@ -66,9 +69,6 @@
     <ClCompile Include="..\..\common\entity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\common\coregraphicsengine.cpp">
-      <Filter>GraphicsEngine</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\common\core.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
@@ -87,9 +87,6 @@
     <ClCompile Include="..\..\common\properties.cpp">
       <Filter>Properties</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\common\coresprite.cpp">
-      <Filter>Sprites</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\common\game.cpp">
       <Filter>Game</Filter>
     </ClCompile>
@@ -98,6 +95,24 @@
     </ClCompile>
     <ClCompile Include="..\..\common\applicatonmanager.cpp">
       <Filter>ApplicationManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\checkbox.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\swalibgraphicsengine.cpp">
+      <Filter>GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\swalibsoundmanager.cpp">
+      <Filter>SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\swalibsprite.cpp">
+      <Filter>Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\applicationmodegameover.cpp">
+      <Filter>ApplicationModes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\applicationmodelevelcompleted.cpp">
+      <Filter>ApplicationModes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,13 +149,7 @@
     <ClInclude Include="..\..\common\entity.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\components.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\common\graphicsengine.h">
-      <Filter>GraphicsEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\coregraphicsengine.h">
       <Filter>GraphicsEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\common\core.h">
@@ -173,11 +182,59 @@
     <ClInclude Include="..\..\common\sprite.h">
       <Filter>Sprites</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\coresprite.h">
-      <Filter>Sprites</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\common\game.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\checkbox.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\soundmanager.h">
+      <Filter>SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\swalibgraphicsengine.h">
+      <Filter>GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\swalibsoundmanager.h">
+      <Filter>SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\swalibsprite.h">
+      <Filter>Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\applicationmodegameover.h">
+      <Filter>ApplicationModes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\applicationmodelevelcompleted.h">
+      <Filter>ApplicationModes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentenemy.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentrenderable.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentmovable.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentroutepath.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentplayer.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentrigidbody.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentgoal.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\component.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\asserts.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\memorycontrol.h">
+      <Filter>Globals</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

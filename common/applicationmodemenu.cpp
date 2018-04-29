@@ -6,11 +6,14 @@
 #include "core.h"
 #include "font.h"
 #include "button.h"
-#include <assert.h>
+#include "asserts.h"
+#include "memorycontrol.h"
 
 
 ApplicationModeMenu::ApplicationModeMenu () :
-	mCurrentContainer (nullptr) {}
+	mCurrentContainer (nullptr),
+	mMusicId          (0),
+	m_pSprite         (nullptr) {}
 
 // *************************************************
 //
@@ -18,10 +21,12 @@ ApplicationModeMenu::ApplicationModeMenu () :
 
 ApplicationModeMenu::~ApplicationModeMenu()
 {
+	if (m_pSprite) g_pGraphicsEngine->ReleaseSprite(m_pSprite);
+
 	auto it = mContainers.begin();
 	while (it != mContainers.end()) 
 	{
-		delete (*it);
+		GAME_DELETE((*it));
 		it = mContainers.erase(it);
 	}
 }
@@ -41,10 +46,10 @@ IdMode ApplicationModeMenu::GetId()
 
 void ApplicationModeMenu::Activate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	m_pProperties = Properties::Instance("messages", g_pApplicationManager->GetLang());
-	assert(m_pProperties);
+	GAME_ASSERT(m_pProperties);
 
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressUp     , 0);
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressDown   , 0);
@@ -52,7 +57,7 @@ void ApplicationModeMenu::Activate()
 
 
 	// Container main menu
-	NavigationContainer * mainContainer = new NavigationContainer();
+	NavigationContainer * mainContainer = GAME_NEW(NavigationContainer, ());
 	mCurrentContainer = mainContainer;
 
 	Button * levelsButton  = InitButton(std::bind(&ApplicationModeMenu::OpenMenu, this, 1) , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, mainContainer, "main_menu.levels.text");
@@ -64,26 +69,34 @@ void ApplicationModeMenu::Activate()
 
 
 	//Container select level menu
-	NavigationContainer * levelContainer = new NavigationContainer();
+	NavigationContainer * levelContainer = GAME_NEW(NavigationContainer, ());
 
-	Button * level1Button       = InitButton(std::bind(&ApplicationModeMenu::StartLevel1 , this)    , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, "main_menu.level1.text");
-	Button * level2Button       = InitButton(std::bind(&ApplicationModeMenu::StartLevel2 , this)    , SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, "main_menu.level2.text");
-	Button * level3Button       = InitButton(std::bind(&ApplicationModeMenu::StartLevel3 , this)    , SCR_HEIGHT/4.f, 230.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, "main_menu.level3.text");
-	Button * levelsReturnButton = InitButton(std::bind(&ApplicationModeMenu::OpenMenu    , this, 0) , SCR_HEIGHT/4.f, 180.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
+	Button * level1Button       = InitButton(std::bind(&ApplicationModeMenu::StartLevel , this, Game::GameLevel::Level1), SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, "main_menu.level1.text");
+	Button * level2Button       = InitButton(std::bind(&ApplicationModeMenu::StartLevel , this, Game::GameLevel::Level2), SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, "main_menu.level2.text");
+	Button * level3Button       = InitButton(std::bind(&ApplicationModeMenu::StartLevel , this, Game::GameLevel::Level3), SCR_HEIGHT/4.f, 230.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, "main_menu.level3.text");
+	Button * levelsReturnButton = InitButton(std::bind(&ApplicationModeMenu::OpenMenu    , this, 0)                     , SCR_HEIGHT/4.f, 180.f, 200.f, SCR_HEIGHT*0.25f, levelContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
 	levelContainer->SetVisible(false);
 	mContainers.push_back(levelContainer);
 
 
 	//Container options menu
-	NavigationContainer * optionsContainer = new NavigationContainer();
-
-	Button * spanishButton       = InitButton(std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::Spanish) , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.spanish.text");
-	Button * englishButton       = InitButton(std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::English) , SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.english.text");
-	Button * optionsReturnButton = InitButton(std::bind(&ApplicationModeMenu::OpenMenu       , this, 0)                               , SCR_HEIGHT/4.f, 230.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
+	NavigationContainer * optionsContainer = GAME_NEW(NavigationContainer, ());
+		     
+	Button   * spanishButton       = InitButton   (std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::Spanish) , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.spanish.text");
+	Button   * englishButton       = InitButton   (std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::English) , SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.english.text");
+	Checkbox * audioCheckbox       = InitCheckbox (                                                                                          SCR_HEIGHT/4.f, 230.f, 250.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.activate_audio.text", g_pApplicationManager->IsAudioActivated());
+	mControlMap[audioCheckbox]     = std::bind(&ApplicationModeMenu::ChangeActivatedAudio, this, audioCheckbox);
+	Button   * optionsReturnButton = InitButton   (std::bind(&ApplicationModeMenu::OpenMenu       , this, 0)                               , SCR_HEIGHT/4.f, 180.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
 	optionsContainer->SetVisible(false);
 	mContainers.push_back(optionsContainer);
+
+	g_pGraphicsEngine->Init();
+	m_pSprite = g_pGraphicsEngine->RequireSprite(vmake(SCR_HEIGHT/4.f, 400.f), vmake(400.f, 56.f), (DATA_FOLDER + "title.png").c_str(), false);
+
+	mMusicId = g_pSoundManager->LoadWav((DATA_FOLDER + "Superboy.wav").c_str());
+	ChangeActivatedAudio(audioCheckbox);
 }
 
 // *************************************************
@@ -92,7 +105,7 @@ void ApplicationModeMenu::Activate()
 
 void ApplicationModeMenu::Deactivate()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 
 	Properties::RemoveInstance();
 	m_pProperties = nullptr;
@@ -108,6 +121,8 @@ void ApplicationModeMenu::Deactivate()
 	}
 
 	g_pEventManager->Unregister(this);
+	g_pSoundManager->UnloadWav(mMusicId);
+	g_pGraphicsEngine->End();
 }
 
 // *************************************************
@@ -116,7 +131,7 @@ void ApplicationModeMenu::Deactivate()
 
 void ApplicationModeMenu::ProcessInput()
 {
-	assert(g_pEventManager);
+	GAME_ASSERT(g_pEventManager);
 	g_pEventManager->UpdateEvents();
 }
 
@@ -135,9 +150,11 @@ void ApplicationModeMenu::Run(float deltaTime)
 
 void ApplicationModeMenu::Render()
 {
+	glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 	glClear( GL_COLOR_BUFFER_BIT );
-	glColor3f(0.0f, 1.0f, 1.0f);
-	FONT_DrawString(vmake(SCR_HEIGHT/4.f, 400.f), m_pProperties->GetProperty("main_menu.title.text").c_str());
+
+	glColor3f(1.f, 1.f, 1.f);
+	if (m_pSprite) g_pGraphicsEngine->RenderSprite(m_pSprite);
 	mCurrentContainer->Render();
 }
 
@@ -152,7 +169,7 @@ void ApplicationModeMenu::ChangeLanguage(Properties::P_Language lang)
 	{
 		g_pApplicationManager->SetLang(lang);
 		m_pProperties = Properties::Instance("messages", lang);
-		assert(m_pProperties);
+		GAME_ASSERT(m_pProperties);
 
 		for (auto container : mContainers)
 		{
@@ -161,6 +178,11 @@ void ApplicationModeMenu::ChangeLanguage(Properties::P_Language lang)
 			{
 				Button * button = dynamic_cast<Button *>(control);
 				if (button) button->SetProperties(m_pProperties);
+				else
+				{
+					Checkbox  * checkbox = dynamic_cast<Checkbox *>(control);
+					if (checkbox) checkbox->SetProperties(m_pProperties);
+				}
 			}
 		}
 	}
@@ -188,7 +210,16 @@ bool ApplicationModeMenu::ProcessEvent(IEventManager::EM_Event event)
 
 void ApplicationModeMenu::OnClick(Button * button)
 {
-	mButtonMap[button]();
+	mControlMap[button]();
+}
+
+// *************************************************
+//
+// *************************************************
+
+void ApplicationModeMenu::OnClick(Checkbox * checkbox)
+{
+	mControlMap[checkbox]();
 }
 
 // *************************************************
@@ -197,45 +228,39 @@ void ApplicationModeMenu::OnClick(Button * button)
 
 Button * ApplicationModeMenu::InitButton(std::function<void()> clickFunction, float x, float y, float width, float height, Container * parent, const char * textKey, float rOn, float gOn, float bOn, float rOff, float gOff, float bOff)
 {
-	Button * button = new Button(x, y, width, height, parent, m_pProperties, textKey, rOn, gOn, bOn, rOff, gOff, bOff);
+	Button * button = GAME_NEW(Button, (x, y, width, height, parent, m_pProperties, textKey, rOn, gOn, bOn, rOff, gOff, bOff));
 
 	button->SetListener(this);
 
-	g_pEventManager->Register(button  , IEventManager::EM_Event::SinglePressEnter, 0);
+	g_pEventManager->Register(button, IEventManager::EM_Event::SinglePressEnter, 0);
 
-	mButtonMap[button] = clickFunction;
+	mControlMap[button] = clickFunction;
 
 	return button;
 }
 
-
 // *************************************************
 //
 // *************************************************
 
-void ApplicationModeMenu::StartLevel1()
+Checkbox * ApplicationModeMenu::InitCheckbox(float x, float y, float width, float height, Container * parent, const char * textKey, bool checked, float rOn, float gOn, float bOn, float rOff, float gOff, float bOff)
 {
-	g_gameLevel = 1;
-	g_pApplicationManager->SwitchMode(AM_Game);
+	Checkbox * checkbox = GAME_NEW(Checkbox, (x, y, width, height, parent, m_pProperties, textKey, checked, rOn, gOn, bOn, rOff, gOff, bOff));
+
+	checkbox->SetListener(this);
+
+	g_pEventManager->Register(checkbox, IEventManager::EM_Event::SinglePressEnter, 0);
+
+	return checkbox;
 }
 
 // *************************************************
 //
 // *************************************************
 
-void ApplicationModeMenu::StartLevel2()
+void ApplicationModeMenu::StartLevel(Game::GameLevel level)
 {
-	g_gameLevel = 2;
-	g_pApplicationManager->SwitchMode(AM_Game);
-}
-
-// *************************************************
-//
-// *************************************************
-
-void ApplicationModeMenu::StartLevel3()
-{
-	g_gameLevel = 3;
+	g_gameLevel = level;
 	g_pApplicationManager->SwitchMode(AM_Game);
 }
 
@@ -253,14 +278,23 @@ void ApplicationModeMenu::OpenMenu(int index)
 	}
 
 	if (static_cast<int>(mContainers.size()) > index) mCurrentContainer = mContainers[index];
-	//std::vector<Control *> containerControls = mCurrentContainer->GetControls();
-	//if(!containerControls.empty()) containerControls[0]->SetFocused(true);
-	
+
 	if (mCurrentContainer)
 	{
 		mCurrentContainer->SetVisible(true);
 		mCurrentContainer->ResetFocus();
 	}
+}
+
+// *************************************************
+//
+// *************************************************
+
+void ApplicationModeMenu::ChangeActivatedAudio(Checkbox * checkbox)
+{
+	bool checkboxChecked = checkbox->IsChecked();
+	g_pApplicationManager->SetAudioActivated(checkboxChecked);
+	if (mMusicId) checkboxChecked ? g_pSoundManager->PlayMusic(mMusicId) : g_pSoundManager->StopMusic();
 }
 
 // *************************************************

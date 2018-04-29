@@ -1,7 +1,10 @@
+#include "stdafx.h"
 #include "properties.h"
+#include "asserts.h"
+#include "memorycontrol.h"
+#include "globals.h"
 #include <fstream>
 #include <algorithm>
-#include <assert.h>
 
 
 Properties *  Properties::mInstance = nullptr;
@@ -29,23 +32,23 @@ Properties * Properties::Instance(const char * file, const P_Language lang)
 {
 	if (mInstance && lang == mInstance->mLang) return mInstance;
 
-	delete mInstance;
+	GAME_DELETE(mInstance);
 	mInstance = nullptr;
 
-	assert(file);
+	GAME_ASSERT(file);
 	const char * languageSuffix = GetLanguageSuffix(lang);
-	assert(languageSuffix);
+	GAME_ASSERT(languageSuffix);
 
-	mInstance = new Properties(lang);
+	mInstance = GAME_NEW(Properties, (lang));
 
-	std::string propertiesSrc = "../data/";
+	std::string propertiesSrc = DATA_FOLDER;
 	propertiesSrc.append(file);
 	propertiesSrc.append("_");
 	propertiesSrc.append(languageSuffix);
 	propertiesSrc.append(".properties");
 
 	std::ifstream propertiesFile(propertiesSrc, std::ios::binary);
-	assert(propertiesFile.is_open());
+	GAME_ASSERT(propertiesFile.is_open());
 
 	std::string line;
 	std::string key;
@@ -70,7 +73,7 @@ Properties * Properties::Instance(const char * file, const P_Language lang)
 
 void Properties::RemoveInstance()
 {
- delete	mInstance;
+ GAME_DELETE(	mInstance);
  mInstance = nullptr;
 }
 
