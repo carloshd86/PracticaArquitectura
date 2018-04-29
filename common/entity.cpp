@@ -2,13 +2,14 @@
 #include "globals.h"
 #include "entity.h"
 #include "component.h"
+#include "memorycontrol.h"
 
 
 Entity::~Entity()
 {
 	for (auto component : m_components)
 	{
-		delete component;
+		GAME_DELETE(component);
 		component = nullptr;
 	}
 	m_components.clear();

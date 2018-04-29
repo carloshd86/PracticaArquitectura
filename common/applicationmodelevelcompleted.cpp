@@ -43,7 +43,7 @@ void ApplicationModeLevelCompleted::Activate()
 
 	g_pGraphicsEngine->Init();
 
-	mMusicId = g_pSoundManager->LoadWav("../data/DefenseLine.wav");
+	mMusicId = g_pSoundManager->LoadWav((DATA_FOLDER + "DefenseLine.wav").c_str());
 	if (mMusicId && g_pApplicationManager->IsAudioActivated()) g_pSoundManager->PlayMusic(mMusicId);
 }
 
@@ -90,13 +90,13 @@ void ApplicationModeLevelCompleted::Render()
 	glClear( GL_COLOR_BUFFER_BIT );
 
 	glColor3f(1.f, 1.f, 0.f);
-	if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(SCR_HEIGHT/6.f, 350.f), m_pProperties->GetProperty("level_completed_final.title.text").c_str());
-	else                                       FONT_DrawString(vmake(SCR_HEIGHT/6.f, 350.f), m_pProperties->GetProperty("level_completed.title.text").c_str());
+	if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(SCR_HEIGHT/4.5f, 350.f), m_pProperties->GetProperty("level_completed_final.title.text").c_str());
+	else                                       FONT_DrawString(vmake(SCR_HEIGHT/4.f, 350.f), m_pProperties->GetProperty("level_completed.title.text").c_str());
 
 	glColor3f(1.f, 1.f, 1.f);
-	FONT_DrawString(vmake(SCR_HEIGHT/6.f, 300.f), m_pProperties->GetProperty("game.press_enter.text").c_str());
-	if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(20.f, 270.f), m_pProperties->GetProperty("level_completed_final.press_enter.text").c_str());
-	else                                       FONT_DrawString(vmake(20.f, 270.f), m_pProperties->GetProperty("level_completed.press_enter.text").c_str());
+	FONT_DrawString(vmake(SCR_HEIGHT/3.f, 300.f), m_pProperties->GetProperty("game.press_enter.text").c_str());
+	if (g_gameLevel == Game::FINAL_GAME_LEVEL) FONT_DrawString(vmake(SCR_HEIGHT/4.5f, 270.f), m_pProperties->GetProperty("level_completed_final.press_enter.text").c_str());
+	else                                       FONT_DrawString(vmake(SCR_HEIGHT/7.f, 270.f), m_pProperties->GetProperty("level_completed.press_enter.text").c_str());
 }
 
 // *************************************************

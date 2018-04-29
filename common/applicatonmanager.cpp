@@ -5,6 +5,7 @@
 #include "applicationmodemenu.h"
 #include "applicationmodelevelcompleted.h"
 #include "applicationmodegameover.h"
+#include "memorycontrol.h"
 
 
 ApplicationManager::ApplicationManager() : 
@@ -19,7 +20,7 @@ ApplicationManager::ApplicationManager() :
 
 ApplicationManager::~ApplicationManager()
 {
-	delete m_pGameMode;
+	GAME_DELETE(m_pGameMode);
 }
 
 // *************************************************
@@ -39,20 +40,20 @@ void ApplicationManager::ManageModeChange()
 {
 	if (!m_pGameMode)
 	{
-		m_pGameMode = new ApplicationModeMenu();
+		m_pGameMode = GAME_NEW(ApplicationModeMenu, ());
 		m_pGameMode->Activate();
 	}
 	else if (m_pGameMode->GetId() != mDesiredMode)
 	{
 		if (m_pGameMode) m_pGameMode->Deactivate();
-		delete m_pGameMode;
+		GAME_DELETE(m_pGameMode);
 
 		switch (mDesiredMode)
 		{
-			case AM_Menu           : m_pGameMode = new ApplicationModeMenu();           break;
-			case AM_Game           : m_pGameMode = new ApplicationModeGame();           break;
-			case AM_LevelCompleted : m_pGameMode = new ApplicationModeLevelCompleted(); break; 
-			case AM_GameOver       : m_pGameMode = new ApplicationModeGameOver();       break; 
+			case AM_Menu           : m_pGameMode = GAME_NEW(ApplicationModeMenu, ());           break;
+			case AM_Game           : m_pGameMode = GAME_NEW(ApplicationModeGame, ());           break;
+			case AM_LevelCompleted : m_pGameMode = GAME_NEW(ApplicationModeLevelCompleted, ()); break; 
+			case AM_GameOver       : m_pGameMode = GAME_NEW(ApplicationModeGameOver, ());       break; 
 			default                : m_pGameMode = nullptr;                             break; 
 		}
 

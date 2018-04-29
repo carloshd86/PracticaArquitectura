@@ -43,9 +43,9 @@ void ApplicationModeGameOver::Activate()
 	g_pEventManager->Register(this, IEventManager::EM_Event::SinglePressEnter , 0);
 
 	g_pGraphicsEngine->Init();
-	m_pSprite = g_pGraphicsEngine->RequireSprite(vmake(SCR_HEIGHT/4.f, 350.f), vmake(400.f, 56.f), "../data/gameover.png", false);
+	m_pSprite = g_pGraphicsEngine->RequireSprite(vmake(SCR_HEIGHT/4.f, 350.f), vmake(400.f, 56.f), (DATA_FOLDER + "gameover.png").c_str(), false);
 
-	mMusicId = g_pSoundManager->LoadWav("../data/DefenseLine.wav");
+	mMusicId = g_pSoundManager->LoadWav((DATA_FOLDER + "DefenseLine.wav").c_str());
 	if (mMusicId && g_pApplicationManager->IsAudioActivated()) g_pSoundManager->PlayMusic(mMusicId);
 }
 

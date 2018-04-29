@@ -9,6 +9,7 @@
 #include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
 #include "asserts.h"
+#include "memorycontrol.h"
 #include <fstream>
 #include "component.h"
 #include "componentenemy.h"
@@ -47,15 +48,15 @@ void Game::Init()
 	if (!mInitialized)
 	{
 		// Init game state
-		char * jsonSrc = nullptr;
+		std::string jsonSrc;
 		switch (mGameLevel)
 		{
-			case Level1: jsonSrc = "../data/level1.json"; break;
-			case Level2: jsonSrc = "../data/level2.json"; break;
-			case Level3: jsonSrc = "../data/level3.json"; break;
+			case Level1: { jsonSrc = DATA_FOLDER + "level1.json"; break; }
+			case Level2: { jsonSrc = DATA_FOLDER + "level2.json"; break; }
+			case Level3: { jsonSrc = DATA_FOLDER + "level3.json"; break; }
 		}
 
-		GAME_ASSERT(jsonSrc);
+		GAME_ASSERT(jsonSrc.c_str());
 
 		std::ifstream file(jsonSrc, std::ios::binary | std::ios::ate);
 		GAME_ASSERT(file.is_open());
@@ -80,7 +81,7 @@ void Game::Init()
 		GAME_ASSERT(document[LEVEL_JSON_KEY].HasMember(BACKGROUND_IMG_JSON_KEY));
 
 		const char * backgroundImg    = document[LEVEL_JSON_KEY][BACKGROUND_IMG_JSON_KEY].GetString();
-		std::string  backgroundImgSrc = "../data/";
+		std::string backgroundImgSrc = DATA_FOLDER;
 		backgroundImgSrc.append(backgroundImg);
 		float backgroundR = 1.f;
 		float backgroundG = 1.f;
@@ -110,17 +111,17 @@ void Game::Init()
 		float        playerHeight = document[PLAYER_JSON_KEY][HEIGHT_JSON_KEY].GetFloat();
 		float        playerSpeed  = document[PLAYER_JSON_KEY][SPEED_JSON_KEY].GetFloat();
 		const char * playerImg    = document[PLAYER_JSON_KEY][IMG_JSON_KEY].GetString();
-		std::string  playerImgSrc = "../data/";
+		std::string  playerImgSrc = DATA_FOLDER;
 		playerImgSrc.append(playerImg);
 
-		m_pPlayer = new Entity();
-		C_Player * cPlayer                    = new C_Player(m_pPlayer);
+		m_pPlayer = GAME_NEW(Entity, ());
+		C_Player * cPlayer                    = GAME_NEW(C_Player, (m_pPlayer));
 		cPlayer->Init();
-		C_Rigidbody * cPlayerRigidbody         = new C_Rigidbody(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight));
+		C_Rigidbody * cPlayerRigidbody        = GAME_NEW(C_Rigidbody, (m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight)));
 		cPlayerRigidbody->Init();
-		C_Renderable * cPlayerRenderable      = new C_Renderable(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight), playerImgSrc.c_str());
+		C_Renderable * cPlayerRenderable      = GAME_NEW(C_Renderable, (m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight), playerImgSrc.c_str()));
 		cPlayerRenderable->Init();
-		C_Movable      * cPlayerMovable       = new C_Movable(m_pPlayer, playerSpeed);
+		C_Movable      * cPlayerMovable       = GAME_NEW(C_Movable, (m_pPlayer, playerSpeed));
 		cPlayerMovable->Init();
 		m_pPlayer->AddComponent(cPlayer);
 		m_pPlayer->AddComponent(cPlayerRigidbody);
@@ -142,15 +143,15 @@ void Game::Init()
 		float        goalWidth  = document[GOAL_JSON_KEY][WIDTH_JSON_KEY].GetFloat();
 		float        goalHeight = document[GOAL_JSON_KEY][HEIGHT_JSON_KEY].GetFloat();
 		const char * goalImg    = document[GOAL_JSON_KEY][IMG_JSON_KEY].GetString();
-		std::string  goalImgSrc = "../data/";
+		std::string  goalImgSrc = DATA_FOLDER;
 		goalImgSrc.append(goalImg);
 
-		m_pGoal = new Entity();
-		C_Goal * cGoal                 = new C_Goal(m_pGoal);
+		m_pGoal = GAME_NEW(Entity, ());
+		C_Goal * cGoal                 = GAME_NEW(C_Goal, (m_pGoal));
 		cGoal->Init();
-		C_Rigidbody * cGoalRigidbody         = new C_Rigidbody(m_pGoal, vmake(goalPosX, goalPosY), vmake(goalWidth, goalHeight));
+		C_Rigidbody * cGoalRigidbody   = GAME_NEW(C_Rigidbody, (m_pGoal, vmake(goalPosX, goalPosY),vmake(goalWidth, goalHeight)));
 		cGoalRigidbody->Init();
-		C_Renderable * cGoalRenderable = new C_Renderable(m_pGoal, vmake(goalPosX, goalPosY), vmake(goalWidth, goalHeight), goalImgSrc.c_str());
+		C_Renderable * cGoalRenderable = GAME_NEW(C_Renderable, (m_pGoal, vmake(goalPosX, goalPosY), vmake(goalWidth, goalHeight), goalImgSrc.c_str()));
 		cGoalRenderable->Init();
 		m_pGoal->AddComponent(cGoal);
 		m_pGoal->AddComponent(cGoalRigidbody);
@@ -184,16 +185,16 @@ void Game::Init()
 				const char * enemyImgRight      = jsonEnemy[IMG_RIGHT_JSON_KEY].GetString();
 				const char * enemyImgAlertLeft  = jsonEnemy[IMG_ALERT_LEFT_JSON_KEY].GetString();
 				const char * enemyImgAlertRight = jsonEnemy[IMG_ALERT_RIGHT_JSON_KEY].GetString();
-				std::string  enemyImgSrc        = "../data/";
+				std::string  enemyImgSrc        = DATA_FOLDER;
 
-				Entity * enemy = new Entity();
-				C_Enemy * cEnemy                = new C_Enemy(enemy, enemyPursuingSpeed, (enemyImgSrc + enemyImgLeft).c_str(), (enemyImgSrc + enemyImgRight).c_str(), (enemyImgSrc + enemyImgAlertLeft).c_str(), (enemyImgSrc + enemyImgAlertRight).c_str());
+				Entity * enemy = GAME_NEW(Entity, ());
+				C_Enemy * cEnemy                = GAME_NEW(C_Enemy, (enemy, enemyPursuingSpeed, (enemyImgSrc + enemyImgLeft).c_str(), (enemyImgSrc + enemyImgRight).c_str(), (enemyImgSrc + enemyImgAlertLeft).c_str(), (enemyImgSrc + enemyImgAlertRight).c_str()));
 				cEnemy->Init();
-				C_Rigidbody * cEnemyRigidbody   = new C_Rigidbody(enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight));
+				C_Rigidbody * cEnemyRigidbody   = GAME_NEW(C_Rigidbody, (enemy, vmake(enemyPosX, enemyPosY),vmake(enemyWidth, enemyHeight)));
 				cEnemyRigidbody->Init();
-				C_Renderable * cEnemyRenderable = new C_Renderable(enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight), (enemyImgSrc + enemyImgLeft).c_str());
+				C_Renderable * cEnemyRenderable = GAME_NEW(C_Renderable, (enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight), (enemyImgSrc + enemyImgLeft).c_str()));
 				cEnemyRenderable->Init();
-				C_Movable * cEnemyMovable       = new C_Movable(enemy, enemySpeed);
+				C_Movable * cEnemyMovable       = GAME_NEW(C_Movable, (enemy, enemySpeed));
 				cEnemyMovable->Init();
 				enemy->AddComponent(cEnemy);
 				enemy->AddComponent(cEnemyRigidbody);
@@ -202,7 +203,7 @@ void Game::Init()
 	
 				if (jsonEnemy.HasMember(ROUTE_POINTS_JSON_KEY))
 				{
-					C_RoutePath * cRoutePath = new C_RoutePath(enemy);
+					C_RoutePath * cRoutePath = GAME_NEW(C_RoutePath, (enemy));
 					cRoutePath->Init();
 					for (auto& point : jsonEnemy[ROUTE_POINTS_JSON_KEY].GetArray())
 					{
@@ -241,13 +242,13 @@ void Game::Init()
 				float        wallWidth = jsonWall[WIDTH_JSON_KEY].GetFloat();
 				float        wallHeight = jsonWall[HEIGHT_JSON_KEY].GetFloat();
 				const char * wallImg = jsonWall[IMG_JSON_KEY].GetString();
-				std::string  wallImgSrc = "../data/";
+				std::string  wallImgSrc = DATA_FOLDER;
 				wallImgSrc.append(wallImg);
 
-				Entity * wall = new Entity();
-				C_Rigidbody * cWall = new C_Rigidbody(wall, vmake(wallPosX, wallPosY), vmake(wallWidth, wallHeight));
+				Entity * wall = GAME_NEW(Entity, ());
+				C_Rigidbody * cWall = GAME_NEW(C_Rigidbody, (wall, vmake(wallPosX, wallPosY),vmake(wallWidth, wallHeight)));
 				cWall->Init();
-				C_Renderable * cWallRenderable = new C_Renderable(wall, vmake(wallPosX, wallPosY), vmake(wallWidth, wallHeight), wallImgSrc.c_str());
+				C_Renderable * cWallRenderable = GAME_NEW(C_Renderable, (wall, vmake(wallPosX, wallPosY), vmake(wallWidth, wallHeight), wallImgSrc.c_str()));
 				cWallRenderable->Init();
 				wall->AddComponent(cWall);
 				wall->AddComponent(cWallRenderable);
@@ -259,26 +260,26 @@ void Game::Init()
 
 		// Scenery limits (invisible walls)
 		vec2 worldLimits = g_pGraphicsEngine->GetWorldSize();
-		Entity * limitDown = new Entity();
-		C_Rigidbody * cRigidbodyDown = new C_Rigidbody(limitDown, vmake(-1.f, -2.f), vmake(worldLimits.x, 1.f));
+		Entity * limitDown = GAME_NEW(Entity, ());
+		C_Rigidbody * cRigidbodyDown = GAME_NEW(C_Rigidbody, (limitDown, vmake(-1.f, -2.f),vmake(worldLimits.x, 1.f)));
 		cRigidbodyDown->Init();
 		limitDown->AddComponent(cRigidbodyDown);
 		mWalls.push_back(limitDown);
 
-		Entity * limitUp = new Entity();
-		C_Rigidbody * cRigidbodyUp = new C_Rigidbody(limitUp, vmake(-1.f, worldLimits.y + 1), vmake(worldLimits.x, 1.f));
+		Entity * limitUp = GAME_NEW(Entity, ());
+		C_Rigidbody * cRigidbodyUp = GAME_NEW(C_Rigidbody, (limitUp, vmake(-1.f, worldLimits.y + 1),vmake(worldLimits.x, 1.f)));
 		cRigidbodyUp->Init();
 		limitUp->AddComponent(cRigidbodyUp);
 		mWalls.push_back(limitUp);
 
-		Entity * limitLeft = new Entity();
-		C_Rigidbody * cRigidbodyLeft = new C_Rigidbody(limitLeft, vmake(-2.f, -1.f), vmake(1.f, worldLimits.y));
+		Entity * limitLeft = GAME_NEW(Entity, ());
+		C_Rigidbody * cRigidbodyLeft = GAME_NEW(C_Rigidbody, (limitLeft, vmake(-2.f, -1.f),vmake(1.f, worldLimits.y)));
 		cRigidbodyLeft->Init();
 		limitLeft->AddComponent(cRigidbodyLeft);
 		mWalls.push_back(limitLeft);
 
-		Entity * limitRight = new Entity();
-		C_Rigidbody * cRigidbodyRight = new C_Rigidbody(limitRight, vmake(worldLimits.x + 1, -1.f), vmake(1.f, worldLimits.y));
+		Entity * limitRight = GAME_NEW(Entity, ());
+		C_Rigidbody * cRigidbodyRight = GAME_NEW(C_Rigidbody, (limitRight, vmake(worldLimits.x + 1, -1.f),vmake(1.f, worldLimits.y)));
 		cRigidbodyRight->Init();
 		limitRight->AddComponent(cRigidbodyRight);
 		mWalls.push_back(limitRight);
@@ -295,7 +296,7 @@ void Game::End()
 {
 	if (mInitialized)
 	{
-		for(auto entity : mEntities) { delete entity; }
+		for(auto entity : mEntities) { GAME_DELETE(entity); }
 		mEntities.clear();
 		
 		m_pPlayer = nullptr;

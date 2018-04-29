@@ -4,6 +4,7 @@
 #include "sys.h"
 #include "core.h"
 #include "swalibsprite.h"
+#include "memorycontrol.h"
 
 
 SwalibGraphicsEngine::SwalibGraphicsEngine(const char * backgroundImage) : 
@@ -58,7 +59,7 @@ void SwalibGraphicsEngine::End()
 {
 	if (mInitialized)
 	{
-		for(auto sprite : mSprites) delete sprite.first;
+		for(auto sprite : mSprites) GAME_DELETE(sprite.first);
 		mSprites.clear();
 
 		for (auto& texture : mTextures) CORE_UnloadPNG(texture.second);
@@ -129,7 +130,7 @@ ISprite * SwalibGraphicsEngine::RequireSprite(vec2 pos, vec2 size, const char * 
 		mTextures.push_back({ image, spriteId });
 	}
 	
-	ISprite * requiredSprite = new SwalibSprite(pos, size, spriteId, r, g, b);
+	ISprite * requiredSprite = GAME_NEW(SwalibSprite, (pos, size, spriteId, r, g, b));
 	mSprites.push_back(std::pair<ISprite *, bool>(requiredSprite, manageRender));
 
 	return requiredSprite;
@@ -145,7 +146,7 @@ void SwalibGraphicsEngine::ReleaseSprite(ISprite * sprite)
 	{
 		if ((*it).first == sprite) 
 		{
-			delete (*it).first;  
+			GAME_DELETE((*it).first);  
 			it = mSprites.erase(it);
 		} 
 		else 

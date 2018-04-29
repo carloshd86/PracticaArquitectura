@@ -17,7 +17,9 @@ extern Game::GameLevel      g_gameLevel;
 extern IGraphicsEngine    * g_pGraphicsEngine;
 extern ISoundManager      * g_pSoundManager;
 extern IEventManager      * g_pEventManager;
-											    
+	
+const std::string DATA_FOLDER = "../data/";
+
 constexpr const char * LEVEL_JSON_KEY           = "level";
 constexpr const char * GOAL_JSON_KEY            = "goal";
 constexpr const char * PLAYER_JSON_KEY          = "player";

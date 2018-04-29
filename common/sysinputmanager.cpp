@@ -2,6 +2,7 @@
 #include "sysinputmanager.h"
 #include "globals.h"
 #include "sys.h"
+#include "memorycontrol.h"
 #include <algorithm>
 #include <utility>
 
@@ -33,7 +34,7 @@ SysInputManager * SysInputManager::Instance()
 {
 	if (!mInstance) 
 	{
-		mInstance = new SysInputManager();
+		mInstance = GAME_NEW(SysInputManager, ());
 		mInstance->Init();
 	}
 
