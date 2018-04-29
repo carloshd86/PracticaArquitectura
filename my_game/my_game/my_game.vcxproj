@@ -152,7 +152,14 @@
     <ClInclude Include="..\..\common\applicationmodelevelcompleted.h" />
     <ClInclude Include="..\..\common\button.h" />
     <ClInclude Include="..\..\common\checkbox.h" />
-    <ClInclude Include="..\..\common\components.h" />
+    <ClInclude Include="..\..\common\componentenemy.h" />
+    <ClInclude Include="..\..\common\componentgoal.h" />
+    <ClInclude Include="..\..\common\componentmovable.h" />
+    <ClInclude Include="..\..\common\componentplayer.h" />
+    <ClInclude Include="..\..\common\componentrenderable.h" />
+    <ClInclude Include="..\..\common\componentrigidbody.h" />
+    <ClInclude Include="..\..\common\componentroutepath.h" />
+    <ClInclude Include="..\..\common\component.h" />
     <ClInclude Include="..\..\common\container.h" />
     <ClInclude Include="..\..\common\control.h" />
     <ClInclude Include="..\..\common\swalibsoundmanager.h" />

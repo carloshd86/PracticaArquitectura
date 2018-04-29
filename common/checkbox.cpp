@@ -80,9 +80,7 @@ void Checkbox::Render()
 		glColor3f(m_rOn, m_gOn, m_bOn);
 
 	FONT_DrawString(vmake(mX, mY), mText.c_str());
-	vec2 spritePos = m_pSprite->GetPos();
-	vec2 spriteSize = m_pSprite->GetSize();
-	CORE_RenderSprite(spritePos, vmake(spritePos.x + spriteSize.x, spritePos.y + spriteSize.y), m_pSprite->GetTex());
+	g_pGraphicsEngine->RenderSprite(m_pSprite);
 }
 
 // *************************************************

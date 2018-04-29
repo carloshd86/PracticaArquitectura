@@ -1,6 +1,6 @@
 {
 	"level" : {
-		"backgroundImg" : "256xdrygrassblock.png",
+		"backgroundImg" : "metal_floor.png",
 		"backgroundR" : 1.0,
 		"backgroundG" : 1.0,
 		"backgroundB" : 1.0
@@ -8,13 +8,13 @@
 	"goal" : {
 		"posX" : 298,
 		"posY" : 416,
-		"width" : 32,
-		"height" : 32,
-		"img" : "goal.png"
+		"width" : 50,
+		"height" : 50,
+		"img" : "goal_circle.png"
 	},
 	"player" : {
 		"posX" : 304,
-		"posY" : 0,
+		"posY" : 1,
 		"width" : 32,
 		"height" : 32,
 		"speed" : 128,
@@ -28,18 +28,24 @@
 			"height" : 32,
 			"speed" : 64,
 			"pursuingSpeed" : 128,
-			"img" : "soldier_right.png",
+			"imgLeft" : "soldier_left.png",
+			"imgRight" : "soldier_right.png",
+			"imgAlertLeft" : "soldier_alert_left.png",
+			"imgAlertRight" : "soldier_alert_right.png",
 			"routePoints" : [ { "posX" : 0, "posY" : 208 }, { "posX" : 256, "posY" : 208 } ]
 		},
 		{
-			"posX" : 626,
+			"posX" : 606,
 			"posY" : 208,
 			"width" : 32,
 			"height" : 32,
 			"speed" : 64,
 			"pursuingSpeed" : 128,
-			"img" : "soldier_left.png",
-			"routePoints" : [ { "posX" : 626, "posY" : 208 }, { "posX" : 330, "posY" : 208 } ]
+			"imgLeft" : "soldier_left.png",
+			"imgRight" : "soldier_right.png",
+			"imgAlertLeft" : "soldier_alert_left.png",
+			"imgAlertRight" : "soldier_alert_right.png",
+			"routePoints" : [ { "posX" : 606, "posY" : 208 }, { "posX" : 330, "posY" : 208 } ]
 		},
 		{
 			"posX" : 256,
@@ -48,7 +54,10 @@
 			"height" : 32,
 			"speed" : 64,
 			"pursuingSpeed" : 128,
-			"img" : "soldier_right.png",
+			"imgLeft" : "soldier_left.png",
+			"imgRight" : "soldier_right.png",
+			"imgAlertLeft" : "soldier_alert_left.png",
+			"imgAlertRight" : "soldier_alert_right.png",
 			"routePoints" : [ { "posX" : 256, "posY" : 240 }, { "posX" : 0, "posY" : 240 } ]
 		},
 		{
@@ -58,8 +67,11 @@
 			"height" : 32,
 			"speed" : 64,
 			"pursuingSpeed" : 128,
-			"img" : "soldier_left.png",
-			"routePoints" : [ { "posX" : 330, "posY" : 240 }, { "posX" : 626, "posY" : 240 } ]
+			"imgLeft" : "soldier_left.png",
+			"imgRight" : "soldier_right.png",
+			"imgAlertLeft" : "soldier_alert_left.png",
+			"imgAlertRight" : "soldier_alert_right.png",
+			"routePoints" : [ { "posX" : 330, "posY" : 240 }, { "posX" : 606, "posY" : 240 } ]
 		}
 	],
 	"walls" : [

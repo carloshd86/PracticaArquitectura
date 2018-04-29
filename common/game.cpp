@@ -10,7 +10,14 @@
 #include "rapidjson/error/en.h"
 #include <assert.h>
 #include <fstream>
-#include "components.h"
+#include "component.h"
+#include "componentenemy.h"
+#include "componentgoal.h"
+#include "componentmovable.h"
+#include "componentplayer.h"
+#include "componentrenderable.h"
+#include "componentrigidbody.h"
+#include "componentroutepath.h"
 
 
 using namespace rapidjson;
@@ -19,8 +26,8 @@ using namespace rapidjson;
 Game::Game() : 
 	mInitialized     (false), 
 	mEnded           (false), 
-	m_pPlayer         (nullptr), 
-	m_pGoal           (nullptr) {}
+	m_pPlayer        (nullptr), 
+	m_pGoal          (nullptr) {}
 
 // *************************************************
 //
@@ -109,16 +116,16 @@ void Game::Init()
 		m_pPlayer = new Entity();
 		C_Player * cPlayer                    = new C_Player(m_pPlayer);
 		cPlayer->Init();
+		C_Rigidbody * cPlayerRigidbody         = new C_Rigidbody(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight));
+		cPlayerRigidbody->Init();
 		C_Renderable * cPlayerRenderable      = new C_Renderable(m_pPlayer, vmake(playerPosX, playerPosY), vmake(playerWidth, playerHeight), playerImgSrc.c_str());
 		cPlayerRenderable->Init();
 		C_Movable      * cPlayerMovable       = new C_Movable(m_pPlayer, playerSpeed);
 		cPlayerMovable->Init();
-		C_Controllable * cPlayerControllable  = new C_Controllable(m_pPlayer);
-		cPlayerControllable->Init();
 		m_pPlayer->AddComponent(cPlayer);
+		m_pPlayer->AddComponent(cPlayerRigidbody);
 		m_pPlayer->AddComponent(cPlayerRenderable);
 		m_pPlayer->AddComponent(cPlayerMovable);
-		m_pPlayer->AddComponent(cPlayerControllable);
 		mEntities.push_back(m_pPlayer);
 
 		// Goal
@@ -141,9 +148,12 @@ void Game::Init()
 		m_pGoal = new Entity();
 		C_Goal * cGoal                 = new C_Goal(m_pGoal);
 		cGoal->Init();
+		C_Rigidbody * cGoalRigidbody         = new C_Rigidbody(m_pGoal, vmake(goalPosX, goalPosY), vmake(goalWidth, goalHeight));
+		cGoalRigidbody->Init();
 		C_Renderable * cGoalRenderable = new C_Renderable(m_pGoal, vmake(goalPosX, goalPosY), vmake(goalWidth, goalHeight), goalImgSrc.c_str());
 		cGoalRenderable->Init();
 		m_pGoal->AddComponent(cGoal);
+		m_pGoal->AddComponent(cGoalRigidbody);
 		m_pGoal->AddComponent(cGoalRenderable);
 		mEntities.push_back(m_pGoal);
 
@@ -159,26 +169,34 @@ void Game::Init()
 				assert(jsonEnemy.HasMember(HEIGHT_JSON_KEY));
 				assert(jsonEnemy.HasMember(SPEED_JSON_KEY));
 				assert(jsonEnemy.HasMember(PURSUING_SPEED_JSON_KEY));
-				assert(jsonEnemy.HasMember(IMG_JSON_KEY));
+				assert(jsonEnemy.HasMember(IMG_LEFT_JSON_KEY));
+				assert(jsonEnemy.HasMember(IMG_RIGHT_JSON_KEY));
+				assert(jsonEnemy.HasMember(IMG_ALERT_LEFT_JSON_KEY));
+				assert(jsonEnemy.HasMember(IMG_ALERT_RIGHT_JSON_KEY));
 
-				float        enemyPosX           = jsonEnemy[POS_X_JSON_KEY].GetFloat();
-				float        enemyPosY           = jsonEnemy[POS_Y_JSON_KEY].GetFloat();
-				float        enemyWidth          = jsonEnemy[WIDTH_JSON_KEY].GetFloat();
-				float        enemyHeight         = jsonEnemy[HEIGHT_JSON_KEY].GetFloat();
-				float        enemySpeed          = jsonEnemy[SPEED_JSON_KEY].GetFloat();
-				float        enemyPursuingSpeed  = jsonEnemy[PURSUING_SPEED_JSON_KEY].GetFloat();
-				const char * enemyImg            = jsonEnemy[IMG_JSON_KEY].GetString();
-				std::string  enemyImgSrc         = "../data/";
-				enemyImgSrc.append(enemyImg);
+				float        enemyPosX          = jsonEnemy[POS_X_JSON_KEY].GetFloat();
+				float        enemyPosY          = jsonEnemy[POS_Y_JSON_KEY].GetFloat();
+				float        enemyWidth         = jsonEnemy[WIDTH_JSON_KEY].GetFloat();
+				float        enemyHeight        = jsonEnemy[HEIGHT_JSON_KEY].GetFloat();
+				float        enemySpeed         = jsonEnemy[SPEED_JSON_KEY].GetFloat();
+				float        enemyPursuingSpeed = jsonEnemy[PURSUING_SPEED_JSON_KEY].GetFloat();
+				const char * enemyImgLeft       = jsonEnemy[IMG_LEFT_JSON_KEY].GetString();
+				const char * enemyImgRight      = jsonEnemy[IMG_RIGHT_JSON_KEY].GetString();
+				const char * enemyImgAlertLeft  = jsonEnemy[IMG_ALERT_LEFT_JSON_KEY].GetString();
+				const char * enemyImgAlertRight = jsonEnemy[IMG_ALERT_RIGHT_JSON_KEY].GetString();
+				std::string  enemyImgSrc        = "../data/";
 
 				Entity * enemy = new Entity();
-				C_Enemy * cEnemy                = new C_Enemy(enemy, enemyPursuingSpeed);
+				C_Enemy * cEnemy                = new C_Enemy(enemy, enemyPursuingSpeed, (enemyImgSrc + enemyImgLeft).c_str(), (enemyImgSrc + enemyImgRight).c_str(), (enemyImgSrc + enemyImgAlertLeft).c_str(), (enemyImgSrc + enemyImgAlertRight).c_str());
 				cEnemy->Init();
-				C_Renderable * cEnemyRenderable = new C_Renderable(enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight), enemyImgSrc.c_str());
+				C_Rigidbody * cEnemyRigidbody   = new C_Rigidbody(enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight));
+				cEnemyRigidbody->Init();
+				C_Renderable * cEnemyRenderable = new C_Renderable(enemy, vmake(enemyPosX, enemyPosY), vmake(enemyWidth, enemyHeight), (enemyImgSrc + enemyImgLeft).c_str());
 				cEnemyRenderable->Init();
 				C_Movable * cEnemyMovable       = new C_Movable(enemy, enemySpeed);
 				cEnemyMovable->Init();
 				enemy->AddComponent(cEnemy);
+				enemy->AddComponent(cEnemyRigidbody);
 				enemy->AddComponent(cEnemyRenderable);
 				enemy->AddComponent(cEnemyMovable);
 	
@@ -207,6 +225,7 @@ void Game::Init()
 
 		// Walls
 		if (document.HasMember(WALLS_JSON_KEY))
+		{
 			for (auto& item : document[WALLS_JSON_KEY].GetArray())
 			{
 				auto& jsonWall = item.GetObjectA();
@@ -217,16 +236,16 @@ void Game::Init()
 				assert(jsonWall.HasMember(HEIGHT_JSON_KEY));
 				assert(jsonWall.HasMember(IMG_JSON_KEY));
 
-				float        wallPosX   = jsonWall[POS_X_JSON_KEY].GetFloat();
-				float        wallPosY   = jsonWall[POS_Y_JSON_KEY].GetFloat();
-				float        wallWidth  = jsonWall[WIDTH_JSON_KEY].GetFloat();
+				float        wallPosX = jsonWall[POS_X_JSON_KEY].GetFloat();
+				float        wallPosY = jsonWall[POS_Y_JSON_KEY].GetFloat();
+				float        wallWidth = jsonWall[WIDTH_JSON_KEY].GetFloat();
 				float        wallHeight = jsonWall[HEIGHT_JSON_KEY].GetFloat();
-				const char * wallImg    = jsonWall[IMG_JSON_KEY].GetString();
+				const char * wallImg = jsonWall[IMG_JSON_KEY].GetString();
 				std::string  wallImgSrc = "../data/";
 				wallImgSrc.append(wallImg);
 
 				Entity * wall = new Entity();
-				C_RigidBody * cWall            = new C_RigidBody(wall);
+				C_Rigidbody * cWall = new C_Rigidbody(wall, vmake(wallPosX, wallPosY), vmake(wallWidth, wallHeight));
 				cWall->Init();
 				C_Renderable * cWallRenderable = new C_Renderable(wall, vmake(wallPosX, wallPosY), vmake(wallWidth, wallHeight), wallImgSrc.c_str());
 				cWallRenderable->Init();
@@ -236,6 +255,33 @@ void Game::Init()
 				mEntities.push_back(wall);
 				mWalls.push_back(wall);
 			}
+		}
+
+		// Scenery limits (invisible walls)
+		vec2 worldLimits = g_pGraphicsEngine->GetWorldSize();
+		Entity * limitDown = new Entity();
+		C_Rigidbody * cRigidbodyDown = new C_Rigidbody(limitDown, vmake(-1.f, -2.f), vmake(worldLimits.x, 1.f));
+		cRigidbodyDown->Init();
+		limitDown->AddComponent(cRigidbodyDown);
+		mWalls.push_back(limitDown);
+
+		Entity * limitUp = new Entity();
+		C_Rigidbody * cRigidbodyUp = new C_Rigidbody(limitUp, vmake(-1.f, worldLimits.y + 1), vmake(worldLimits.x, 1.f));
+		cRigidbodyUp->Init();
+		limitUp->AddComponent(cRigidbodyUp);
+		mWalls.push_back(limitUp);
+
+		Entity * limitLeft = new Entity();
+		C_Rigidbody * cRigidbodyLeft = new C_Rigidbody(limitLeft, vmake(-2.f, -1.f), vmake(1.f, worldLimits.y));
+		cRigidbodyLeft->Init();
+		limitLeft->AddComponent(cRigidbodyLeft);
+		mWalls.push_back(limitLeft);
+
+		Entity * limitRight = new Entity();
+		C_Rigidbody * cRigidbodyRight = new C_Rigidbody(limitRight, vmake(worldLimits.x + 1, -1.f), vmake(1.f, worldLimits.y));
+		cRigidbodyRight->Init();
+		limitRight->AddComponent(cRigidbodyRight);
+		mWalls.push_back(limitRight);
 
 		mInitialized = true;
 	}
@@ -280,12 +326,12 @@ void Game::Run(float deltaTime)
 
 void Game::MoveEntities() 
 {
-	RequirePositionMessage positionMessage;
+	RequireRigidbodyPositionMessage positionMessage;
 	m_pPlayer->ReceiveMessage(positionMessage);
 	assert(positionMessage.GetProcessed());
 	vec2 playerPos = vmake(positionMessage.GetX(), positionMessage.GetY());
 
-	RequireSizeMessage sizeMessage;
+	RequireRigidbodySizeMessage sizeMessage;
 	m_pPlayer->ReceiveMessage(sizeMessage);
 	assert(sizeMessage.GetProcessed());
 	vec2 playerSize = vmake(sizeMessage.GetX(), sizeMessage.GetY());
@@ -316,14 +362,14 @@ void Game::MoveEntities()
 			playerPosCheck.y = playerPos.y - playerMovement.y;
 			if (CheckRectCollision(playerPosCheck, playerSize, wallPos, wallSize))
 			{
-				m_pPlayer->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type::CollisionX));
+				m_pPlayer->ReceiveMessage(RigidbodyCollisionMessage(RigidbodyCollisionMessage::RGBM_Type::CollisionX));
 			}
 
 			playerPosCheck.x = playerPos.x - playerMovement.x;
 			playerPosCheck.y = playerPos.y;
 			if (CheckRectCollision(playerPosCheck, playerSize, wallPos, wallSize))
 			{
-				m_pPlayer->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type::CollisionY));
+				m_pPlayer->ReceiveMessage(RigidbodyCollisionMessage(RigidbodyCollisionMessage::RGBM_Type::CollisionY));
 			}
 		}
 
@@ -350,12 +396,12 @@ void Game::MoveEntities()
 
 				if (CheckRectCollision(enemyPosCheck, enemySize, wallPos, wallSize))
 				{
-					enemy->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type::CollisionX));
+					enemy->ReceiveMessage(RigidbodyCollisionMessage(RigidbodyCollisionMessage::RGBM_Type::CollisionX));
 				}
 
 				if (CheckRectCollision(enemyPos, enemySize, wallPos, wallSize))
 				{
-					enemy->ReceiveMessage(RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type::CollisionY));
+					enemy->ReceiveMessage(RigidbodyCollisionMessage(RigidbodyCollisionMessage::RGBM_Type::CollisionY));
 				}
 			}
 		}
@@ -369,12 +415,12 @@ void Game::MoveEntities()
 
 void Game::CheckCollisions()
 {
-	RequirePositionMessage positionMessage;
+	RequireRigidbodyPositionMessage positionMessage;
 	m_pPlayer->ReceiveMessage(positionMessage);
 	assert(positionMessage.GetProcessed());
 	vec2 playerPos = vmake(positionMessage.GetX(), positionMessage.GetY());
 
-	RequireSizeMessage sizeMessage;
+	RequireRigidbodySizeMessage sizeMessage;
 	m_pPlayer->ReceiveMessage(sizeMessage);
 	assert(sizeMessage.GetProcessed());
 	vec2 playerSize = vmake(sizeMessage.GetX(), sizeMessage.GetY());

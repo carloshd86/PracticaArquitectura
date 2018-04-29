@@ -159,6 +159,17 @@ void SwalibGraphicsEngine::ReleaseSprite(ISprite * sprite)
 //
 // *************************************************
 
+void SwalibGraphicsEngine::RenderSprite(ISprite * sprite) 
+{
+	vec2 pos = sprite->GetPos();
+	vec2 size = sprite->GetSize();
+	CORE_RenderSprite(pos, vmake(pos.x + size.x, pos.y + size.y), sprite->GetTex());
+}
+
+// *************************************************
+//
+// *************************************************
+
 void SwalibGraphicsEngine::SetOverlayActive(bool active)
 {
 	mOverlayActive = active;
@@ -195,4 +206,13 @@ void SwalibGraphicsEngine::SetBackgroundColor(float r, float g, float b)
 	mBackgroundR = r;
 	mBackgroundG = g;
 	mBackgroundB = b;
+}
+
+// *************************************************
+//
+// *************************************************
+
+vec2 SwalibGraphicsEngine::GetWorldSize()
+{
+return vmake(SCR_WIDTH, SCR_HEIGHT);
 }

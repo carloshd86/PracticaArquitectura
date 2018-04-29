@@ -12,13 +12,15 @@ public:
 	enum GM_Type
 	{
 		EnemyCollision,
-		RigidBodyCollision,
+		RigidbodyCollision,
 		GoalReached,
 		SetPosition,
 		AddPosition,
 		SetSize,
-		RequirePosition,
-		RequireSize,
+		RequireRenderPosition,
+		RequireRenderSize,
+		RequireRigidbodyPosition,
+		RequireRigidbodySize,
 		RequireMovement,
 		RequirePursuingSpeed,
 		RequireRoute,
@@ -45,7 +47,9 @@ private:
 	GM_Type mType;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class EnemyCollisionMessage : public GameMessage
 {
@@ -55,9 +59,11 @@ public:
 		GameMessage(GM_Type::EnemyCollision) {}
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
-class RigidBodyCollisionMessage : public GameMessage
+class RigidbodyCollisionMessage : public GameMessage
 {
 public:
 
@@ -67,18 +73,20 @@ public:
 		CollisionY
 	};
 
-	RigidBodyCollisionMessage(RigidBodyCollisionMessage::RGBM_Type collisionType) : 
-		GameMessage    (GM_Type::RigidBodyCollision),
+	RigidbodyCollisionMessage(RigidbodyCollisionMessage::RGBM_Type collisionType) : 
+		GameMessage    (GM_Type::RigidbodyCollision),
 		mCollisionType (collisionType) {}
 
-	RigidBodyCollisionMessage::RGBM_Type GetCollisionType() const { return mCollisionType; }
+	RigidbodyCollisionMessage::RGBM_Type GetCollisionType() const { return mCollisionType; }
 
 private:
 
-	RigidBodyCollisionMessage::RGBM_Type mCollisionType;
+	RigidbodyCollisionMessage::RGBM_Type mCollisionType;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class GoalReachedMessage : public GameMessage
 {
@@ -88,7 +96,9 @@ public:
 		GameMessage(GM_Type::GoalReached) {}
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class SetPositionMessage : public GameMessage
 {
@@ -108,7 +118,9 @@ private:
 	float mY;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class AddPositionMessage : public GameMessage
 {
@@ -128,7 +140,9 @@ private:
 	float mY;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class SetSizeMessage : public GameMessage
 {
@@ -148,14 +162,16 @@ private:
 	float mY;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
-class RequirePositionMessage : public GameMessage
+class RequireRenderPositionMessage : public GameMessage
 {
 public:
 
-	RequirePositionMessage() : 
-		GameMessage (GM_Type::RequirePosition),
+	RequireRenderPositionMessage() : 
+		GameMessage (GM_Type::RequireRenderPosition),
 		mProcessed  (false),
 		mX          (0.f), 
 		mY          (0.f) {}
@@ -174,14 +190,16 @@ private:
 	float mY;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
-class RequireSizeMessage : public GameMessage
+class RequireRenderSizeMessage : public GameMessage
 {
 public:
 
-	RequireSizeMessage() : 
-		GameMessage (GM_Type::RequireSize),
+	RequireRenderSizeMessage() : 
+		GameMessage (GM_Type::RequireRenderSize),
 		mProcessed  (false),
 		mX          (0.f), 
 		mY          (0.f) {}
@@ -200,7 +218,65 @@ private:
 	float mY;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
+
+class RequireRigidbodyPositionMessage : public GameMessage
+{
+public:
+
+	RequireRigidbodyPositionMessage() : 
+		GameMessage (GM_Type::RequireRigidbodyPosition),
+		mProcessed  (false),
+		mX          (0.f), 
+		mY          (0.f) {}
+
+	bool  GetProcessed()         const { return mProcessed; }
+	void  SetProcessed(bool processed) { mProcessed = processed; }
+	float GetX()                 const { return mX; }
+	void  SetX(float x)                { mX = x; }
+	float GetY()                 const { return mY; }
+	void  SetY(float y)                { mY = y; }
+
+private:
+
+	bool  mProcessed;
+	float mX;
+	float mY;
+};
+
+// *************************************************
+//
+// *************************************************
+
+class RequireRigidbodySizeMessage : public GameMessage
+{
+public:
+
+	RequireRigidbodySizeMessage() : 
+		GameMessage (GM_Type::RequireRigidbodySize),
+		mProcessed  (false),
+		mX          (0.f), 
+		mY          (0.f) {}
+
+	bool  GetProcessed()         const { return mProcessed; }
+	void  SetProcessed(bool processed) { mProcessed = processed; }
+	float GetX()                 const { return mX; }
+	void  SetX(float x)                { mX = x; }
+	float GetY()                 const { return mY; }
+	void  SetY(float y)                { mY = y; }
+
+private:
+
+	bool  mProcessed;
+	float mX;
+	float mY;
+};
+
+// *************************************************
+//
+// *************************************************
 
 class RequireMovementMessage : public GameMessage
 {
@@ -230,7 +306,9 @@ private:
 	float mSpeed;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class RequirePursuingSpeedMessage : public GameMessage
 {
@@ -251,7 +329,9 @@ private:
 	float mPursuingSpeed;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class RequireRouteMessage : public GameMessage
 {
@@ -273,7 +353,9 @@ private:
 	uint8_t                  mCurrentRoutePoint;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class IncreaseCurrentRoutePointMessage : public GameMessage
 {
@@ -293,8 +375,9 @@ private:
 	float mCurrentY;
 };
 
-
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class SetMovementMessage : public GameMessage
 {
@@ -314,7 +397,9 @@ private:
 	float mY;
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class MoveUpMessage : public GameMessage
 {
@@ -324,7 +409,9 @@ public:
 		GameMessage (GM_Type::MoveUp) {}
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class MoveDownMessage : public GameMessage
 {
@@ -334,7 +421,9 @@ public:
 		GameMessage (GM_Type::MoveDown) {}
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class MoveLeftMessage : public GameMessage
 {
@@ -344,7 +433,9 @@ public:
 		GameMessage(GM_Type::MoveLeft) {}
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class MoveRightMessage : public GameMessage
 {
@@ -354,7 +445,9 @@ public:
 		GameMessage (GM_Type::MoveRight) {}
 };
 
-/***************************/
+// *************************************************
+//
+// *************************************************
 
 class ChangeSpriteMessage : public GameMessage
 {

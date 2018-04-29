@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "globals.h"
 #include "entity.h"
-#include "components.h"
+#include "component.h"
 
 
 Entity::~Entity()

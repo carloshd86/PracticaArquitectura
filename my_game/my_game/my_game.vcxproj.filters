@@ -149,9 +149,6 @@
     <ClInclude Include="..\..\common\entity.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\common\components.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\common\graphicsengine.h">
       <Filter>GraphicsEngine</Filter>
     </ClInclude>
@@ -208,6 +205,30 @@
     </ClInclude>
     <ClInclude Include="..\..\common\applicationmodelevelcompleted.h">
       <Filter>ApplicationModes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentenemy.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentrenderable.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentmovable.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentroutepath.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentplayer.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentrigidbody.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\componentgoal.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\component.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

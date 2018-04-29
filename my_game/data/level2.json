@@ -1,6 +1,6 @@
 {
 	"level" : {
-		"backgroundImg" : "256xdrygrassblock.png",
+		"backgroundImg" : "dry_grass_floor_2.png",
 		"backgroundR" : 1.0,
 		"backgroundG" : 1.0,
 		"backgroundB" : 1.0
@@ -8,13 +8,13 @@
 	"goal" : {
 		"posX" : 286,
 		"posY" : 426,
-		"width" : 32,
-		"height" : 32,
-		"img" : "goal.png"
+		"width" : 50,
+		"height" : 50,
+		"img" : "goal_circle.png"
 	},
 	"player" : {
 		"posX" : 304,
-		"posY" : 0,
+		"posY" : 1,
 		"width" : 32,
 		"height" : 32,
 		"speed" : 128,
@@ -28,7 +28,10 @@
 			"height" : 32,
 			"speed" : 64,
 			"pursuingSpeed" : 128,
-			"img" : "soldier_right.png",
+			"imgLeft" : "soldier_left.png",
+			"imgRight" : "soldier_right.png",
+			"imgAlertLeft" : "soldier_alert_left.png",
+			"imgAlertRight" : "soldier_alert_right.png",
 			"routePoints" : [ { "posX" : 170, "posY" : 321 }, { "posX" : 407, "posY" : 321 }, { "posX" : 407, "posY" : 127 }, { "posX" : 170, "posY" : 127 } ]
 		},
 		{
@@ -38,8 +41,24 @@
 			"height" : 32,
 			"speed" : 64,
 			"pursuingSpeed" : 128,
-			"img" : "soldier_left.png",
+			"imgLeft" : "soldier_left.png",
+			"imgRight" : "soldier_right.png",
+			"imgAlertLeft" : "soldier_alert_left.png",
+			"imgAlertRight" : "soldier_alert_right.png",
 			"routePoints" : [ { "posX" : 407, "posY" : 127 }, { "posX" : 170, "posY" : 127 }, { "posX" : 170, "posY" : 321 }, { "posX" : 407, "posY" : 321 } ]
+		},
+		{
+			"posX" : 170,
+			"posY" : 127,
+			"width" : 32,
+			"height" : 32,
+			"speed" : 64,
+			"pursuingSpeed" : 128,
+			"imgLeft" : "soldier_left.png",
+			"imgRight" : "soldier_right.png",
+			"imgAlertLeft" : "soldier_alert_left.png",
+			"imgAlertRight" : "soldier_alert_right.png",
+			"routePoints" : [ { "posX" : 170, "posY" : 127 }, { "posX" : 170, "posY" : 321 }, { "posX" : 407, "posY" : 321 }, { "posX" : 407, "posY" : 127 } ]
 		}
 	],
 	"walls" : [
@@ -48,21 +67,21 @@
 			"posY" : 0,
 			"width" : 100,
 			"height" : 480,
-			"img" : "wall.png"
+			"img" : "stones_grass.png"
 		},
 		{
 			"posX" : 203,
 			"posY" : 160,
 			"width" : 203,
 			"height" : 160,
-			"img" : "wall.png"
+			"img" : "stones_grass.png"
 		},
 		{
 			"posX" : 520,
 			"posY" : 0,
-			"width" : 100,
+			"width" : 120,
 			"height" : 480,
-			"img" : "wall.png"
+			"img" : "stones_grass.png"
 		}
 	]
 }

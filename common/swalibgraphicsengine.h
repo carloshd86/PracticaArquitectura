@@ -21,10 +21,12 @@ public:
 	void      Render             ();
 	ISprite * RequireSprite      (vec2 pos, vec2 size, const char * image, bool manageRender = true, float r = 1.f, float g = 1.f, float b = 1.f);
 	void      ReleaseSprite      (ISprite * sprite);
+	void      RenderSprite       (ISprite * sprite);
 	void      SetOverlayActive   (bool active);
 	void      SetOverlayColor    (float r, float g, float b, float a);
 	void      SetBackgroundImage (const char * backgroundImage);
 	void      SetBackgroundColor (float r, float g, float b);
+	vec2      GetWorldSize       ();
 
 private:
 
