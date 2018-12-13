@@ -58,7 +58,7 @@ Properties * Properties::Instance(const char * file, const P_Language lang)
 		std::getline(propertiesFile, line);
 		int index = line.find('=', 0);
 		key = line.substr(0, index - 1);
-		value = line.substr(index);
+		value = line.substr(index + 1);
 		value.erase(std::remove(value.begin(), value.end(), '\r'), value.end());
 		value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
 		mInstance->mTexts.insert(make_pair(key, value));
