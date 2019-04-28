@@ -314,5 +314,5 @@ void ApplicationModeGame::ChangeActivatedAudio(Checkbox * checkbox)
 {
 	bool checkboxChecked = checkbox->IsChecked();
 	g_pApplicationManager->SetAudioActivated(checkboxChecked);
-	if (mMusicId) checkboxChecked ? g_pSoundManager->PlayMusic(mMusicId) : g_pSoundManager->StopMusic();
+	if (mMusicId) checkboxChecked ? g_pSoundManager->PlayMusic(mMusicId, g_pApplicationManager->GetVolume() / 100.f) : g_pSoundManager->StopMusic();
 }

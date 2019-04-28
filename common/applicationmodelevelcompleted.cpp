@@ -44,7 +44,7 @@ void ApplicationModeLevelCompleted::Activate()
 	g_pGraphicsEngine->Init();
 
 	mMusicId = g_pSoundManager->LoadWav((DATA_FOLDER + "DefenseLine.wav").c_str());
-	if (mMusicId && g_pApplicationManager->IsAudioActivated()) g_pSoundManager->PlayMusic(mMusicId);
+	if (mMusicId && g_pApplicationManager->IsAudioActivated()) g_pSoundManager->PlayMusic(mMusicId, g_pApplicationManager->GetVolume() / 100.f);
 }
 
 // *************************************************

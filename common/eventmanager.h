@@ -24,7 +24,9 @@ public:
 		SinglePressLeft,
 		SinglePressRight,
 		SinglePressEscape,
-		SinglePressEnter
+		SinglePressEnter,
+		ReleaseLeft,
+		ReleaseRight
 	};
 
 	class IListener 

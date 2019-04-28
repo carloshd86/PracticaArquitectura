@@ -7,12 +7,12 @@
 #include "applicationmodegameover.h"
 #include "memorycontrol.h"
 
-
 ApplicationManager::ApplicationManager() : 
 	mDesiredMode      (AM_Menu),
 	m_pGameMode       (nullptr),
 	mLang             (DEFAULT_LANG),
-	mAudioActivated   (true) {}
+	mAudioActivated   (true),
+	mVolume           (50.f) {}
 
 // *************************************************
 //
@@ -122,4 +122,22 @@ bool ApplicationManager::IsAudioActivated() const
 void ApplicationManager::SetAudioActivated(bool audioActivated)
 {
 	mAudioActivated = audioActivated;
+}
+
+// *************************************************
+//
+// *************************************************
+
+float ApplicationManager::GetVolume() const
+{
+	return mVolume;
+}
+
+// *************************************************
+//
+// *************************************************
+
+void ApplicationManager::SetVolume(float volume)
+{
+	mVolume = volume;
 }

@@ -98,6 +98,14 @@ void SysInputManager::UpdateEvents()
 					SendEvent(it->first, it->second); 
 				break; 
 			}
+
+			case IEventManager::EM_Event::ReleaseLeft  :
+			case IEventManager::EM_Event::ReleaseRight :
+			{ 
+				if (mPressStatusMap[eventKey].lastPress && !mPressStatusMap[eventKey].currentPress) 
+					SendEvent(it->first, it->second); 
+				break; 
+			}
 		}
 	}
 	for (auto& pressStatus : mPressStatusMap)
@@ -200,10 +208,12 @@ int SysInputManager::GetSysKeyFromEvent(EM_Event event)
 		case EM_Event::SinglePressDown   : key = SYS_KEY_DOWN;   break;
 
 		case EM_Event::MoveLeft          :
-		case EM_Event::SinglePressLeft   : key = SYS_KEY_LEFT;   break;
+		case EM_Event::SinglePressLeft   :
+		case EM_Event::ReleaseLeft       : key = SYS_KEY_LEFT;   break;
 
 		case EM_Event::MoveRight         :
-		case EM_Event::SinglePressRight  : key = SYS_KEY_RIGHT;  break;
+		case EM_Event::SinglePressRight  :
+		case EM_Event::ReleaseRight      : key = SYS_KEY_RIGHT;  break;
 
 		case EM_Event::SinglePressEscape : key = VK_ESCAPE;      break;
 		case EM_Event::SinglePressEnter  : key = VK_RETURN;      break;

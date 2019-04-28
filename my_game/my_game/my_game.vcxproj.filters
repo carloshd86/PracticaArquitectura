@@ -93,9 +93,6 @@
     <ClCompile Include="..\..\common\main.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\common\applicatonmanager.cpp">
-      <Filter>ApplicationManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\common\checkbox.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -113,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="..\..\common\applicationmodelevelcompleted.cpp">
       <Filter>ApplicationModes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\applicationmanager.cpp">
+      <Filter>ApplicationManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\slider.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="..\..\common\memorycontrol.h">
       <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\slider.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -20,6 +20,7 @@ public:
 	virtual void         UnloadWav (unsigned int snd);
 	virtual void         PlayMusic (unsigned int snd, float volume = 1.f);
 	virtual void         StopMusic ();
+	virtual void         SetVolume (float volume);
 
 };
 
