@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "globals.h"
 #include "control.h"
 
 
@@ -22,6 +23,7 @@ Control::Control(float x, float y, float width, float height, Container * parent
 
 Control::~Control()
 {
+	g_pEventManager->Unregister(this);
 }
 
 // *************************************************

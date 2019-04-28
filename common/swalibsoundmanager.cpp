@@ -75,3 +75,12 @@ void SwalibSoundManager::StopMusic()
 {
 	CORE_StopMusic();
 }
+
+// *************************************************
+//
+// *************************************************
+
+void SwalibSoundManager::SetVolume(float volume)
+{
+	CORE_SetVolume(volume / 100.f);
+}

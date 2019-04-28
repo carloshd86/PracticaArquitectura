@@ -5,7 +5,6 @@
 #include "sys.h"
 #include "core.h"
 #include "font.h"
-#include "button.h"
 #include "asserts.h"
 #include "memorycontrol.h"
 
@@ -86,8 +85,8 @@ void ApplicationModeMenu::Activate()
 	Button   * spanishButton       = InitButton   (std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::Spanish) , SCR_HEIGHT/4.f, 330.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.spanish.text");
 	Button   * englishButton       = InitButton   (std::bind(&ApplicationModeMenu::ChangeLanguage , this, Properties::P_Language::English) , SCR_HEIGHT/4.f, 280.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.english.text");
 	Checkbox * audioCheckbox       = InitCheckbox (                                                                                          SCR_HEIGHT/4.f, 230.f, 250.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.activate_audio.text", g_pApplicationManager->IsAudioActivated());
-	mControlMap[audioCheckbox]     = std::bind(&ApplicationModeMenu::ChangeActivatedAudio, this, audioCheckbox);
-	Button   * optionsReturnButton = InitButton   (std::bind(&ApplicationModeMenu::OpenMenu       , this, 0)                               , SCR_HEIGHT/4.f, 180.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
+	Slider   * audioSlider         = InitSlider   (                                                                                          SCR_HEIGHT/4.f, 180.f, 250.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.volume.text"        );
+	Button   * optionsReturnButton = InitButton   (std::bind(&ApplicationModeMenu::OpenMenu       , this, 0)                               , SCR_HEIGHT/4.f, 130.f, 200.f, SCR_HEIGHT*0.25f, optionsContainer, "main_menu.return.text", 1.f, 1.f, 0.f, 1.f, 0.7f, 0.f);
 
 	optionsContainer->SetVisible(false);
 	mContainers.push_back(optionsContainer);
@@ -176,12 +175,17 @@ void ApplicationModeMenu::ChangeLanguage(Properties::P_Language lang)
 			const std::vector<Control *> containerControls = container->GetControls();
 			for (auto control : containerControls)
 			{
-				Button * button = dynamic_cast<Button *>(control);
+				Button* button = dynamic_cast<Button*>(control);
 				if (button) button->SetProperties(m_pProperties);
 				else
 				{
-					Checkbox  * checkbox = dynamic_cast<Checkbox *>(control);
+					Checkbox* checkbox = dynamic_cast<Checkbox*>(control);
 					if (checkbox) checkbox->SetProperties(m_pProperties);
+					else
+					{
+						Slider* slider = dynamic_cast<Slider*>(control);
+						if (slider) slider->SetProperties(m_pProperties);
+					}
 				}
 			}
 		}
@@ -226,6 +230,15 @@ void ApplicationModeMenu::OnClick(Checkbox * checkbox)
 //
 // *************************************************
 
+void ApplicationModeMenu::OnPercentageChanged(Slider* slider)
+{
+	mControlMap[slider]();
+}
+
+// *************************************************
+//
+// *************************************************
+
 Button * ApplicationModeMenu::InitButton(std::function<void()> clickFunction, float x, float y, float width, float height, Container * parent, const char * textKey, float rOn, float gOn, float bOn, float rOff, float gOff, float bOff)
 {
 	Button * button = GAME_NEW(Button, (x, y, width, height, parent, m_pProperties, textKey, rOn, gOn, bOn, rOff, gOff, bOff));
@@ -251,7 +264,29 @@ Checkbox * ApplicationModeMenu::InitCheckbox(float x, float y, float width, floa
 
 	g_pEventManager->Register(checkbox, IEventManager::EM_Event::SinglePressEnter, 0);
 
+	mControlMap[checkbox] = std::bind(&ApplicationModeMenu::ChangeActivatedAudio, this, checkbox);
+
 	return checkbox;
+}
+
+// *************************************************
+//
+// *************************************************
+
+Slider * ApplicationModeMenu::InitSlider(float x, float y, float width, float height, Container * parent, const char * textKey, float rOn, float gOn, float bOn, float rOff, float gOff, float bOff)
+{
+	Slider * slider = GAME_NEW(Slider, (x, y, width, height, parent, m_pProperties, textKey, g_pApplicationManager->GetVolume(), rOn, gOn, bOn, rOff, gOff, bOff));
+
+	slider->SetListener(this);
+
+	g_pEventManager->Register(slider, IEventManager::EM_Event::MoveLeft    , 0);
+	g_pEventManager->Register(slider, IEventManager::EM_Event::MoveRight   , 0);
+	g_pEventManager->Register(slider, IEventManager::EM_Event::ReleaseLeft , 0);
+	g_pEventManager->Register(slider, IEventManager::EM_Event::ReleaseRight, 0);
+
+	mControlMap[slider] = std::bind(&ApplicationModeMenu::ChangeVolume, this, slider);
+
+	return slider;
 }
 
 // *************************************************
@@ -294,7 +329,17 @@ void ApplicationModeMenu::ChangeActivatedAudio(Checkbox * checkbox)
 {
 	bool checkboxChecked = checkbox->IsChecked();
 	g_pApplicationManager->SetAudioActivated(checkboxChecked);
-	if (mMusicId) checkboxChecked ? g_pSoundManager->PlayMusic(mMusicId) : g_pSoundManager->StopMusic();
+	if (mMusicId) checkboxChecked ? g_pSoundManager->PlayMusic(mMusicId, g_pApplicationManager->GetVolume() / 100.f) : g_pSoundManager->StopMusic();
+}
+
+// *************************************************
+//
+// *************************************************
+
+void ApplicationModeMenu::ChangeVolume(Slider* slider)
+{
+	float volume = slider->GetPercentage();
+	if (mMusicId) g_pSoundManager->SetVolume(volume);
 }
 
 // *************************************************

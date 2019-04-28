@@ -7,11 +7,11 @@
 #include "navigationcontainer.h"
 #include "button.h"
 #include "checkbox.h"
+#include "slider.h"
 #include <map>
 #include <functional>
 
-
-class ApplicationModeMenu : public ApplicationMode, public IEventManager::IListener, public Button::IListener, public Checkbox::IListener
+class ApplicationModeMenu : public ApplicationMode, public IEventManager::IListener, public Button::IListener, public Checkbox::IListener, public Slider::IListener
 {
 public:
 
@@ -26,9 +26,10 @@ public:
 	void   Render          ();
 	void   ChangeLanguage  (Properties::P_Language lang);
 
-	bool ProcessEvent (IEventManager::EM_Event event);
-	void OnClick      (Button * button);
-	void OnClick      (Checkbox * checkbox);
+	bool ProcessEvent        (IEventManager::EM_Event event);
+	void OnClick             (Button * button);
+	void OnClick             (Checkbox * checkbox);
+	void OnPercentageChanged (Slider* slider);
 
 
 private:
@@ -42,10 +43,12 @@ private:
 
 	Button   * InitButton   (std::function<void()> clickFunction, float x, float y, float width, float height, Container * parent, const char * textKey, float rOn = 1.f, float gOn = 1.f, float bOn = 0.f, float rOff = 1.f, float gOff = 1.f, float bOff = 1.f);
 	Checkbox * InitCheckbox (float x, float y, float width, float height, Container * parent, const char * textKey, bool checked, float rOn = 1.f, float gOn = 1.f, float bOn = 0.f, float rOff = 1.f, float gOff = 1.f, float bOff = 1.f);
+	Slider   * InitSlider   (float x, float y, float width, float height, Container * parent, const char * textKey, float rOn = 1.f, float gOn = 1.f, float bOn = 0.f, float rOff = 1.f, float gOff = 1.f, float bOff = 1.f);
 
 	void StartLevel           (Game::GameLevel level);
 	void OpenMenu             (int index);
 	void ChangeActivatedAudio (Checkbox * checkbox);
+	void ChangeVolume         (Slider* slider);
 	void QuitGame             ();
 };
 

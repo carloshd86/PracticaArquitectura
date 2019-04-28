@@ -23,6 +23,8 @@ public:
 	void                   SetLang           (Properties::P_Language lang);
 	bool                   IsAudioActivated  () const;
 	void                   SetAudioActivated (bool audioActivated);
+	float                  GetVolume         () const;
+	void                   SetVolume         (float volume);
 
 	
 private:
@@ -31,6 +33,7 @@ private:
 	ApplicationMode        *m_pGameMode;
 	Properties::P_Language  mLang;
 	bool                    mAudioActivated;
+	float                   mVolume;
 };
 
 #endif

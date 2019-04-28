@@ -73,6 +73,7 @@ void CORE_PlaySound (uint snd, float volume, float pitch);
 void CORE_UnloadWav (uint snd);
 void CORE_PlayMusic (uint snd, float volume = 1.f);
 void CORE_StopMusic ();
+void CORE_SetVolume (float volume);
 #endif //SWALIB_SOUND
 
 #endif

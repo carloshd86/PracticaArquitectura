@@ -14,6 +14,7 @@ public:
 	virtual void         UnloadWav (unsigned int snd)                            = 0;
 	virtual void         PlayMusic (unsigned int snd, float volume = 1.f)        = 0;
 	virtual void         StopMusic ()                                            = 0;
+	virtual void         SetVolume (float volume)                                = 0;
 };
 
 #endif

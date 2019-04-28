@@ -127,10 +127,11 @@
     <ClCompile Include="..\..\common\container.cpp" />
     <ClCompile Include="..\..\common\control.cpp" />
     <ClCompile Include="..\..\common\core.cpp" />
+    <ClCompile Include="..\..\common\slider.cpp" />
     <ClCompile Include="..\..\common\swalibsoundmanager.cpp" />
     <ClCompile Include="..\..\common\entity.cpp" />
     <ClCompile Include="..\..\common\game.cpp" />
-    <ClCompile Include="..\..\common\applicatonmanager.cpp" />
+    <ClCompile Include="..\..\common\applicationmanager.cpp" />
     <ClCompile Include="..\..\common\navigationcontainer.cpp" />
     <ClCompile Include="..\..\common\properties.cpp" />
     <ClCompile Include="..\..\common\sysinputmanager.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="..\..\common\container.h" />
     <ClInclude Include="..\..\common\control.h" />
     <ClInclude Include="..\..\common\memorycontrol.h" />
+    <ClInclude Include="..\..\common\slider.h" />
     <ClInclude Include="..\..\common\swalibsoundmanager.h" />
     <ClInclude Include="..\..\common\entity.h" />
     <ClInclude Include="..\..\common\eventmanager.h" />
